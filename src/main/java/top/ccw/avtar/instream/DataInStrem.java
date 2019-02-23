@@ -6,6 +6,10 @@ package top.ccw.avtar.instream;
  * 一旦数据来了，存入HBASE 和 MySQL数据库。并发一个通知消息给Kafka。
  */
 public class DataInStrem implements Runnable {
+
+    /***
+     * 启动 数据流入程序
+     */
     @Override
     public void run() {
         while (true) {
