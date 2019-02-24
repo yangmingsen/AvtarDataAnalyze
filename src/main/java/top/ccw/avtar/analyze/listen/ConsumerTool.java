@@ -18,8 +18,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 
 /***
  * ActiveMQ工具：
- * 监听数据类型为 MapMessage (来自)
- *
+ * 监听数据类型为 MapMessage
+ * @author yangmingsen
  */
 public class ConsumerTool implements MessageListener,ExceptionListener {
     private String user = ActiveMQConnection.DEFAULT_USER;

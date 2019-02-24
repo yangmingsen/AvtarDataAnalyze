@@ -9,6 +9,9 @@ import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import utils.LoggerLevels
 
+/***
+  * 监听
+  */
 object KafkaInput {
 
   val zkQuorum = "yms1:2181,yms2:2181,yms3:2181"

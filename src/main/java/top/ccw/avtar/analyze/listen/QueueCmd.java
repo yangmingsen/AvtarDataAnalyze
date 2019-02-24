@@ -1,5 +1,12 @@
 package top.ccw.avtar.analyze.listen;
 
+/***
+ * 命令对象
+ * 其中name 表示的是当前命令名字
+ *      content 表示命令内容
+ *
+ * @author yangmingsen
+ */
 public class QueueCmd {
     private String name;
     private Object content;

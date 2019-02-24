@@ -6,6 +6,8 @@ import top.ccw.avtar.instream.DataInStrem;
 
 /***
  * 启动程序：启动2个线程（1、Kafka数据读取程序存储程序。2、数据分析程序）
+ *
+ * @author yangmingsen
  */
 public class Start {
 
