@@ -26,7 +26,7 @@ object ExcuteAnalyze {
 
   def test(): Unit = {
 
-    startAnalyze("10")
+    startAnalyze("10")//test 目前方向是 软件工程
 
   }
 
@@ -59,9 +59,10 @@ object ExcuteAnalyze {
     val jobsData = dataIn()
 
     //进入时状态分析
-    currentStatus(jobsData,direcion)
+    //currentStatus(jobsData,direcion)
 
     //进入统计图表分析
+    statisticalGraph(jobsData,direcion)
 
   }
 
@@ -154,8 +155,8 @@ object ExcuteAnalyze {
     * 统计图表
     * @return
     */
-  private def statisticalGraph(): Boolean = {
-    true
+  private def statisticalGraph(jobsData: RDD[JobDataEntity],jobtypeTwoId: String): Unit = {
+    //
   }
 
 }

@@ -42,7 +42,7 @@ public class RedisClient {
      * 根据 key1 与 key2 查询Redis数据
      * @param key1 Redis key
      * @param key2 HashMap key
-     * @return
+     * @return HashMap value
      */
     public static String getValue(String key1, String key2) {
         List<String> hmget = jedis.hmget(key1, key2);
