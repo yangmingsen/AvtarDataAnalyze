@@ -15,6 +15,7 @@ public class AnalyzeData implements Runnable{
      */
     @Override
     public void run() {
+
         System.out.println("Start AnalyzeData Program Thread ..... "+Thread.currentThread().getName()+"---------\n");
 
         /***

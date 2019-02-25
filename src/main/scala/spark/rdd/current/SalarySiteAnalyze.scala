@@ -13,12 +13,12 @@ import org.apache.spark.rdd.RDD
   */
 object SalarySiteAnalyze {
 
-  def start(jobsRDD: RDD[JobDataEntity]): Unit = {
+  def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     /***
       * 获取每个地区对应的平均薪资
       */
-    val rdd1 = jobsRDD.map(x => {
+    val rdd1 = jobsRDD.filter(x => {(x.jobSalaryMin.length!=0) && (!x.jobSite.equals("异地招聘"))}).map(x => {
       val site = x.jobSite
       val salary_min = x.jobSalaryMin.toDouble
       val salary_max = x.jobSalaryMax.toDouble
@@ -47,6 +47,9 @@ object SalarySiteAnalyze {
 
     val list = new util.ArrayList[SalarySiteEntity]()
     rdd5.collect().toList.map(x => list.add(SalarySiteEntity(x._1,x._2,x._3)))
+
+    //print to Test
+    println("SalarySiteAnalyze = "+rdd5.collect().toBuffer)
 
     //do write dabase
 

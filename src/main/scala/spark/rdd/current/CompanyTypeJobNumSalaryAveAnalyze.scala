@@ -13,12 +13,12 @@ import org.apache.spark.rdd.RDD
   * @author yangminsen
   */
 object CompanyTypeJobNumSalaryAveAnalyze {
-  def start(jobsRDD: RDD[JobDataEntity]): Unit = {
+  def start(jobsRDD: RDD[JobDataEntity],jobtypeTwoId: String): Unit = {
 
     /***
       * 获取 （公司类型,最小薪资,最大薪资）
       */
-    val rdd1 = jobsRDD.map(x => {
+    val rdd1 = jobsRDD.filter(x =>{(x.jobSalaryMin.length!=0) && (x.companyType.length!=0)}).map(x => {
       val companyType = x.companyType
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
@@ -27,11 +27,10 @@ object CompanyTypeJobNumSalaryAveAnalyze {
       (companyType,ave)
     })
 
-
     val rdd2 = rdd1.countByKey()
 
     //
-    val jobRDD3 = rdd1.reduceByKey(_ + _).map(x => {
+    val rdd3 = rdd1.reduceByKey(_ + _).map(x => {
       val jobNum = rdd2.get(x._1) match {
         case Some(v) => v.toLong
         case None => 1
@@ -42,7 +41,11 @@ object CompanyTypeJobNumSalaryAveAnalyze {
     })
 
     val list = new util.ArrayList[CompanyTypeJobNumSalaryAveEntity]()
-    jobRDD3.collect().toList.map(x => list.add(CompanyTypeJobNumSalaryAveEntity(x._1,x._2,x._3)))
+    rdd3.collect().toList.map(x => list.add(CompanyTypeJobNumSalaryAveEntity(x._1,x._2,x._3)))
+
+
+    //print to Test
+    println("CompanyTypeJobNumSalaryAveAnalyze = "+rdd3.collect().toBuffer)
 
     //write to database
 

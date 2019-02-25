@@ -78,6 +78,7 @@ object KafkaInput {
     val companyName = jsonObj.get("companyName").toString
 
 
+    val jobSiteProvinces = jsonObj.get("jobSiteProvinces").toString
     val jobSite = jsonObj.get("jobSite").toString
     val jobSalaryMin = jsonObj.get("jobSalaryMin").toString
     val jobSalaryMax = jsonObj.get("jobSalaryMax").toString
@@ -96,7 +97,7 @@ object KafkaInput {
     val companyBusiness = jsonObj.get("companyBusiness").toString
 
 
-    JobDataEntity(direction,jobName,companyName,jobSite,jobSalaryMin,jobSalaryMax,
+    JobDataEntity(direction,jobName,companyName,jobSiteProvinces,jobSite,jobSalaryMin,jobSalaryMax,
       relaseDate,educationLevel,workExper,companyWelfare,jobResp,jobRequire,
       companyType,companyPeopleNum,companyBusiness )
   }

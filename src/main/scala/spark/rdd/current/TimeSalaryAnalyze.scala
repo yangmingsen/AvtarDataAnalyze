@@ -12,12 +12,12 @@ import org.apache.spark.rdd.RDD
   * @author yangminsen
   */
 object TimeSalaryAnalyze {
-  def start(jobsRDD: RDD[JobDataEntity]): Unit = {
+  def start(jobsRDD: RDD[JobDataEntity],jobtypeTwoId: String): Unit = {
 
     /***
       * 获取每个时间对应的平均薪资
       */
-    val rdd1 = jobsRDD.map(x => {
+    val rdd1 = jobsRDD.filter(_.jobSalaryMin.length != 0).map(x => {
       val date = x.relaseDate.substring(5,x.relaseDate.length)
       val salary_min = x.jobSalaryMin.toDouble
       val salary_max = x.jobSalaryMax.toDouble
@@ -48,6 +48,9 @@ object TimeSalaryAnalyze {
 
     val list = new util.ArrayList[TimeSalaryEntity]()
     rdd5.collect().toList.map(x => list.add(TimeSalaryEntity(x._1,x._2)))
+
+    //print to Test
+    println("TimeSalaryAnalyze = "+rdd5.collect().toBuffer)
 
     //do write database
 

@@ -14,10 +14,10 @@ import org.apache.spark.rdd.RDD
   */
 object JobNameRankAnalyze {
 
-  def start(jobsRDD: RDD[JobDataEntity]): Unit = {
+  def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //获取 (职位名，最小薪资，最大薪资，地点)
-    val rdd1 = jobsRDD.map(x => {
+    val rdd1 = jobsRDD.filter(x => {(x.jobSalaryMin.length!=0)&&(x.jobSite.length!=0)}).map(x => {
       val name = x.jobName
       val min =  x.jobSalaryMin.toDouble
       val max =  x.jobSalaryMax.toDouble
@@ -32,6 +32,10 @@ object JobNameRankAnalyze {
     val list = new util.ArrayList[JobNameRankEntity]()
 
     rdd2.collect().toList.map(x => {list.add(JobNameRankEntity(x._1,x._2,x._3,x._4))})
+
+
+    //print to Test
+    println("JobNameRankAnalyze = "+rdd2.collect().toBuffer)
 
     //do write database
 

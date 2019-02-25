@@ -14,7 +14,7 @@ import org.apache.spark.rdd.RDD
   * @author yangminsen
   */
 object ProvinceJobNumAnalyze {
-  def start(jobsRDD: RDD[JobDataEntity]): Unit = {
+  def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     /***
       * 获取 （职位地点,发布时间)
@@ -26,7 +26,7 @@ object ProvinceJobNumAnalyze {
     })
 
     //按地区统计职位数，并封装为RDD[ProvinceJobNumEntity()]
-    val rdd2 = rdd1.map(x => (x._1,1)).reduceByKey(_+_).map(x => ProvinceJobNumEntity(x._1,x._2.toLong))
+    val rdd2 = rdd1.filter(x => (!x._1.equals("异地招聘"))).map(x => (x._1,1)).reduceByKey(_+_).map(x => ProvinceJobNumEntity(x._1,x._2.toLong))
 
     val day = "2019-01-17"
     //统计当前职位数据 该天职位数
@@ -36,6 +36,9 @@ object ProvinceJobNumAnalyze {
 
     val list = new util.ArrayList[ProvinceJobNumEntity]()
     rdd2.collect().toList.map(x => list.add(x))
+
+    //print to Test
+    println("ProvinceJobNumAnalyze = "+rdd2.collect().toBuffer)
 
     //do write database
 

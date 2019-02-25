@@ -52,7 +52,7 @@ case class ProvinceJobNumEntity(val province: String, val num: Long)
 case class CompanyTypeJobNumSalaryAveEntity(val companyType: String, val jobNum: Long, val salary: Double)
 
 
-case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSite: String, jobSalaryMin: String,
+case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
                          jobResp: String, jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
 
