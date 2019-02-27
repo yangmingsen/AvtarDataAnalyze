@@ -8,12 +8,12 @@ import spark.rdd.current._
 import top.ccw.avtar.redis.RedisClient
 import utils.LoggerLevels
 
-/***
+/** *
   * <p>共分析2个主题：实时状态、统计图表</p>
   * 流程：
-  *   1、从HBase或者MySQL读取数据
-  *   2、读入数据后首先分析实时状态
-  *   3、实时状态分析完毕后、计算统计图表
+  * 1、从HBase或者MySQL读取数据
+  * 2、读入数据后首先分析实时状态
+  * 3、实时状态分析完毕后、计算统计图表
   *
   * @author yangmingsen
   */
@@ -26,25 +26,26 @@ object ExcuteAnalyze {
 
   def test(): Unit = {
 
-    startAnalyze("10")//test 目前方向是 软件工程
+    startAnalyze("10") //test 目前方向是 软件工程
 
   }
 
-  /***
-    *启动分析方法，无需方向参数。
+  /** *
+    * 启动分析方法，无需方向参数。
     * 方向从Redis提取
     */
   def startAnalyze(): Unit = {
 
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
-    val direction = RedisClient.getValue("msgCmd","direction")
+    val direction = RedisClient.getValue("msgCmd", "direction")
 
     excuteAnalyze(direction)
 
   }
 
-  /***
+  /** *
     * 启动分析方法，需要传入 方向指令 cmd
+    *
     * @param direcion 方向指令:表示当前需要分析程序分析什么方向的数据
     */
   def startAnalyze(direcion: String): Unit = {
@@ -62,12 +63,12 @@ object ExcuteAnalyze {
     //currentStatus(jobsData,direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData,direcion)
+    statisticalGraph(jobsData, direcion)
 
   }
 
 
-  /***
+  /** *
     * 读取数据
     */
   private def dataIn(): RDD[JobDataEntity] = {
@@ -83,15 +84,15 @@ object ExcuteAnalyze {
 
     val sqlContext = new SQLContext(sc)
 
-    //  val jdbcDF = sqlContext.read.format("jdbc").
-    //    options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-    //      "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
-    //  jdbcDF.registerTempTable("tb_job_info_new")
-
     val jdbcDF = sqlContext.read.format("jdbc").
+      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
+        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
+    jdbcDF.registerTempTable("tb_job_info_new")
+
+    /*val jdbcDF = sqlContext.read.format("jdbc").
       options(Map("url" -> "jdbc:mysql://127.0.0.1:3306/job_data?characterEncoding=utf8&useSSL=false",
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "root", "password" -> "ymsyms")).load()
-    jdbcDF.registerTempTable("tb_job_info_new")
+    jdbcDF.registerTempTable("tb_job_info_new")*/
 
     val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 100")
 
@@ -113,50 +114,54 @@ object ExcuteAnalyze {
       val companyPeopleNum = x.getString(15)
       val companyBusiness = x.getString(16)
 
-      JobDataEntity(direction,jobName,companyName,jobSiteProvinces,jobSite,jobSalaryMin,jobSalaryMax,relaseDate,educationLevel,
-        workExper,companyWelfare,jobResp,jobRequire,companyType,companyPeopleNum,companyBusiness)
+      JobDataEntity(direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+        workExper, companyWelfare, jobResp, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
-    println("get Data from MySQL"+"AND data size = "+rdd1.collect().toList.size)
+    println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
 
 
     rdd1
   }
 
-  /***
+  /** *
     * 实时状态分析
+    *
     * @return
     */
-  private def currentStatus(jobsData: RDD[JobDataEntity],jobtypeTwoId: String): Unit = {
+  private def currentStatus(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析TimeSalary
-    TimeSalaryAnalyze.start(jobsData,jobtypeTwoId)
+    TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析SalarySite
-    SalarySiteAnalyze.start(jobsData,jobtypeTwoId)
+    SalarySiteAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析ProvinceJobNum
-    ProvinceJobNumAnalyze.start(jobsData,jobtypeTwoId)
+    ProvinceJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 JobNameRank
-    JobNameRankAnalyze.start(jobsData,jobtypeTwoId)
+    JobNameRankAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationJobNum
-    EducationJobNumAnalyze.start(jobsData,jobtypeTwoId)
+    EducationJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
-    //分析CompanyTypeJobNumSalaryAve
-    CompanyTypeJobNumSalaryAveAnalyze.start(jobsData,jobtypeTwoId)
+    //分析 CompanyTypeJobNumSalaryAve
+    CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
 
   }
 
 
-  /***
+  /** *
     * 统计图表
+    *
     * @return
     */
-  private def statisticalGraph(jobsData: RDD[JobDataEntity],jobtypeTwoId: String): Unit = {
-    //
+  private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
+    //分析 Company_businessNum
+    Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
+
   }
 
 }
