@@ -6,7 +6,6 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
 import top.ccw.avtar.redis.RedisClient
-import utils.LoggerLevels
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -20,7 +19,7 @@ import utils.LoggerLevels
 object ExcuteAnalyze {
 
   //初始化环境
-  val conf = new SparkConf().setAppName("ExcuteAnalyze").setMaster("local[4]")
+  val conf = new SparkConf().setAppName("ExcuteAnalyze").set("spark.driver.host", "localhost").setMaster("local[4]")
   val sc = new SparkContext(conf)
 
 
@@ -160,7 +159,9 @@ object ExcuteAnalyze {
     */
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
     //分析 Company_businessNum
-    Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
+    //Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
+    //分析 SalaryWorkExperJobNumAve
+    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
 
   }
 
