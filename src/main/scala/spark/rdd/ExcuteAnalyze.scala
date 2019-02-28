@@ -158,6 +158,7 @@ object ExcuteAnalyze {
     * @return
     */
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
+
     //分析 Company_businessNum
     //Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
 
@@ -168,7 +169,10 @@ object ExcuteAnalyze {
     //EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationJobNumSalaryAve
-    EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    //EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 CompanyTypeNumAve
+    //CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }
