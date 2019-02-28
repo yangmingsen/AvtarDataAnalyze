@@ -19,7 +19,7 @@ object CompanyTypeNumAveAnalyze {
     val rdd1 = jobsRDD.filter(x => {
       (x.companyType.length != 0) && (x.companyPeopleNum.length != 0)
     }).map(x => {
-      val companyType = x.companyType.replaceAll("\\s*", "")
+      val companyType = x.companyType
       val num = x.companyPeopleNum.replaceAll("少于", "").replaceAll("人", "")
       if (num.contains("-")) {
         val num1 = num.split("-", 2)(0).toDouble

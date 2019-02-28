@@ -18,7 +18,7 @@ object EducationSalaryAveAnalyze {
       * 获取 （学历,最小薪资,最大薪资,发布时间）
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (x.educationLevel!= "")
+      (x.jobSalaryMin.length != 0) && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
     }).map(x => {
       val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
       val min = x.jobSalaryMin.toDouble
@@ -53,23 +53,4 @@ object EducationSalaryAveAnalyze {
 
   }
 
-  def isWeekRange1(date: String): Boolean = {
-    val now = date.substring(8, 10).toInt
-    now >= 1 && now <= 7
-  }
-
-  def isWeekRange2(date: String): Boolean = {
-    val now = date.substring(8, 10).toInt
-    now > 7 && now <= 14
-  }
-
-  def isWeekRange3(date: String): Boolean = {
-    val now = date.substring(8, 10).toInt
-    now > 14 && now <= 21
-  }
-
-  def isWeekRange4(date: String): Boolean = {
-    val now = date.substring(8, 10).toInt
-    now > 21 && now <= 28
-  }
 }
