@@ -2,30 +2,29 @@ package spark.rdd.current
 
 import java.util
 
-import com.google.common.base.CharMatcher
-import entity.{EducationJobNumSalaryAveEntity, JobDataEntity}
+import entity.{CompanyTypeSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 
 /** *
-  * 描述：按学历统计每个职位的平均薪资的关系分析
+  * 描述： 以时间为轴、分析公司类型薪资历史走向
   *
   * @author ljq
   */
-object EducationJobNumSalaryAveAnalyze {
+object CompanyTypeSalaryAveAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     /** *
-      * 获取 （学历,最小薪资,最大薪资）
+      * 获取 （公司类型,最小薪资,最大薪资,发布时间）
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
+      (x.jobSalaryMin.length != 0) && (x.companyType != "")
     }).map(x => {
-      val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val companyType = x.companyType
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
 
-      (level, ave)
+      (companyType, ave)
     })
 
     val rdd2 = rdd1.countByKey()
@@ -38,18 +37,19 @@ object EducationJobNumSalaryAveAnalyze {
       }
       val ave = (x._2 / jobNum).formatted("%.2f").toDouble
 
-      (x._1, jobNum, ave)
+      (x._1, ave)
     })
 
-    val list = new util.ArrayList[EducationJobNumSalaryAveEntity]()
-    rdd3.collect().toList.map(x => list.add(entity.EducationJobNumSalaryAveEntity(x._3, x._2, x._1)))
+    val list = new util.ArrayList[CompanyTypeSalaryAveEntity]()
+    rdd3.collect().toList.map(x => list.add(entity.CompanyTypeSalaryAveEntity(x._1, x._2)))
 
 
     //print to Test
-    println("EducationJobNumSalaryAveAnalyze = " + rdd3.collect().toBuffer)
+    println("CompanyTypeSalaryAveAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
 
 
   }
+
 }

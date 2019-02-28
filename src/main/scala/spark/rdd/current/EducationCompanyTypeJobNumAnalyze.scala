@@ -2,6 +2,7 @@ package spark.rdd.current
 
 import java.util
 
+import com.google.common.base.CharMatcher
 import entity.{EducationCompanyTypeJobNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 
@@ -17,10 +18,10 @@ object EducationCompanyTypeJobNumAnalyze {
       * 获取 （公司类型,学历)
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.educationLevel.length != 0) && (x.companyType.replaceAll("\\s*", "") != "")
+      (x.educationLevel.length != 0) && (CharMatcher.WHITESPACE.trimFrom(x.companyType) != "")
     }).map(x => {
-      val level = x.educationLevel.replaceAll("\\s*", "")
-      val companyType = x.companyType.replaceAll("\\s*", "")
+      val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val companyType = x.companyType
       ((companyType, level), 1)
     })
     val rdd2 = rdd1.countByKey()

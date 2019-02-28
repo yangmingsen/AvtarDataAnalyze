@@ -4,6 +4,8 @@ import entity.{JobDataEntity, SalaryWorkExperJobNumAveEntity}
 import org.apache.spark.rdd.RDD
 import java.util
 
+import com.google.common.base.CharMatcher
+
 /** *
   * 描述： 职位当前方向工作经验与薪资（平均薪资，职位数）的关系分析
   *
@@ -16,11 +18,11 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
       * 获取 （工作经验--按最小值来,最小薪资,最大薪资）
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (x.workExper.replaceAll("\\s*", "") != "")
+      (x.jobSalaryMin.length != 0) && (x.workExper != "")
     }).map(x => {
-      val workExper = x.workExper.replaceAll("\\s*", "").substring(2, 3) match {
+      val workExper = CharMatcher.WHITESPACE.trimFrom(x.workExper).substring(0, 1) match {
         case "无" => "0"
-        case _ => x.workExper.replaceAll("\\s*", "").substring(2, 3)
+        case _ => CharMatcher.WHITESPACE.trimFrom(x.workExper).substring(0, 1)
       }
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble

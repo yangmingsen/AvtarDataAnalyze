@@ -177,6 +177,11 @@ object ExcuteAnalyze {
     //分析 JobNameNum
     //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
 
+    //分析 EducationSalaryAve
+    //EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 CompanyTypeSalaryAve
+    //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }
