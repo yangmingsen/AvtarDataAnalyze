@@ -11,7 +11,9 @@ import org.apache.spark.rdd.RDD
   */
 object Company_businessNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-    val rdd1 = jobsRDD.filter(x => ((x.companyBusiness != null) && (x.companyBusiness.length != 0))).map(x => {
+    val rdd1 = jobsRDD.filter(x => {
+      (x.companyBusiness != null) && (x.companyBusiness.length != 0)
+    }).map(x => {
       val business = x.companyBusiness.replaceAll("\\s*", "")
       (business, 1)
     })

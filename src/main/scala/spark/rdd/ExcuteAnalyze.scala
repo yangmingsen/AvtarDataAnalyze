@@ -173,6 +173,10 @@ object ExcuteAnalyze {
 
     //分析 CompanyTypeNumAve
     //CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 JobNameNum
+    //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
+
   }
 
 }
