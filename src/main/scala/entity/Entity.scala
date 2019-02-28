@@ -76,6 +76,14 @@ case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Lon
   */
 case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum: Long, val level: String)
 
+/** *
+  *
+  * @param level  学历
+  * @param salary 对应的平均薪资
+  * @param jobNum 对应的职位数
+  */
+case class EducationJobNumSalaryAveEntity(val salary: Double, val jobNum: Long, val level: String)
+
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
                          jobResp: String, jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
