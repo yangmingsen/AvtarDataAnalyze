@@ -161,8 +161,10 @@ object ExcuteAnalyze {
     //分析 Company_businessNum
     //Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
     //分析 SalaryWorkExperJobNumAve
-    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+    //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
 
+    //分析 EducationCompanyTypeJobNum
+    EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

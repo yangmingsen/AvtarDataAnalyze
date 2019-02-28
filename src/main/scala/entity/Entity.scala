@@ -68,6 +68,14 @@ case class Company_businessNumEntity(val company_business: String, val num: Long
   */
 case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Long, val salary: Double)
 
+/** *
+  *
+  * @param companyType 公司类型
+  * @param level       学历
+  * @param jobNum      对应的职位数
+  */
+case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum: Long, val level: String)
+
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
                          jobResp: String, jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
