@@ -1,10 +1,10 @@
-package spark.rdd.current
+package spark.rdd.statistical
 
-import entity.{JobDataEntity, SalaryWorkExperJobNumAveEntity}
-import org.apache.spark.rdd.RDD
 import java.util
 
 import com.google.common.base.CharMatcher
+import entity.{JobDataEntity, SalaryWorkExperJobNumAveEntity}
+import org.apache.spark.rdd.RDD
 
 /** *
   * 描述： 职位当前方向工作经验与薪资（平均薪资，职位数）的关系分析

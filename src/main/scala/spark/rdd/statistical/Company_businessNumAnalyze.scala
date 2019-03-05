@@ -1,6 +1,7 @@
-package spark.rdd.current
+package spark.rdd.statistical
 
 import java.util
+
 import entity.{Company_businessNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 

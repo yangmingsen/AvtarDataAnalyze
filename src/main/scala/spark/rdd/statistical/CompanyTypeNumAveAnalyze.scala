@@ -1,4 +1,4 @@
-package spark.rdd.current
+package spark.rdd.statistical
 
 import java.util
 
