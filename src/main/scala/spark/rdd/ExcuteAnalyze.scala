@@ -5,6 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
+import spark.rdd.statistical.Company_businessNumAnalyze
 import top.ccw.avtar.redis.RedisClient
 
 /** *
@@ -160,7 +161,7 @@ object ExcuteAnalyze {
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析 Company_businessNum
-    //Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
+    Company_businessNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 SalaryWorkExperJobNumAve
     //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)

@@ -59,6 +59,7 @@ case class CompanyTypeJobNumSalaryAveEntity(val companyType: String, val jobNum:
   * @param num              对应的公司业务的词频
   */
 case class Company_businessNumEntity(val company_business: String, val num: Long)
+case class tb_statistical_companybusiness_num(name:String,value:Long)
 
 /** *
   *
