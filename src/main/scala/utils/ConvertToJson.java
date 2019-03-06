@@ -2,6 +2,7 @@ package utils;
 
 import com.google.gson.Gson;
 import entity.tb_statistical_companybusiness_num;
+import entity.tb_statistical_companytype_num;
 import entity.tb_statistical_jobname_num;
 
 import java.util.ArrayList;
@@ -19,7 +20,14 @@ public class ConvertToJson {
         String gsonStr = gson.toJson(list);
         return gsonStr;
     }
+
     public static String ToJson2(ArrayList<tb_statistical_jobname_num> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
+
+    public static String ToJson3(ArrayList<tb_statistical_companytype_num> list) {
         Gson gson = new Gson();
         String gsonStr = gson.toJson(list);
         return gsonStr;

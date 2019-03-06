@@ -2,8 +2,9 @@ package spark.rdd.statistical
 
 import java.util
 
-import entity.{CompanyTypeNumAveEntity, JobDataEntity}
+import entity.{JobDataEntity, tb_statistical_companytype_num}
 import org.apache.spark.rdd.RDD
+import utils.{ConvertToJson, dbutils}
 
 /** *
   * 描述： 按公司类型统计，得到各个公司类型的平均人数
@@ -44,15 +45,16 @@ object CompanyTypeNumAveAnalyze {
       (ave, x._1)
     })
 
-    val list = new util.ArrayList[CompanyTypeNumAveEntity]()
-    rdd3.collect().toList.map(x => list.add(entity.CompanyTypeNumAveEntity(x._1, x._2)))
+    val list = new util.ArrayList[tb_statistical_companytype_num]()
+    rdd3.collect().toList.map(x => list.add(entity.tb_statistical_companytype_num(x._1, x._2)))
 
 
     //print to Test
-    println("CompanyTypeNumAveAnalyze = " + rdd3.collect().toBuffer)
+    //println("CompanyTypeNumAveAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
-
+    val str = ConvertToJson.ToJson3(list)
+    dbutils.insert(str, "tb_statistical_companytype_num")
 
   }
 
