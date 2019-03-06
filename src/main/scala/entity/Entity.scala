@@ -98,6 +98,7 @@ case class CompanyTypeNumAveEntity(val Num: Int, val CompanyType: String)
   * @param Num     对应的人数
   */
 case class JobNameNumEntity(val jobName: String, val Num: Long)
+case class tb_statistical_jobname_num(name:String,value:Long)
 
 /** *
   *
