@@ -20,7 +20,7 @@ object dbutils {
       ps = conn.prepareStatement(sql)
       ps.setString(1, result)
       ps.setInt(2, 10)
-      ps.setInt(3, 11)
+      ps.setInt(3, 12)
       ps.executeUpdate()
     }
     catch {
