@@ -5,6 +5,7 @@ import java.util
 import com.google.common.base.CharMatcher
 import entity.{JobDataEntity, SalaryWorkExperJobNumAveEntity}
 import org.apache.spark.rdd.RDD
+import utils.dbutils
 
 /** *
   * 描述： 职位当前方向工作经验与薪资（平均薪资，职位数）的关系分析
@@ -21,8 +22,8 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
       (x.jobSalaryMin.length != 0) && (x.workExper != "")
     }).map(x => {
       val workExper = CharMatcher.WHITESPACE.trimFrom(x.workExper).substring(0, 1) match {
-        case "无" => "0"
-        case _ => CharMatcher.WHITESPACE.trimFrom(x.workExper).substring(0, 1)
+        case "无" => "无工作经验"
+        case _ => CharMatcher.WHITESPACE.trimFrom(x.workExper) /*.substring(0, 1)*/
       }
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
@@ -30,6 +31,9 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
 
       (workExper, ave)
     })
+
+    val list1 = new util.ArrayList[String]()
+    val list2 = new util.ArrayList[Double]()
 
     val rdd2 = rdd1.countByKey()
 
@@ -46,13 +50,15 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
 
     val list = new util.ArrayList[SalaryWorkExperJobNumAveEntity]()
     rdd3.collect().toList.map(x => list.add(entity.SalaryWorkExperJobNumAveEntity(x._1, x._2, x._3)))
-
+    rdd3.collect().toList.map(x => list1.add("'" + x._1 + "'") && list2.add(x._3))
 
     //print to Test
-    println("SalaryWorkExperJobNumAveEntityAnalyze = " + rdd3.collect().toBuffer)
+    //println("SalaryWorkExperJobNumAveEntityAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
+    val list3 = "[" + list1 + "," + list2 + "]"
 
+    dbutils.insert(list3, "tb_statistical_salary_workexper_jobnumave")
 
   }
 
