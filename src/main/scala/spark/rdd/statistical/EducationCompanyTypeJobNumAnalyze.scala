@@ -37,6 +37,9 @@ object EducationCompanyTypeJobNumAnalyze {
     val list = new util.ArrayList[EducationCompanyTypeJobNumEntity]()
     rdd3.collect().toList.map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
 
+    val list1 = "['高中','中专','大专','本科','硕士','博士']"
+
+    /*println(list1)*/
     //print to Test
     println("EducationCompanyTypeJobNumAnalyze = " + rdd3.collect().toBuffer)
 
