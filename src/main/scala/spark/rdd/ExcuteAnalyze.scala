@@ -94,7 +94,7 @@ object ExcuteAnalyze {
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "root", "password" -> "ymsyms")).load()
     jdbcDF.registerTempTable("tb_job_info_new")*/
 
-    val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 100")
+    val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 300")
 
     val rdd1 = jobDF.map(x => {
       val direction = x.getInt(1).toString
