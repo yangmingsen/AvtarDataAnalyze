@@ -39,6 +39,7 @@ object ExcuteAnalyze {
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
     val direction = RedisClient.getValue("msgCmd", "direction")
 
+    //执行分析程序
     excuteAnalyze(direction)
 
   }
@@ -119,7 +120,6 @@ object ExcuteAnalyze {
     })
 
     println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
-
 
     rdd1
   }

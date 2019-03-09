@@ -32,7 +32,6 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
     private MessageConsumer consumer = null;
     private ActiveMQConnectionFactory connectionFactory=null;
     public static Boolean isconnection=false;
-
     // 初始化
     private void initialize() throws JMSException {
         connectionFactory= new ActiveMQConnectionFactory(
@@ -50,18 +49,18 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
 
         consumer.setMessageListener(this);
         connection.setExceptionListener(this);
-        System.out.println("Consumer:->Begin listening to ActiveMQ CMD...");
+        System.out.println("Consumer:->Begin listening...");
         isconnection=true;
         // 开始监听
         Message message = consumer.receive();
-        //System.out.println(message.getJMSMessageID());
+        System.out.println(message.getJMSMessageID());
         //System.out.println("---------");
-        onMessage(message);
+        this.onMessage(message);
     }
 
     // 关闭连接
     public void close() throws JMSException {
-        System.out.println("Consumer:->Closing connection to ActiveMQ CMD...");
+        System.out.println("Consumer:->Closing connection");
         if (consumer != null)
             consumer.close();
         if (session != null)
@@ -70,28 +69,43 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
             connection.close();
     }
 
-    // 消息处理函数
+
 
     /***
      * 处理来自ActiveMQ的消息，
      * @param message
      */
     public void onMessage(Message message) {
+
         try {
 
             if(message instanceof MapMessage){
+
                 MapMessage mm = (MapMessage) message;
 
                 //获取主题信息
-                String listenCmdStr = mm.getString(this.subject);
+                String listenCmdStr = mm.getString("QueueCmd");
                 Gson gson = new Gson();
+
                 //获取命令对象 通过gson
+                /**
+                 * ActiveMQ发给分析程序的数据类型为MapMessage 为队列模式。
+                 * queue名字（desitination）为：/AnalyzeCmd 数据(MapMessage=>ListenCmd).
+                 *  命令内容：
+                 * 1、QueueCmd（name="A",content="null")表示来自有数据来了的通知消息
+                 * 2、QueueCmd（name="B",content="方向指令")表示移动端发来指令的通知消息
+                 */
                 QueueCmd listenCmd = gson.fromJson(listenCmdStr, QueueCmd.class);
 
-                //获取命令
-                String cmd = (String) listenCmd.getContent();
+                //1.如果是 name = A
+                if(listenCmd.getName().equals("A")) {
+                    //do execute things....
 
-                //do execute things....
+                } else if (listenCmd.getName().equals("B")) {//2.如果 name = B
+                    //do execute things....
+
+                }
+
 
 
             } else {

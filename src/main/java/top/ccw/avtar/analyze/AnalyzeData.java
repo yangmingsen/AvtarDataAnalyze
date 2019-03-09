@@ -10,6 +10,8 @@ import top.ccw.avtar.analyze.listen.ConsumerTool;
  */
 public class AnalyzeData implements Runnable{
 
+    static  Thread go = null;
+
     /***
      *
      */
@@ -26,9 +28,9 @@ public class AnalyzeData implements Runnable{
             ConsumerTool consumer = new ConsumerTool();
             consumer.consumeMessage();
 
-            while (ConsumerTool.isconnection) {
-                //System.out.println(123);
-            }
+//            while (ConsumerTool.isconnection) {
+//                //System.out.println(123);
+//            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -36,4 +38,10 @@ public class AnalyzeData implements Runnable{
 
 
     }
+
+    public static void main(String[] args) {
+        go = new Thread(new AnalyzeData(),"task1");
+        go.start();
+    }
+
 }

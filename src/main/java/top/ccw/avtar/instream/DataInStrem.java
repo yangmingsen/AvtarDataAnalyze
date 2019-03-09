@@ -9,6 +9,7 @@ package top.ccw.avtar.instream;
  */
 public class DataInStrem implements Runnable {
 
+
     /***
      * 启动 数据流入程序
      */
@@ -24,5 +25,8 @@ public class DataInStrem implements Runnable {
         }
 
         //do Kafka data inputStream...
+
     }
+
+
 }
