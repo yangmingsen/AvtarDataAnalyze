@@ -1,5 +1,7 @@
 package top.ccw.avtar.instream.clearn;
 
+import com.google.common.base.CharMatcher;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -79,8 +81,8 @@ public class DataClean {
                 String relase_date = year + "-" + rs.getString("relase_date");
 
                 if (job_info != "") {
-                    education_level = job_info.replaceAll("\\s*", "").split("\\|")[2];
-                    work_exper = job_info.replaceAll("\\s*", "").split("\\|")[1];
+                    education_level = CharMatcher.WHITESPACE.trimFrom(job_info).split("\\|")[2];
+                    work_exper = CharMatcher.WHITESPACE.trimFrom(job_info).split("\\|")[1];
                     if (!education_level.contains("本科") && !education_level.contains("大专") && !education_level
                             .contains("博士") && !education_level.contains("硕士") && !education_level.contains("中专") &&
                             !education_level.contains("高中")) {
