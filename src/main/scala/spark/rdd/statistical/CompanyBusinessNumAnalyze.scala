@@ -11,7 +11,7 @@ import utils.{ConvertToJson, dbutils}
   *
   * @author ljq
   */
-object Company_businessNumAnalyze {
+object CompanyBusinessNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
     val rdd1 = jobsRDD.filter(x => {
       (x.companyBusiness != null) && (x.companyBusiness.length != 0)
@@ -26,7 +26,7 @@ object Company_businessNumAnalyze {
     rdd2.collect().toList.map(x => list.add(tb_statistical_companybusiness_num(x._1, x._2)))
 
     //print to Test
-    //println("Company_businessNumAnalyze = " + rdd2.collect().toBuffer)
+    //println("CompanyBusinessNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)
