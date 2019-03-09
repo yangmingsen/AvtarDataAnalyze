@@ -16,6 +16,7 @@ import java.util.Calendar;
  * 建立者： yangmingsen
  */
 public class DataClean {
+
     public static void cleandata() {
 
         Calendar cal = Calendar.getInstance();
@@ -122,8 +123,8 @@ public class DataClean {
         }
     }
 
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         cleandata();
-    }
+    }*/
 
 }
