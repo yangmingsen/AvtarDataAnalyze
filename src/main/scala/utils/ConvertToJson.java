@@ -32,4 +32,10 @@ public class ConvertToJson {
         String gsonStr = gson.toJson(list);
         return gsonStr;
     }
+
+    public static String ToJson4(String list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
 }
