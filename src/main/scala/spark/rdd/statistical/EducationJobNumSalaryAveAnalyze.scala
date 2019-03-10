@@ -3,9 +3,9 @@ package spark.rdd.statistical
 import java.util
 
 import com.google.common.base.CharMatcher
-import entity.{EducationJobNumSalaryAveEntity, JobDataEntity}
+import entity.{EducationJobNumSalaryAve, EducationJobNumSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.dbutils
+import utils.ConvertToJson
 
 /** *
   * 描述：按学历统计每个职位的平均薪资的关系分析
@@ -31,7 +31,6 @@ object EducationJobNumSalaryAveAnalyze {
 
     val list1 = new util.ArrayList[String]()
     val list2 = new util.ArrayList[Double]()
-
     val rdd2 = rdd1.countByKey()
 
     //
@@ -45,14 +44,16 @@ object EducationJobNumSalaryAveAnalyze {
     })
 
     val list = new util.ArrayList[EducationJobNumSalaryAveEntity]()
+    val list3 = new util.ArrayList[EducationJobNumSalaryAve]()
     rdd3.collect().toList.map(x => list.add(entity.EducationJobNumSalaryAveEntity(x._3, x._2, x._1)))
-    rdd3.collect().toList.map(x => list1.add("'"+x._1+"'")&&list2.add(x._3))
+    rdd3.collect().toList.map(x => list1.add("\""+x._1+"\"") && list2.add(x._3))
+    list3.add(EducationJobNumSalaryAve(list1.toString, list2.toString))
     //print to Test
     //println("EducationJobNumSalaryAveAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
-    val list3 = "["+list1+","+list2+"]"
-
-    dbutils.insert(list3, "tb_statistical_education_salaryave")
+    val gsonStr = ConvertToJson.ToJson5(list3)
+    //println(gsonStr.substring(1,gsonStr.length()-1))
+    //dbutils.insert(gsonStr.substring(1,gsonStr.length()-1), "tb_statistical_education_salaryave")
   }
 }

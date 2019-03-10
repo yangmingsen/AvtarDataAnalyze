@@ -3,9 +3,9 @@ package spark.rdd.statistical
 import java.util
 
 import com.google.common.base.CharMatcher
-import entity.{EducationCompanyTypeJobNumEntity, JobDataEntity}
+import entity.{EducationCompanyTypeJobNum, EducationCompanyTypeJobNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.dbutils
+import utils.ConvertToJson
 
 /** *
   * 描述： 按公司类型分类，统计出每种公司类型的学历数的关系分析
@@ -66,13 +66,17 @@ object EducationCompanyTypeJobNumAnalyze {
 
     val list8 = new util.ArrayList[String]()
     for (x <- data2) {
-      list8.add("'" + x + "'")
+      list8.add("\""+x+"\"")
     }
-    val list9 = "[" + list8 + ",[" + list2 + "," + list3 + "," + list4 + "," + list5 + "," + list6 + "," + list7 + "]]"
+    val list9 = new util.ArrayList[EducationCompanyTypeJobNum]()
+    list9.add(EducationCompanyTypeJobNum(list8.toString, list2.toString, list3.toString, list4.toString, list5.toString, list6.toString, list7.toString))
+
     //print to Test
     //println("EducationCompanyTypeJobNumAnalyze = " + rdd3.collect().toBuffer)
 
     //do write database
-    dbutils.insert(list9, "tb_statistical_education_companytype_jobnum")
+    val gsonStr = ConvertToJson.ToJson6(list9)
+    println(gsonStr.substring(1, gsonStr.length() - 1))
+    //dbutils.insert(gsonStr.substring(1, gsonStr.length() - 1), "tb_statistical_education_companytype_jobnum")
   }
 }

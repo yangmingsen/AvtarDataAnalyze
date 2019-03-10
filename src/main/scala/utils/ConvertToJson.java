@@ -1,9 +1,7 @@
 package utils;
 
 import com.google.gson.Gson;
-import entity.tb_statistical_companybusiness_num;
-import entity.tb_statistical_companytype_num;
-import entity.tb_statistical_jobname_num;
+import entity.*;
 
 import java.util.ArrayList;
 
@@ -33,7 +31,18 @@ public class ConvertToJson {
         return gsonStr;
     }
 
-    public static String ToJson4(String list) {
+    public static String ToJson4(ArrayList<SalaryWorkExperJobNumAve> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
+
+    public static String ToJson5(ArrayList<EducationJobNumSalaryAve> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
+    public static String ToJson6(ArrayList<EducationCompanyTypeJobNum> list) {
         Gson gson = new Gson();
         String gsonStr = gson.toJson(list);
         return gsonStr;

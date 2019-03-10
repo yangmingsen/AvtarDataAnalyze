@@ -4,7 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, tb_statistical_jobname_num}
 import org.apache.spark.rdd.RDD
-import utils.{ConvertToJson, dbutils}
+import utils.ConvertToJson
 
 /** *
   * 描述： 通过统计技术计算各个职位名的个数，展示出目前比较火热的职位名
@@ -30,7 +30,7 @@ object JobNameNumAnalyze {
 
     //do write to Databse
     val str = ConvertToJson.ToJson2(list)
-    dbutils.insert(str, "tb_statistical_jobname_num")
+    //dbutils.insert(str, "tb_statistical_jobname_num")
   }
 
 }
