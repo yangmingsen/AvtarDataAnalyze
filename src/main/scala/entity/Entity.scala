@@ -85,7 +85,7 @@ case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum:
   * @param jobNum 对应的职位数
   */
 case class EducationJobNumSalaryAveEntity(val salary: Double, val jobNum: Long, val level: String)
-
+case class EducationJobNumSalaryAve(val education: String, val ave_salary: String)
 /** *
   *
   * @param CompanyType 公司类型
