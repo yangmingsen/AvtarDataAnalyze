@@ -14,6 +14,7 @@ import javax.jms.Message;
 import com.google.gson.Gson;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import top.ccw.avtar.entity.QueueCmd;
 
 
 /***
@@ -105,7 +106,6 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
                     //do execute things....
 
                 }
-
 
 
             } else {

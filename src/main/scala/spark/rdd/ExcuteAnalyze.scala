@@ -61,10 +61,10 @@ object ExcuteAnalyze {
     val jobsData = dataIn()
 
     //进入时状态分析
-    //currentStatus(jobsData,direcion)
+    currentStatus(jobsData,direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData, direcion)
+    //statisticalGraph(jobsData, direcion)
 
   }
 
@@ -85,17 +85,17 @@ object ExcuteAnalyze {
 
     val sqlContext = new SQLContext(sc)
 
-    val jdbcDF = sqlContext.read.format("jdbc").
-      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
-    jdbcDF.registerTempTable("tb_job_info_new")
+//    val jdbcDF = sqlContext.read.format("jdbc").
+//      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
+//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
+//    jdbcDF.registerTempTable("tb_job_info_new")
 
-    /*val jdbcDF = sqlContext.read.format("jdbc").
+    val jdbcDF = sqlContext.read.format("jdbc").
       options(Map("url" -> "jdbc:mysql://127.0.0.1:3306/job_data?characterEncoding=utf8&useSSL=false",
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "root", "password" -> "ymsyms")).load()
-    jdbcDF.registerTempTable("tb_job_info_new")*/
+    jdbcDF.registerTempTable("tb_job_info_new")
 
-    val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 300")
+    val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 3000")
 
     val rdd1 = jobDF.map(x => {
       val direction = x.getInt(1).toString
