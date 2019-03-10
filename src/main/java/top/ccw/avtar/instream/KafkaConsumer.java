@@ -1,10 +1,12 @@
 package top.ccw.avtar.instream;
 
+import com.google.gson.Gson;
 import kafka.consumer.Consumer;
 import kafka.consumer.ConsumerConfig;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
+import top.ccw.avtar.entity.JobDataOne;
 
 
 import java.util.HashMap;
@@ -43,17 +45,12 @@ public class KafkaConsumer {
 
                 //获取kafka中数据
                 String msg = new String(mm.message());
-                System.out.println(msg);
-                System.out.println("---------------");
+
+                Gson gson = new Gson();
+                //得到一个数据对象
+                JobDataOne jobDataOne = gson.fromJson(msg,JobDataOne.class);
 
                 //go data clear program
-
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
 
             }
         }

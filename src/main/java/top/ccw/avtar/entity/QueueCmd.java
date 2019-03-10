@@ -1,4 +1,4 @@
-package top.ccw.avtar.analyze.listen;
+package top.ccw.avtar.entity;
 
 /***
  * 命令对象
