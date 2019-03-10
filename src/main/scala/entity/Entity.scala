@@ -70,6 +70,8 @@ case class tb_statistical_companybusiness_num(name: String, value: Long)
   */
 case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Long, val salary: Double)
 
+case class SalaryWorkExperJobNumAve(val workExper: String, val ave_salary: String)
+
 /** *
   *
   * @param companyType 公司类型
@@ -78,6 +80,8 @@ case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Lon
   */
 case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum: Long, val level: String)
 
+case class EducationCompanyTypeJobNum(val companyType: String, val highSchool: String, val secondarySchool: String, val college: String, val bachelor: String, val masterDegree: String, val doctor: String)
+
 /** *
   *
   * @param level  学历
@@ -85,7 +89,9 @@ case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum:
   * @param jobNum 对应的职位数
   */
 case class EducationJobNumSalaryAveEntity(val salary: Double, val jobNum: Long, val level: String)
+
 case class EducationJobNumSalaryAve(val education: String, val ave_salary: String)
+
 /** *
   *
   * @param CompanyType 公司类型

@@ -66,7 +66,7 @@ object EducationCompanyTypeJobNumAnalyze {
 
     val list8 = new util.ArrayList[String]()
     for (x <- data2) {
-      list8.add("'" + x + "'")
+      list8.add("\""+x+"\"")
     }
     val list9 = new util.ArrayList[EducationCompanyTypeJobNum]()
     list9.add(EducationCompanyTypeJobNum(list8.toString, list2.toString, list3.toString, list4.toString, list5.toString, list6.toString, list7.toString))
@@ -76,7 +76,7 @@ object EducationCompanyTypeJobNumAnalyze {
 
     //do write database
     val gsonStr = ConvertToJson.ToJson6(list9)
-    //println(gsonStr.substring(1, gsonStr.length() - 1))
+    println(gsonStr.substring(1, gsonStr.length() - 1))
     //dbutils.insert(gsonStr.substring(1, gsonStr.length() - 1), "tb_statistical_education_companytype_jobnum")
   }
 }

@@ -5,6 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
+import spark.rdd.statistical.SalaryWorkExperJobNumAveEntityAnalyze
 import top.ccw.avtar.redis.RedisClient
 
 /** *
@@ -163,7 +164,7 @@ object ExcuteAnalyze {
     //CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 SalaryWorkExperJobNumAve
-    //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationCompanyTypeJobNum
     //EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
