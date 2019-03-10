@@ -4,6 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, SalarySiteEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析地区薪资的关系
@@ -47,6 +48,13 @@ object SalarySiteAnalyze {
     //按平均薪资排序
     val rdd5 = rdd4.sortBy(x => x._2, false)
 
+    //职位需求量最大的城市
+    val requireMax = rdd5.sortBy(x => x._3,false).collect().toList.head._1
+
+    //平均薪资水平最高的城市
+    val salaryMax = rdd5.collect().head._1
+
+
     val list = new util.ArrayList[SalarySiteEntity]()
     rdd5.collect().toList.map(x => list.add(SalarySiteEntity(x._1, x._2, x._3)))
 
@@ -54,6 +62,7 @@ object SalarySiteAnalyze {
     println("SalarySiteAnalyze = " + rdd5.collect().toBuffer)
 
     //do write dabase
+    Update.ToTbCurrentSalarySite(list,requireMax,salaryMax)
 
   }
 }

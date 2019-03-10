@@ -4,6 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, TimeSalaryEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析薪资与时间的关系
@@ -54,5 +55,6 @@ object TimeSalaryAnalyze {
 
     //do write database
 
+    Update.ToTbCurrentTimeSalary(list)
   }
 }

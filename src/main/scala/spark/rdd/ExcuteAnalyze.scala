@@ -6,6 +6,8 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
 import spark.rdd.statistical.EducationCompanyTypeJobNumAnalyze
+import top.ccw.avtar.db.Update
+import top.ccw.avtar.db.utils.DateHelper
 import top.ccw.avtar.redis.RedisClient
 
 /** *
@@ -26,6 +28,7 @@ object ExcuteAnalyze {
 
   def test(): Unit = {
 
+    Update.setUpdateInfo(10,DateHelper.getYYYY_MM_DD)
     startAnalyze("10") //test 目前方向是 软件工程
 
   }

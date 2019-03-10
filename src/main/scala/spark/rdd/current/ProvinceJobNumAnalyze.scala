@@ -4,6 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, ProvinceJobNumEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 
 /** *
@@ -45,6 +46,7 @@ object ProvinceJobNumAnalyze {
     println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
+    Update.ToTbCurrentProvinceJobnum(list,jobDayNum,jobWeekNum)
 
   }
 
