@@ -4,6 +4,7 @@ import java.util
 
 import entity.{CompanyTypeJobNumSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /***
   * 描述： 职位在全国范围内公司类型情况（平均薪资，职位数）的分布状况分析
@@ -48,7 +49,7 @@ object CompanyTypeJobNumSalaryAveAnalyze {
     println("CompanyTypeJobNumSalaryAveAnalyze = "+rdd3.collect().toBuffer)
 
     //write to database
-
+    Update.ToTbCurrentCompanytypeJobnum(list)
 
   }
 }

@@ -4,6 +4,7 @@ import java.util
 
 import entity.{EducationJobNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析学历占比
@@ -32,6 +33,7 @@ object EducationJobNumAnalyze {
     println("EducationJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write to Databse
+    Update.ToTbCurrentEducationJobnum(list)
 
   }
 }

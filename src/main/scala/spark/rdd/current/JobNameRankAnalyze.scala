@@ -4,6 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, JobNameRankEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析全国当前方向的职位排名(按薪资)
@@ -33,7 +34,7 @@ object JobNameRankAnalyze {
     val rdd2 = rdd1.sortBy(x => x._2, false)
     val list = new util.ArrayList[JobNameRankEntity]()
 
-    rdd2.collect().toList.map(x => {
+    rdd2.collect().toList.take(10).map(x => {
       list.add(JobNameRankEntity(x._1, x._2, x._3, x._4))
     })
 
@@ -42,6 +43,7 @@ object JobNameRankAnalyze {
     println("JobNameRankAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
+    Update.ToTbCurrentJobnameRank(list)
 
   }
 }
