@@ -41,7 +41,7 @@ object EducationCompanyTypeJobNumAnalyze {
     rdd3.collect().toList.map(x => set.add("'" + x._1 + "'"))
     val data1 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data2 = List("国企", "上市公司", "创业公司", "外资（非欧美）", "外资（欧美）", "民营公司", "合资", "事业单位")
-    val list1 = new util.ArrayList[String]()
+    val list1 = new util.ArrayList[Long]()
 
     for (y <- data1) {
       for (z <- data2) {
@@ -49,10 +49,10 @@ object EducationCompanyTypeJobNumAnalyze {
           x._3.equals(y) && x._1.equals(z)
         }).cache()
         if (rdd.count() > 0) {
-          rdd.collect().toList.map(x => list1.add(x._2.toString))
+          rdd.collect().toList.map(x => list1.add(x._2))
         }
         else {
-          list1.add("0")
+          list1.add(0)
         }
       }
     }
@@ -66,10 +66,10 @@ object EducationCompanyTypeJobNumAnalyze {
 
     val list8 = new util.ArrayList[String]()
     for (x <- data2) {
-      list8.add("\""+x+"\"")
+      list8.add(x)
     }
     val list9 = new util.ArrayList[EducationCompanyTypeJobNum]()
-    list9.add(EducationCompanyTypeJobNum(list8.toString, list2.toString, list3.toString, list4.toString, list5.toString, list6.toString, list7.toString))
+    list9.add(EducationCompanyTypeJobNum(list8, list2, list3, list4, list5, list6, list7))
 
     //print to Test
     //println("EducationCompanyTypeJobNumAnalyze = " + rdd3.collect().toBuffer)

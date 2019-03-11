@@ -1,5 +1,7 @@
 package entity
 
+import java.util
+
 /** *
   *
   * @param date   日期
@@ -70,7 +72,7 @@ case class tb_statistical_companybusiness_num(name: String, value: Long)
   */
 case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Long, val salary: Double)
 
-case class SalaryWorkExperJobNumAve(val workExper: String, val ave_salary: String)
+case class SalaryWorkExperJobNumAve(val workExper: util.ArrayList[String], val ave_salary: util.ArrayList[Double])
 
 /** *
   *
@@ -80,7 +82,7 @@ case class SalaryWorkExperJobNumAve(val workExper: String, val ave_salary: Strin
   */
 case class EducationCompanyTypeJobNumEntity(val companyType: String, val jobNum: Long, val level: String)
 
-case class EducationCompanyTypeJobNum(val companyType: String, val highSchool: String, val secondarySchool: String, val college: String, val bachelor: String, val masterDegree: String, val doctor: String)
+case class EducationCompanyTypeJobNum(val companyType: util.ArrayList[String], val highSchool: util.List[Long], val secondarySchool: util.List[Long], val college: util.List[Long], val bachelor: util.List[Long], val masterDegree: util.List[Long], val doctor: util.List[Long])
 
 /** *
   *
@@ -90,7 +92,7 @@ case class EducationCompanyTypeJobNum(val companyType: String, val highSchool: S
   */
 case class EducationJobNumSalaryAveEntity(val salary: Double, val jobNum: Long, val level: String)
 
-case class EducationJobNumSalaryAve(val education: String, val ave_salary: String)
+case class EducationJobNumSalaryAve(val education: util.ArrayList[String], val ave_salary: util.ArrayList[Double])
 
 /** *
   *

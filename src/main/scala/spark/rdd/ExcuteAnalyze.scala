@@ -31,6 +31,8 @@ object ExcuteAnalyze {
     Update.setUpdateInfo(10,DateHelper.getYYYY_MM_DD)
     startAnalyze("10") //test 目前方向是 软件工程
 
+
+
   }
 
   /** *
