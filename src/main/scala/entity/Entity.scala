@@ -1,5 +1,7 @@
 package entity
 
+import java.util
+
 /** *
   *
   * @param date   日期
@@ -70,7 +72,7 @@ case class tb_statistical_companybusiness_num(name: String, value: Long)
   */
 case class SalaryWorkExperJobNumAveEntity(val workExper: String, val jobNum: Long, val salary: Double)
 
-case class SalaryWorkExperJobNumAve(val workExper: String, val ave_salary: String)
+case class SalaryWorkExperJobNumAve(val workExper: util.ArrayList[String], val ave_salary: util.ArrayList[Double])
 
 /** *
   *
