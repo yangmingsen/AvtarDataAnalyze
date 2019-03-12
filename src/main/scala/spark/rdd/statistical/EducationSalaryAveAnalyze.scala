@@ -28,28 +28,24 @@ object EducationSalaryAveAnalyze {
       val ave = (min.toDouble + max.toDouble) / 2.0
       val relaseDate = x.relaseDate
       ((level, relaseDate), ave)
-      /*if(relaseDate<=data1(0))
-        ((level,"01-3"), ave)
-      else if(relaseDate>data1(0)&&relaseDate<=data1(1))
-        ((level,"01-10"), ave)
-      else if(relaseDate>data1(1)&&relaseDate<=data1(2))
-        ((level,"01-17"), ave)
-      else if(relaseDate>data1(2)&&relaseDate<=data1(3))
-        ((level,"01-24"), ave)
-      else if(relaseDate>data1(3)&&relaseDate<=data1(4))
-        ((level,"01-31"), ave)*/
     })
 
     for (y <- data2) {
       val rdd2 = rdd1.filter(x => {
-        x._1._2 <= data1(0) && x._1._1.equals(y)
+        isWeekRange(x._1._2) == 1 && x._1._1.equals(y)
+      }).map(x=>{
+        ((x._1._1,"2019-"+data1(0)),x._2)
       })
-      val rdd3 = rdd2.reduceByKey(_ + _).map(x => {
-        val num = rdd2.count()
-        val ave_salary = (x._2 / num).formatted("%.2f").toDouble
-        (x._1._1, ave_salary, data1(0))
-      })
-      println(rdd3.collect().toBuffer)
+         val rdd3 = rdd2.countByKey()
+         val rdd4 = rdd2.reduceByKey(_ + _).map(x => {
+         val num = rdd3.get(x._1) match {
+           case Some(v) => v.toLong
+           case None => 1
+         }
+         val ave_salary = (x._2 / num).formatted("%.2f").toDouble
+         (x._1._1, ave_salary, "2019-"+data1(0))
+       })
+       println(rdd4.collect().toBuffer)
     }
 
     val list1 = new util.ArrayList[Double]()
@@ -71,10 +67,22 @@ object EducationSalaryAveAnalyze {
 
     //print to Test
     //println("EducationSalaryAveAnalyze = " + rdd3.collect().toBuffer)
-
+    //println(rdd2.collect().toBuffer)
     //write to database
+  }
 
-
+  def isWeekRange(date: String): Int = {
+    val day = date.substring(8, date.length).toInt
+    if (day <= 3)
+      1
+    else if (day > 3 & day <= 10)
+      2
+    else if (day > 10 && day <= 17)
+      3
+    else if (day > 17 && day <= 24)
+      4
+    else
+      5
   }
 
 }

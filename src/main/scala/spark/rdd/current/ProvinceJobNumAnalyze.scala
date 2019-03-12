@@ -46,7 +46,7 @@ object ProvinceJobNumAnalyze {
     println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
-    Update.ToTbCurrentProvinceJobnum(list,jobDayNum,jobWeekNum)
+    Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum)
 
   }
 

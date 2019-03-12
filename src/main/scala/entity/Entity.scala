@@ -114,10 +114,10 @@ case class tb_statistical_jobname_num(name: String, value: Long)
 
 /** *
   *
-  * @param level  学历
-  * @param salary 对应的平均薪资
+  * @param relaseDate 日期
+  * @param ave_salary 对应的平均薪资
   */
-case class EducationSalaryAveEntity(val level: String, val salary: Double)
+case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String], val ave_salary: util.ArrayList[Double])
 
 /** *
   *
