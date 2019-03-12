@@ -5,7 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
-import spark.rdd.statistical.EducationSalaryAveAnalyze
+import spark.rdd.statistical.CompanyTypeSalaryAveAnalyze
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.db.utils.DateHelper
 import top.ccw.avtar.redis.RedisClient
@@ -183,10 +183,10 @@ object ExcuteAnalyze {
     //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationSalaryAve
-    EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    //EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeSalaryAve
-    //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

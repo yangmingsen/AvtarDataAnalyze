@@ -47,4 +47,14 @@ public class ConvertToJson {
         String gsonStr = gson.toJson(list);
         return gsonStr;
     }
+    public static String ToJson7(ArrayList<EducationSalaryAveEntity> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
+    public static String ToJson8(ArrayList<CompanyTypeSalaryAveEntity> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
 }

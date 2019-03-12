@@ -19,7 +19,7 @@ object EducationCompanyTypeJobNumAnalyze {
       * 获取 （公司类型,学历)
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.educationLevel.length != 0) && (CharMatcher.WHITESPACE.trimFrom(x.companyType) != "")
+      (x.educationLevel.length != 0) && x.educationLevel!="" && (CharMatcher.WHITESPACE.trimFrom(x.companyType) != "")
     }).map(x => {
       val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
       val companyType = x.companyType

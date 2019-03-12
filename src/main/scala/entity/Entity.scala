@@ -115,16 +115,10 @@ case class tb_statistical_jobname_num(name: String, value: Long)
 /** *
   *
   * @param relaseDate 日期
-  * @param ave_salary 对应的平均薪资
   */
-case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String], val ave_salary: util.ArrayList[Double])
+case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String],  val education: util.ArrayList[String],val highSchool: util.List[Double], val secondarySchool: util.List[Double], val college: util.List[Double], val bachelor: util.List[Double], val masterDegree: util.List[Double], val doctor: util.List[Double])
 
-/** *
-  *
-  * @param companyType 公司类型
-  * @param salary      对应的平均薪资
-  */
-case class CompanyTypeSalaryAveEntity(val companyType: String, val salary: Double)
+case class CompanyTypeSalaryAveEntity(val relaseDate: util.ArrayList[String],val source: util.ArrayList[util.List[Object]])
 
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
