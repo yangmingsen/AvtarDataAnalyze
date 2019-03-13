@@ -118,7 +118,7 @@ case class tb_statistical_jobname_num(name: String, value: Long)
   */
 case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String],  val education: util.ArrayList[String],val highSchool: util.List[Double], val secondarySchool: util.List[Double], val college: util.List[Double], val bachelor: util.List[Double], val masterDegree: util.List[Double], val doctor: util.List[Double])
 
-case class CompanyTypeSalaryAveEntity(val relaseDate: util.ArrayList[String],val source: util.ArrayList[util.List[Object]])
+case class CompanyTypeSalaryAveEntity(val source: util.ArrayList[Object])
 
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,

@@ -59,21 +59,42 @@ object CompanyTypeSalaryAveAnalyze {
       }
     }
 
-    val list2 = list1.subList(0, 6)
-    val list3 = list1.subList(6, 12)
-    val list4 = list1.subList(12, 18)
-    val list5 = list1.subList(18, 24)
-    val list6 = list1.subList(24, 30)
-    val list7 = list1.subList(30, 36)
-    val list8 = list1.subList(36, 42)
-    val list9 = list1.subList(42, 48)
+    val list2 = new util.ArrayList[Object]()
+    val list3 = new util.ArrayList[Object]()
+    val list4 = new util.ArrayList[Object]()
+    val list5 = new util.ArrayList[Object]()
+    val list6 = new util.ArrayList[Object]()
+    val list7 = new util.ArrayList[Object]()
+    val list8 = new util.ArrayList[Object]()
+    val list9 = new util.ArrayList[Object]()
+
+    for (i <- 0 until list1.size()) {
+      if (0 <= i && i < 6)
+        list2.add(list1.get(i))
+      else if (6 <= i && i < 12)
+        list3.add(list1.get(i))
+      else if (12 <= i && i < 18)
+        list4.add(list1.get(i))
+      else if (18 <= i && i < 24)
+        list5.add(list1.get(i))
+      else if (24 <= i && i < 30)
+        list6.add(list1.get(i))
+      else if (30 <= i && i < 36)
+        list7.add(list1.get(i))
+      else if (36 <= i && i < 42)
+        list8.add(list1.get(i))
+      else
+        list9.add(list1.get(i))
+    }
+
 
     val list10 = new util.ArrayList[String]()
     list10.add("date")
     for (x <- data1) {
       list10.add(x)
     }
-    val list11 = new util.ArrayList[util.List[Object]]()
+    val list11 = new util.ArrayList[Object]()
+    list11.add(list10)
     list11.add(list2)
     list11.add(list3)
     list11.add(list4)
@@ -83,7 +104,7 @@ object CompanyTypeSalaryAveAnalyze {
     list11.add(list8)
     list11.add(list9)
     val list = new util.ArrayList[CompanyTypeSalaryAveEntity]()
-    list.add(CompanyTypeSalaryAveEntity(list10, list11))
+    list.add(CompanyTypeSalaryAveEntity(list11))
 
     //print to Test
     //println("CompanyTypeSalaryAveAnalyze = " + rdd3.collect().toBuffer)
