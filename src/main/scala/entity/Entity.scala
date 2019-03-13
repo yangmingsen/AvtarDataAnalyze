@@ -120,6 +120,8 @@ case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String],  val
 
 case class CompanyTypeSalaryAveEntity(val source: util.ArrayList[Object])
 
+case class IntermediateDataLayerEntity(val source: util.ArrayList[Object])
+
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
                          jobResp: String, jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
