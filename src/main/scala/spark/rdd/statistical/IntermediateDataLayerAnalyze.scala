@@ -3,7 +3,7 @@ package spark.rdd.statistical
 import java.util
 
 import com.google.common.base.CharMatcher
-import entity.JobDataEntity
+import entity.{IntermediateDataLayerEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 import utils.ConvertToJson
 
@@ -95,7 +95,7 @@ object IntermediateDataLayerAnalyze {
     rdd15.foreach(x => list.add("value7\":\""+x._1))
 
     //do write to Databse
-    val str = ConvertToJson.ToJson9(list)
+    val str = ConvertToJson.ToJson9(IntermediateDataLayerEntity(list))
     println(str)
     //dbutils.insert(str, "tb_statistical_companybusiness_num")
   }
