@@ -57,7 +57,7 @@ public class ConvertToJson {
         String gsonStr = gson.toJson(list);
         return gsonStr;
     }
-    public static String ToJson9(IntermediateDataLayerEntity list) {
+    public static String ToJson9(ArrayList<IntermediateDataLayerEntity> list) {
         Gson gson = new Gson();
         String gsonStr = gson.toJson(list);
         return gsonStr;
