@@ -43,9 +43,9 @@ public class JobDataTwoDao {
 
         String sql = "INSERT INTO tb_job_info_new (`direction`,`job_name`,`company_name`,"
                 + "`job_site`,`job_salary_min`,`job_salary_max`,`relase_date`,`education_level`,"
-                + "`work_exper`,`company_welfare`,`job_resp`,`job_require`,`company_type`,`company_people_num`,`company_business`)"
+                + "`work_exper`,`company_welfare`,`job_require`,`company_type`,`company_people_num`,`company_business`)"
                 + "VALUES(?,?,?,?,?,"
-                + "?,?,?,?,?,"
+                + "?,?,?,?,"
                 + "?,?,?,?,?)";
 
         try {
@@ -63,11 +63,10 @@ public class JobDataTwoDao {
                 pstmt.setString(8, job.getEducationLevel());
                 pstmt.setString(9, job.getWorkExper());
                 pstmt.setString(10, job.getCompanyWelfare());
-                pstmt.setString(11, job.getJobResp());
-                pstmt.setString(12, job.getJobRequire());
-                pstmt.setString(13, job.getCompanyType());
-                pstmt.setString(14, job.getCompanyPeopleNum());
-                pstmt.setString(15, job.getCompanyBusiness());
+                pstmt.setString(11, job.getJobRequire());
+                pstmt.setString(12, job.getCompanyType());
+                pstmt.setString(13, job.getCompanyPeopleNum());
+                pstmt.setString(14, job.getCompanyBusiness());
 
                 pstmt.addBatch();
 
