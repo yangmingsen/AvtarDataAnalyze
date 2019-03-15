@@ -126,7 +126,7 @@ case class IntermediateDataLayerEntity(val data: util.ArrayList[IntermediateData
 
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
-                         jobResp: String, jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
+                         jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
 
 class Entity {
 
