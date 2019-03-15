@@ -27,7 +27,7 @@ object CompanyBusinessNumAnalyze {
 
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)
-    println(str)
+    //println(str)
     //dbutils.update_statistical("tb_statistical_companybusiness_num", str)
   }
 }

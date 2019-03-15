@@ -5,7 +5,7 @@ import java.util
 import com.google.common.base.CharMatcher
 import entity.{EducationJobNumSalaryAve, EducationJobNumSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.{ConvertToJson, dbutils}
+import utils.ConvertToJson
 
 /** *
   * 描述：按学历统计每个职位的平均薪资的关系分析
@@ -53,6 +53,6 @@ object EducationJobNumSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson5(list3)
     //println(gsonStr.substring(1,gsonStr.length()-1))
 
-    dbutils.update_statistical("tb_statistical_education_salaryave",gsonStr.substring(1,gsonStr.length()-1))
+    //dbutils.update_statistical("tb_statistical_education_salaryave",gsonStr.substring(1,gsonStr.length()-1))
   }
 }

@@ -5,7 +5,7 @@ import java.util
 import com.google.common.base.CharMatcher
 import entity.{EducationSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.{ConvertToJson, dbutils}
+import utils.ConvertToJson
 
 /** *
   * 描述： 以时间为轴，分析学历薪资历史走向
@@ -79,7 +79,7 @@ object EducationSalaryAveAnalyze {
     //write to database
     val gsonStr = ConvertToJson.ToJson7(list)
     //println(gsonStr.substring(1, gsonStr.length() - 1))
-    dbutils.update_statistical("tb_statistical_education_jobnum_salaryave",gsonStr.substring(1,gsonStr.length()-1))
+    //dbutils.update_statistical("tb_statistical_education_jobnum_salaryave",gsonStr.substring(1,gsonStr.length()-1))
 
   }
 

@@ -8,7 +8,7 @@ import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
 import org.ansj.splitWord.analysis.DicAnalysis
 import org.apache.spark.rdd.RDD
-import utils.{ConvertToJson, dbutils}
+import utils.ConvertToJson
 
 import scala.io.Source
 
@@ -157,6 +157,6 @@ object IntermediateDataLayerAnalyze {
     list0.add(IntermediateDataLayerEntity(list))
     val str = ConvertToJson.ToJson9(list0)
     //println(str.substring(1, str.length() - 1))
-    dbutils.update_statistical("tb_statistical_mediatedatalayer",str.substring(1, str.length() - 1))
+    //dbutils.update_statistical("tb_statistical_mediatedatalayer",str.substring(1, str.length() - 1))
   }
 }
