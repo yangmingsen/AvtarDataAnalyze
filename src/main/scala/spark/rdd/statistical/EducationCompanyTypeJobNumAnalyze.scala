@@ -71,12 +71,10 @@ object EducationCompanyTypeJobNumAnalyze {
     val list9 = new util.ArrayList[EducationCompanyTypeJobNum]()
     list9.add(EducationCompanyTypeJobNum(list8, list2, list3, list4, list5, list6, list7))
 
-    //print to Test
-    //println("EducationCompanyTypeJobNumAnalyze = " + rdd3.collect().toBuffer)
-
     //do write database
     val gsonStr = ConvertToJson.ToJson6(list9)
-    println(gsonStr.substring(1, gsonStr.length() - 1))
-    //dbutils.insert(gsonStr.substring(1, gsonStr.length() - 1), "tb_statistical_education_companytype_jobnum")
+    //println(gsonStr.substring(1, gsonStr.length() - 1))
+
+    //dbutils.update_statistical("tb_statistical_education_companytype_jobnum",gsonStr.substring(1, gsonStr.length() - 1))
   }
 }

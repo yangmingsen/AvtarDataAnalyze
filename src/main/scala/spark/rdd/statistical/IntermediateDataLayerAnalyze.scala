@@ -14,7 +14,7 @@ import scala.io.Source
 
 /**
   * @author ljq
-  *         created on 2019-03-13 19:10
+  *         Created on 2019-03-13 19:10
   **/
 object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
@@ -23,7 +23,6 @@ object IntermediateDataLayerAnalyze {
       x.jobName.length != 0
     }).map(x => {
       val direction = x.direction
-      /*val jobName = x.jobName*/
       (direction, 1)
     })
     val rdd2 = rdd1.reduceByKey(_ + _)
@@ -115,7 +114,7 @@ object IntermediateDataLayerAnalyze {
     list7.add("需求最大的工作经验要求")
     rdd15.foreach(x => list7.add(x._1))
 
-    val data = jobsRDD.map(x => x.jobResp)
+    val data = jobsRDD.map(x => x.jobRequire)
 
     val data1 = new util.ArrayList[String]()
     for (word <- Source.fromFile("/home/zq/Desktop/ability.txt", "GBK").getLines()) {
@@ -157,7 +156,7 @@ object IntermediateDataLayerAnalyze {
     list.add(IntermediateDataLayerEntity1(list1, list2, list3, list4, list5, list6, list7, list8, list9))
     list0.add(IntermediateDataLayerEntity(list))
     val str = ConvertToJson.ToJson9(list0)
-    println(str.substring(1, str.length() - 1))
-    //dbutils.insert(str, "tb_statistical_companybusiness_num")
+    //println(str.substring(1, str.length() - 1))
+    //dbutils.update_statistical("tb_statistical_mediatedatalayer",str.substring(1, str.length() - 1))
   }
 }

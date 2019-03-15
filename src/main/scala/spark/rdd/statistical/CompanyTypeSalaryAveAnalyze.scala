@@ -106,12 +106,10 @@ object CompanyTypeSalaryAveAnalyze {
     val list = new util.ArrayList[CompanyTypeSalaryAveEntity]()
     list.add(CompanyTypeSalaryAveEntity(list11))
 
-    //print to Test
-    //println("CompanyTypeSalaryAveAnalyze = " + rdd3.collect().toBuffer)
-
     //write to database
     val gsonStr = ConvertToJson.ToJson8(list)
-    println(gsonStr.substring(1, gsonStr.length() - 1))
+    //println(gsonStr.substring(1, gsonStr.length() - 1))
+    //dbutils.update_statistical("tb_statistical_companytype_salary", gsonStr.substring(1, gsonStr.length() - 1))
 
   }
 

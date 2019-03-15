@@ -48,12 +48,11 @@ object EducationJobNumSalaryAveAnalyze {
     rdd3.collect().toList.map(x => list.add(entity.EducationJobNumSalaryAveEntity(x._3, x._2, x._1)))
     rdd3.collect().toList.map(x => list1.add(x._1) && list2.add(x._3))
     list3.add(EducationJobNumSalaryAve(list1, list2))
-    //print to Test
-    //println("EducationJobNumSalaryAveAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
     val gsonStr = ConvertToJson.ToJson5(list3)
-    println(gsonStr.substring(1,gsonStr.length()-1))
-    //dbutils.insert(gsonStr.substring(1,gsonStr.length()-1), "tb_statistical_education_salaryave")
+    //println(gsonStr.substring(1,gsonStr.length()-1))
+
+    //dbutils.update_statistical("tb_statistical_education_salaryave",gsonStr.substring(1,gsonStr.length()-1))
   }
 }

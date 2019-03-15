@@ -53,13 +53,11 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
     rdd3.collect().toList.map(x => list.add(entity.SalaryWorkExperJobNumAveEntity(x._1, x._2, x._3)))
     rdd3.collect().toList.map(x => list1.add(x._1) && list2.add(x._3))
     list3.add(SalaryWorkExperJobNumAve(list1, list2))
-    //print to Test
-    //println("SalaryWorkExperJobNumAveEntityAnalyze = " + rdd3.collect().toBuffer)
 
     //write to database
     val gsonStr = ConvertToJson.ToJson4(list3)
-    println(gsonStr.substring(1,gsonStr.length()-1))
-    //dbutils.i nsert(gsonStr.substring(1,gsonStr.length()-1), "tb_statistical_salary_workexper_jobnumave")
+    //println(gsonStr.substring(1,gsonStr.length()-1))
+    //dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", gsonStr.substring(1, gsonStr.length() - 1))
 
   }
 

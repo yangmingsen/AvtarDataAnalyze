@@ -25,11 +25,9 @@ object CompanyBusinessNumAnalyze {
 
     rdd2.collect().toList.map(x => list.add(tb_statistical_companybusiness_num(x._1, x._2)))
 
-    //print to Test
-    //println("CompanyBusinessNumAnalyze = " + rdd2.collect().toBuffer)
-
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)
-    //dbutils.insert(str, "tb_statistical_companybusiness_num")
+    //println(str)
+    //dbutils.update_statistical("tb_statistical_companybusiness_num", str)
   }
 }
