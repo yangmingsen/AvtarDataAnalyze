@@ -7,6 +7,7 @@ public class WebSocketClient {
     public static void initClient(MessageServiceWebSocket client) {
         socketClient = client;
         socketClient.connect();
+
     }
 
     public static void sendMsg() {

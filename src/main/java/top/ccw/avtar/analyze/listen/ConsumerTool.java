@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import top.ccw.avtar.entity.QueueCmd;
+import top.ccw.avtar.task.AnalyzeTask;
 
 
 /***
@@ -101,6 +102,8 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
                 //1.如果是 name = A
                 if(listenCmd.getName().equals("A")) {
                     //do execute things....
+                    Thread analyzeTask = new Thread(new AnalyzeTask(listenCmd),"analyzeTask");
+                    analyzeTask.start();
 
                 } else if (listenCmd.getName().equals("B")) {//2.如果 name = B
                     //do execute things....

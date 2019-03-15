@@ -43,7 +43,7 @@ object JobNameRankAnalyze {
     println("JobNameRankAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
-    Update.ToTbCurrentJobnameRank(list)
+    //Update.ToTbCurrentJobnameRank(list)
 
   }
 }

@@ -33,7 +33,7 @@ object EducationJobNumAnalyze {
     println("EducationJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write to Databse
-    Update.ToTbCurrentEducationJobnum(list)
+    //Update.ToTbCurrentEducationJobnum(list)
 
   }
 }
