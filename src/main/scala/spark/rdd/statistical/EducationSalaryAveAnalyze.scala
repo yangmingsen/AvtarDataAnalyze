@@ -5,7 +5,7 @@ import java.util
 import com.google.common.base.CharMatcher
 import entity.{EducationSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, dbutils}
 
 /** *
   * 描述： 以时间为轴，分析学历薪资历史走向
@@ -76,12 +76,11 @@ object EducationSalaryAveAnalyze {
     val list = new util.ArrayList[EducationSalaryAveEntity]()
     list.add(EducationSalaryAveEntity(list8, list9, list2, list3, list4, list5, list6, list7))
 
-
-    //print to Test
-    //println("EducationSalaryAveAnalyze = " + rdd3.collect().toBuffer)
     //write to database
     val gsonStr = ConvertToJson.ToJson7(list)
-    println(gsonStr.substring(1, gsonStr.length() - 1))
+    //println(gsonStr.substring(1, gsonStr.length() - 1))
+    dbutils.update_statistical("tb_statistical_education_jobnum_salaryave",gsonStr.substring(1,gsonStr.length()-1))
+
   }
 
   def isWeekRange(date: String): Int = {

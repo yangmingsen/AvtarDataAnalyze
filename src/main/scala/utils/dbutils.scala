@@ -7,7 +7,7 @@ import java.sql.{Connection, DriverManager}
   *
   **/
 object dbutils {
-  def insert(result: String, sqlstr: String): Unit = {
+  def update_statistical(dbname: String, result: String): Unit = {
     val Driver = "com.mysql.jdbc.Driver"
     val url = "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com:3306/job_data?useUnicode=true&characterEncoding=utf8" +
       "&useSSL=false"
@@ -16,10 +16,8 @@ object dbutils {
     try {
       Class.forName(Driver)
       conn = DriverManager.getConnection(url, "user", "Group1234")
-      ps = conn.prepareStatement(sqlstr)
+      ps = conn.prepareStatement("update " + dbname + " set result=? where id=1")
       ps.setString(1, result)
-      ps.setInt(2, 10)
-      ps.setInt(3, 14)
       ps.executeUpdate()
     }
     catch {

@@ -5,10 +5,9 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
-import spark.rdd.statistical.IntermediateDataLayerAnalyze
 import top.ccw.avtar.db.Update
-import top.ccw.avtar.utils.DateHelper
 import top.ccw.avtar.redis.RedisClient
+import top.ccw.avtar.utils.DateHelper
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -188,7 +187,7 @@ object ExcuteAnalyze {
     //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //中间数据层 IntermediateDataLayer
-    IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

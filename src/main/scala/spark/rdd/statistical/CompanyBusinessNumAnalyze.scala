@@ -4,7 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, tb_statistical_companybusiness_num}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, dbutils}
 
 /** *
   * 描述： 分析相同公司业务的词频
@@ -30,6 +30,6 @@ object CompanyBusinessNumAnalyze {
 
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)
-    //dbutils.insert(str, "tb_statistical_companybusiness_num")
+    dbutils.update_statistical("tb_statistical_companybusiness_num", str)
   }
 }
