@@ -1,7 +1,7 @@
 package top.ccw.avtar.db.dao;
 
 import top.ccw.avtar.db.entity.EducationJobNumThree;
-import top.ccw.avtar.db.utils.JdbcUtil;
+import top.ccw.avtar.utils.JdbcUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

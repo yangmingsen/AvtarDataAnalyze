@@ -48,6 +48,7 @@ public class DataClean {
                 String work_exper = null;
                 String job_resp = null;
                 String job_require = null;
+
                 if (job_salary.contains("千/月")) {
                     double firstnum = Double.valueOf(job_salary.substring(0, job_salary.length() - 3).split("-")[0]);
                     double secondnum = Double.valueOf(job_salary.substring(0, job_salary.length() - 3).split("-")[1]);
@@ -110,6 +111,7 @@ public class DataClean {
                     job_require = rs.getString("job_info2").replaceAll("\\t", "").replaceAll("[ ]+", " ")
                             .replaceAll("(?m)^\\s*$(\\n|\\r\\n)", "").substring(4, x);
                 }
+
                 String company_type = rs.getString("company_type");
                 String company_people_num = rs.getString("company_people_num");
                 String company_business = rs.getString("company_business");

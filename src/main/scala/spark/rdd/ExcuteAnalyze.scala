@@ -7,7 +7,7 @@ import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
 import spark.rdd.statistical.EducationCompanyTypeJobNumAnalyze
 import top.ccw.avtar.db.Update
-import top.ccw.avtar.db.utils.DateHelper
+import top.ccw.avtar.utils.DateHelper
 import top.ccw.avtar.redis.RedisClient
 
 /** *

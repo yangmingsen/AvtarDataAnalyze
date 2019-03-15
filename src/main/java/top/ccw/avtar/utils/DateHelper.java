@@ -1,4 +1,4 @@
-package top.ccw.avtar.db.utils;
+package top.ccw.avtar.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

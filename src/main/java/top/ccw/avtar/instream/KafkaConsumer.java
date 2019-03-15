@@ -50,6 +50,10 @@ public class KafkaConsumer {
                 //得到一个数据对象
                 JobDataOne jobDataOne = gson.fromJson(msg,JobDataOne.class);
 
+                System.out.println("jobinfo = "+jobDataOne.toString());
+
+
+
                 //go data clear program
 
             }
