@@ -115,7 +115,7 @@ object IntermediateDataLayerAnalyze {
     list7.add("需求最大的工作经验要求")
     rdd15.foreach(x => list7.add(x._1))
 
-    val data = jobsRDD.map(x => x.jobResp)
+    val data = jobsRDD.map(x => x.jobRequire)
 
     val data1 = new util.ArrayList[String]()
     for (word <- Source.fromFile("/home/zq/Desktop/ability.txt", "GBK").getLines()) {
