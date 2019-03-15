@@ -19,7 +19,7 @@ object EducationJobNumSalaryAveAnalyze {
       * 获取 （学历,最小薪资,最大薪资）
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
+      (x.jobSalaryMin.length != 0) && x.educationLevel!="" && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
     }).map(x => {
       val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
       val min = x.jobSalaryMin.toDouble

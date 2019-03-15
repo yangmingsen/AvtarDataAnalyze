@@ -114,17 +114,15 @@ case class tb_statistical_jobname_num(name: String, value: Long)
 
 /** *
   *
-  * @param level  学历
-  * @param salary 对应的平均薪资
+  * @param relaseDate 日期
   */
-case class EducationSalaryAveEntity(val level: String, val salary: Double)
+case class EducationSalaryAveEntity(val relaseDate: util.ArrayList[String],  val education: util.ArrayList[String],val highSchool: util.List[Double], val secondarySchool: util.List[Double], val college: util.List[Double], val bachelor: util.List[Double], val masterDegree: util.List[Double], val doctor: util.List[Double])
 
-/** *
-  *
-  * @param companyType 公司类型
-  * @param salary      对应的平均薪资
-  */
-case class CompanyTypeSalaryAveEntity(val companyType: String, val salary: Double)
+case class CompanyTypeSalaryAveEntity(val source: util.ArrayList[Object])
+
+case class IntermediateDataLayerEntity1(val current_total_positions: util.ArrayList[String],val most_popular_position: util.ArrayList[String],val average_salary: util.ArrayList[String],val city_with_the_greatest_demand: util.ArrayList[String],val the_most_demanding_academic_requirements: util.ArrayList[String],val the_type_of_company_with_the_most_demand: util.ArrayList[String],val the_workexpr_with_the_most_demand: util.ArrayList[String],val maximum_demand_ability: util.ArrayList[String],val most_popular_technology: util.ArrayList[String])
+
+case class IntermediateDataLayerEntity(val data: util.ArrayList[IntermediateDataLayerEntity1])
 
 case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
