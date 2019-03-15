@@ -5,6 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
+import spark.rdd.statistical.CompanyBusinessNumAnalyze
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
 import top.ccw.avtar.utils.DateHelper
@@ -27,8 +28,8 @@ object ExcuteAnalyze {
 
   def test(): Unit = {
 
-    Update.setUpdateInfo(9, DateHelper.getYYYY_MM_DD)
-    startAnalyze("9") //test 目前方向是 软件工程
+    Update.setUpdateInfo(10, DateHelper.getYYYY_MM_DD)
+    startAnalyze("10") //test 目前方向是 软件工程
 
 
   }
@@ -64,10 +65,10 @@ object ExcuteAnalyze {
     val jobsData = dataIn()
 
     //进入时状态分析
-    currentStatus(jobsData, direcion)
+    //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    //statisticalGraph(jobsData, direcion)
+    statisticalGraph(jobsData, direcion)
 
   }
 
@@ -88,17 +89,17 @@ object ExcuteAnalyze {
 
     val sqlContext = new SQLContext(sc)
 
-//    val jdbcDF = sqlContext.read.format("jdbc").
-//      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
-//    jdbcDF.registerTempTable("tb_job_info_new")
-
     val jdbcDF = sqlContext.read.format("jdbc").
-      options(Map("url" -> "jdbc:mysql://127.0.0.1:3306/job_data?characterEncoding=utf8&useSSL=false",
-        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "root", "password" -> "ymsyms")).load()
+      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
+        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
     jdbcDF.registerTempTable("tb_job_info_new")
 
-    val jobDF = sqlContext.sql("SELECT * FROM `job_data_all` WHERE direction_id=9")
+    /*val jdbcDF = sqlContext.read.format("jdbc").
+      options(Map("url" -> "jdbc:mysql://127.0.0.1:3306/job_data?characterEncoding=utf8&useSSL=false",
+        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "root", "password" -> "ymsyms")).load()
+    jdbcDF.registerTempTable("tb_job_info_new")*/
+
+    val jobDF = sqlContext.sql("SELECT * FROM `tb_job_info_new` WHERE id BETWEEN 1 AND 3000")
 
     val rdd1 = jobDF.map(x => {
       val direction = x.getInt(1).toString
@@ -163,7 +164,7 @@ object ExcuteAnalyze {
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析 Company_businessNum
-    //CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 SalaryWorkExperJobNumAve
     //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)

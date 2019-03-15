@@ -98,8 +98,8 @@ object KafkaInput {
 
 
     JobDataEntity(direction,jobName,companyName,jobSiteProvinces,jobSite,jobSalaryMin,jobSalaryMax,
-      relaseDate,educationLevel,workExper,companyWelfare,jobResp,jobRequire,
-      companyType,companyPeopleNum,companyBusiness )
+      relaseDate,educationLevel,workExper,companyWelfare,jobRequire,
+      companyType,companyPeopleNum,companyBusiness)
   }
 
 
