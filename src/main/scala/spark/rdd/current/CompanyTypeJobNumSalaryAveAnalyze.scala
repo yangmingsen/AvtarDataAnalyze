@@ -19,8 +19,8 @@ object CompanyTypeJobNumSalaryAveAnalyze {
     /***
       * 获取 （公司类型,最小薪资,最大薪资）
       */
-    val rdd1 = jobsRDD.filter(x =>{(x.jobSalaryMin != "None") && (x.companyType.length!=0)}).map(x => {
-      val companyType = x.companyType.replaceAll("\\s*", "")
+    val rdd1 = jobsRDD.filter(x =>{(x.jobSalaryMin != "") && (x.companyType!="")}).map(x => {
+      val companyType = x.companyType
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble+max.toDouble)/2.0

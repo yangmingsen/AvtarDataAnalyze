@@ -18,9 +18,7 @@ object JobNameRankAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //获取 (职位名，最小薪资，最大薪资，地点)
-    val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != "None") && (x.jobSite.length != 0)
-    }).map(x => {
+    val rdd1 = jobsRDD.filter(x => {(x.jobSalaryMin != "")}).map(x => {
       val name = x.jobName
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
@@ -40,7 +38,7 @@ object JobNameRankAnalyze {
 
 
     //print to Test
-    println("JobNameRankAnalyze = " + rdd2.collect().toBuffer)
+    println("JobNameRankAnalyze = " + rdd2.collect().toBuffer.take(10))
 
     //do write database
     //Update.ToTbCurrentJobnameRank(list)

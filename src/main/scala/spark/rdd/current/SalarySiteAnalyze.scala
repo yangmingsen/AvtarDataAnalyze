@@ -19,9 +19,7 @@ object SalarySiteAnalyze {
     /** *
       * 获取每个地区对应的平均薪资
       */
-    val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != "None") && (!x.jobSite.equals("异地招聘"))
-    }).map(x => {
+    val rdd1 = jobsRDD.filter(x => {(x.jobSalaryMin != "") && (!x.jobSite.equals("异地招聘"))}).map(x => {
       val site = x.jobSite
       val salary_min = x.jobSalaryMin.toDouble
       val salary_max = x.jobSalaryMax.toDouble
