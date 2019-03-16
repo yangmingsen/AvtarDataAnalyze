@@ -6,7 +6,6 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
 import top.ccw.avtar.db.Update
-import top.ccw.avtar.redis.RedisClient
 import top.ccw.avtar.utils.DateHelper
 
 /** *
