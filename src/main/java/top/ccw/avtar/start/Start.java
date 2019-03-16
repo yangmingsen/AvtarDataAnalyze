@@ -16,22 +16,22 @@ public class Start {
     public static void main(String[] args) {
 
         //启动分析线程
-        Thread analyzeDataThread = new Thread(new AnalyzeData(), "AnalyzeData");
-
-        //启动数据流入线程
-        Thread dataInStremThread = new Thread(new DataInStrem(), "DataInStrem");
-
-        analyzeDataThread.start();
-        dataInStremThread.start();
+//        Thread analyzeDataThread = new Thread(new AnalyzeData(), "AnalyzeData");
+//
+//        //启动数据流入线程
+//        Thread dataInStremThread = new Thread(new DataInStrem(), "DataInStrem");
+//
+//        analyzeDataThread.start();
+//        dataInStremThread.start();
 
 
         Thread timeWorkTaskThread = new Thread(new TimeWorkTask(),"TimeWorkTask");
         timeWorkTaskThread.start();
 
         while (true) {
-            System.out.println("main thread ....."+Thread.currentThread().getName()+"---------\n");
+            //System.out.println("main thread ....."+Thread.currentThread().getName()+"---------\n");
             try {
-                Thread.sleep(1000);
+                Thread.sleep(Integer.MAX_VALUE);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
