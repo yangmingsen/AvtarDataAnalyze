@@ -41,7 +41,7 @@ object ExcuteAnalyze {
   def startAnalyze(): Unit = {
 
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
-    val direction = RedisClient.getValue("msgCmd", "direction")
+    val direction = "9" //RedisClient.getValue("msgCmd", "direction")
     println("direction in Redis : "+direction)
 
     if(direction!=null && direction!="") {
@@ -57,9 +57,11 @@ object ExcuteAnalyze {
     * @param direcion 方向指令:表示当前需要分析程序分析什么方向的数据
     */
   def startAnalyze(direcion: String): Unit = {
-
-
     excuteAnalyze(direcion)
+
+  }
+
+  def stopAnalyze(): Unit = {
     sc.stop()
   }
 
