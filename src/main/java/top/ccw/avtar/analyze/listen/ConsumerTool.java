@@ -102,12 +102,13 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
                 //1.如果是 name = A
                 if(listenCmd.getName().equals("A")) {
                     //do execute things....
-                    Thread analyzeTask = new Thread(new AnalyzeTask(listenCmd),"analyzeTask");
-                    analyzeTask.start();
+
+                    //Thread analyzeTask = new Thread(new AnalyzeTask(listenCmd),"analyzeTask");
+                    //analyzeTask.start();
 
                 } else if (listenCmd.getName().equals("B")) {//2.如果 name = B
                     //do execute things....
-
+                    System.out.println("mobile change direction = "+listenCmd.getContent().toString());
                 }
 
 

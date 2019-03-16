@@ -15,39 +15,19 @@ import java.util.Map;
  */
 public class RedisClient {
 
-    private static Jedis jedis;
+    public static String getNowAnalyzeValue() {
+        Jedis jedis = new Jedis("39.108.73.162");
+        jedis.auth("123");
 
-    /**
-     * 连接redis服务器
-     */
-    static {
-        jedis=RedisUtil.getJedis();
+        String aDirecion = jedis.get("ADirecion");
+
+        return aDirecion;
+
     }
 
-
-    /***
-     * 存放数据
-     * @param key1 Redis key
-     * @param key2 HashMap key
-     * @param value push value
-     */
-    public static void putValue(String key1, String key2, String value) {
-        Map<String,String> map = new HashMap<String,String>();
-        map.put(key2,value);
-
-        jedis.hmset(key1, map);
+    public static void main(String[] args) {
+        System.out.println("dir = "+getNowAnalyzeValue());
     }
 
-    /***
-     * 根据 key1 与 key2 查询Redis数据
-     * @param key1 Redis key
-     * @param key2 HashMap key
-     * @return HashMap value
-     */
-    public static String getValue(String key1, String key2) {
-        List<String> hmget = jedis.hmget(key1, key2);
-
-        return hmget.get(0);
-    }
 
 }
