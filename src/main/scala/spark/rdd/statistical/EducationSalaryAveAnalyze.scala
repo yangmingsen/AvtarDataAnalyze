@@ -2,7 +2,6 @@ package spark.rdd.statistical
 
 import java.util
 
-import com.google.common.base.CharMatcher
 import entity.{EducationSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 import utils.ConvertToJson
@@ -17,14 +16,14 @@ object EducationSalaryAveAnalyze {
     /** *
       * 获取 （学历,最小薪资,最大薪资,发布时间）
       */
-    val data1 = List("01-3", "01-10", "01-17", "01-24", "01-31")
+    val data1 = List("02-18", "02-25", "03-02", "03-09", "03-15")
     val data2 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data3 = List(0, 1, 2, 3, 4)
 
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && x.educationLevel != "" && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
+      x.jobSalaryMin.length != 0 && x.educationLevel != ""
     }).map(x => {
-      val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val level = x.educationLevel
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
@@ -84,14 +83,14 @@ object EducationSalaryAveAnalyze {
   }
 
   def isWeekRange(date: String): Int = {
-    val day = date.substring(8, date.length).toInt
-    if (day <= 3)
+    val day = date.substring(5, date.length)
+    if (day <= "02-18")
       0
-    else if (day > 3 & day <= 10)
+    else if (day > "02-18" & day <= "02-25")
       1
-    else if (day > 10 && day <= 17)
+    else if (day > "02-25" && day <= "03-02")
       2
-    else if (day > 17 && day <= 24)
+    else if (day > "03-02" && day <= "03-09")
       3
     else
       4

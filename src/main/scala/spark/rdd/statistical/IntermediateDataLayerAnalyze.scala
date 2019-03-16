@@ -14,7 +14,7 @@ import scala.io.Source
 
 /**
   * @author ljq
-  *         Created on 2019-03-13 19:10
+  * Created on 2019-03-13 19:10
   **/
 object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
@@ -36,7 +36,7 @@ object IntermediateDataLayerAnalyze {
     val rdd4 = rdd3.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd5 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (x.jobName.length != 0)
+      x.jobSalaryMin.length != 0 && x.jobName!= ""
     }).map(x => {
       val direction = x.direction
       val min = x.jobSalaryMin.toDouble
@@ -63,15 +63,15 @@ object IntermediateDataLayerAnalyze {
     val rdd9 = rdd8.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd10 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && x.educationLevel != "" && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
+      x.jobName.length != 0 && x.educationLevel != ""
     }).map(x => {
-      val educationLevel = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val educationLevel = x.educationLevel
       (educationLevel, 1)
     })
     val rdd11 = rdd10.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd12 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && (x.companyType.length != 0)
+      x.jobName.length != 0 && x.companyType.length != 0
     }).map(x => {
       val companyType = x.companyType
       (companyType, 1)
@@ -79,12 +79,9 @@ object IntermediateDataLayerAnalyze {
     val rdd13 = rdd12.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd14 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && (x.workExper != "")
+      x.jobName.length != 0 && x.workExper != ""
     }).map(x => {
-      val workExper = CharMatcher.WHITESPACE.trimFrom(x.workExper).substring(0, 1) match {
-        case "无" => "无工作经验"
-        case _ => CharMatcher.WHITESPACE.trimFrom(x.workExper)
-      }
+      val workExper = x.workExper
       (workExper, 1)
     })
     val rdd15 = rdd14.reduceByKey(_ + _).sortBy(_._2, false).take(1)
