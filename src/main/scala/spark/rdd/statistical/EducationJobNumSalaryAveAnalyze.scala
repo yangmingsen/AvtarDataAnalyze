@@ -2,8 +2,7 @@ package spark.rdd.statistical
 
 import java.util
 
-import com.google.common.base.CharMatcher
-import entity.{EducationJobNumSalaryAve, EducationJobNumSalaryAveEntity, JobDataEntity}
+import entity.{EducationJobNumSalaryAve, JobDataEntity}
 import org.apache.spark.rdd.RDD
 import utils.ConvertToJson
 
@@ -19,9 +18,9 @@ object EducationJobNumSalaryAveAnalyze {
       * 获取 （学历,最小薪资,最大薪资）
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && x.educationLevel!="" && (CharMatcher.WHITESPACE.trimFrom(x.educationLevel) != "")
+      x.jobSalaryMin.length != 0 && x.educationLevel!=""
     }).map(x => {
-      val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val level = x.educationLevel
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
@@ -43,9 +42,9 @@ object EducationJobNumSalaryAveAnalyze {
       (x._1, jobNum, ave)
     })
 
-    val list = new util.ArrayList[EducationJobNumSalaryAveEntity]()
+    //val list = new util.ArrayList[EducationJobNumSalaryAveEntity]()
     val list3 = new util.ArrayList[EducationJobNumSalaryAve]()
-    rdd3.collect().toList.map(x => list.add(entity.EducationJobNumSalaryAveEntity(x._3, x._2, x._1)))
+    //rdd3.collect().toList.map(x => list.add(entity.EducationJobNumSalaryAveEntity(x._3, x._2, x._1)))
     rdd3.collect().toList.map(x => list1.add(x._1) && list2.add(x._3))
     list3.add(EducationJobNumSalaryAve(list1, list2))
 

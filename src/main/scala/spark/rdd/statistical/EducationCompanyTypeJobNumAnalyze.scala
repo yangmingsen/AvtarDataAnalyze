@@ -2,7 +2,6 @@ package spark.rdd.statistical
 
 import java.util
 
-import com.google.common.base.CharMatcher
 import entity.{EducationCompanyTypeJobNum, EducationCompanyTypeJobNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
 import utils.ConvertToJson
@@ -19,9 +18,9 @@ object EducationCompanyTypeJobNumAnalyze {
       * 获取 （公司类型,学历)
       */
     val rdd1 = jobsRDD.filter(x => {
-      (x.educationLevel.length != 0) && x.educationLevel!="" && (CharMatcher.WHITESPACE.trimFrom(x.companyType) != "")
+      x.educationLevel != "" && x.companyType != ""
     }).map(x => {
-      val level = CharMatcher.WHITESPACE.trimFrom(x.educationLevel)
+      val level = x.educationLevel
       val companyType = x.companyType
       ((companyType, level), 1)
     })
@@ -37,8 +36,7 @@ object EducationCompanyTypeJobNumAnalyze {
 
     val list = new util.ArrayList[EducationCompanyTypeJobNumEntity]()
     rdd3.collect().toList.map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
-    val set = new util.HashSet[String]()
-    rdd3.collect().toList.map(x => set.add("'" + x._1 + "'"))
+
     val data1 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data2 = List("国企", "上市公司", "创业公司", "外资（非欧美）", "外资（欧美）", "民营公司", "合资", "事业单位")
     val list1 = new util.ArrayList[Long]()

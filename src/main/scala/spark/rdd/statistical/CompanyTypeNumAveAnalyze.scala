@@ -21,15 +21,8 @@ object CompanyTypeNumAveAnalyze {
       x.companyType != "" && x.companyPeopleNum != ""
     }).map(x => {
       val companyType = x.companyType
-      val num = x.companyPeopleNum.replaceAll("少于", "").replaceAll("人", "").replaceAll("以上", "")
-      if (num.contains("-")) {
-        val num1 = (num.split("-", 2)(0).toDouble + num.split("-", 2)(1).toDouble) / 2.0
-        (companyType, num1)
-      }
-      else {
-        val num1 = num.toDouble
-        (companyType, num1)
-      }
+      val num = x.companyPeopleNum.toLong
+      (companyType, num)
     })
 
     val rdd2 = rdd1.countByKey()
@@ -39,7 +32,7 @@ object CompanyTypeNumAveAnalyze {
         case Some(v) => v.toLong
         case None => 1
       }
-      val ave = (x._2 / jobNum).toLong
+      val ave = x._2 / jobNum
 
       (ave, x._1)
     })
@@ -50,7 +43,7 @@ object CompanyTypeNumAveAnalyze {
     //write to database
     val str = ConvertToJson.ToJson3(list)
 
-    println(str)
+    //println(str)
     //dbutils.update_statistical("tb_statistical_companytype_num", str)
   }
 

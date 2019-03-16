@@ -14,9 +14,9 @@ import utils.ConvertToJson
 object CompanyBusinessNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
     val rdd1 = jobsRDD.filter(x => {
-      (x.companyBusiness != null) && (x.companyBusiness.length != 0)
+      x.companyBusiness != ""
     }).map(x => {
-      val business = x.companyBusiness.replaceAll("\\s*", "")
+      val business = x.companyBusiness
       (business, 1)
     })
 
