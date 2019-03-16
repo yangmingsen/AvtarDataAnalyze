@@ -19,7 +19,7 @@ object JobNameRankAnalyze {
 
     //获取 (职位名，最小薪资，最大薪资，地点)
     val rdd1 = jobsRDD.filter(x => {
-      (x.jobSalaryMin.length != 0) && (x.jobSite.length != 0)
+      (x.jobSalaryMin.length != "None") && (x.jobSite.length != 0)
     }).map(x => {
       val name = x.jobName
       val min = x.jobSalaryMin.toDouble
