@@ -99,7 +99,7 @@ case class EducationJobNumSalaryAve(val education: util.ArrayList[String], val a
   * @param CompanyType 公司类型
   * @param Num         对应的平均人数
   */
-case class CompanyTypeNumAveEntity(val Num: Int, val CompanyType: String)
+case class CompanyTypeNumAveEntity(val Num: Long, val CompanyType: String)
 
 case class tb_statistical_companytype_num(value: Long, name: String)
 
