@@ -10,8 +10,6 @@ import top.ccw.avtar.analyze.listen.ConsumerTool;
  */
 public class AnalyzeData implements Runnable{
 
-    static  Thread go = null;
-
     /***
      *
      */
@@ -37,11 +35,6 @@ public class AnalyzeData implements Runnable{
         }
 
 
-    }
-
-    public static void main(String[] args) {
-        go = new Thread(new AnalyzeData(),"task1");
-        go.start();
     }
 
 }
