@@ -5,6 +5,7 @@ import java.util
 import entity.{JobDataEntity, ProvinceJobNumEntity}
 import org.apache.spark.rdd.RDD
 import top.ccw.avtar.db.Update
+import top.ccw.avtar.utils.DateHelper
 
 
 /** *
@@ -21,7 +22,7 @@ object ProvinceJobNumAnalyze {
       * 获取 （职位地点,发布时间)
       */
     val rdd1 = jobsRDD.map(x => {
-      val jobSite = x.jobSite
+      val jobSite = x.jobSiteProvinces
       val relaseDate = x.relaseDate
       (jobSite, relaseDate)
     })
@@ -31,7 +32,9 @@ object ProvinceJobNumAnalyze {
       !x._1.equals("异地招聘")
     }).map(x => (x._1, 1)).reduceByKey(_ + _).map(x => ProvinceJobNumEntity(x._1, x._2.toLong))
 
-    val day = "2019-02-10"
+    //获取当天日期
+    val day = DateHelper.getYYYY_MM_DD
+
     //统计当前职位数据 该天职位数
     val jobDayNum = rdd1.filter(x => (x._2 == day)).count()
     //统计当前职位数据 日期范围职位数
@@ -46,12 +49,16 @@ object ProvinceJobNumAnalyze {
     println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
-    //Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum)
+    Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum)
 
   }
 
   def isWeekRange(date: String): Boolean = {
-    val now = date.substring(8, 10).toInt
-    now > 2 && now < 11
+
+    val nowDate = DateHelper.getYYYY_MM_DD.substring(8,10).toInt
+
+    val matchDate = date.substring(8, 10).toInt
+
+    matchDate > nowDate-7 && matchDate < nowDate
   }
 }

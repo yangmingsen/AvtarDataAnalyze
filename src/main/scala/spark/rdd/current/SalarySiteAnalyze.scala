@@ -60,7 +60,7 @@ object SalarySiteAnalyze {
     println("SalarySiteAnalyze = " + rdd5.collect().toBuffer)
 
     //do write dabase
-    //Update.ToTbCurrentSalarySite(list,requireMax,salaryMax)
+    Update.ToTbCurrentSalarySite(list,requireMax,salaryMax)
 
   }
 }

@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import entity.*;
 import top.ccw.avtar.db.dao.*;
 import top.ccw.avtar.db.entity.*;
+import top.ccw.avtar.utils.DateHelper;
+import top.ccw.avtar.websocket.WebSocketClient;
 
 
 import java.util.List;
@@ -19,23 +21,32 @@ import java.util.List;
  */
 public class Update {
     private static int jobtypeTwoId = 0;
-    private static String  time = "";
+    private static String  time = DateHelper.getYYYY_MM_DD();
 
     private static int getJobtypeTwoId() {
         return jobtypeTwoId;
     }
 
-    public static void setUpdateInfo(int jobtypeTwoId, String time) {
+    public static void setUpdateInfo(int jobtypeTwoId) {
         Update.jobtypeTwoId = jobtypeTwoId;
-        Update.time = time;
     }
 
     private static String getTime() {
         return time;
     }
 
+    /***
+     * 通知前台展示
+     * @param columnId
+     */
+    private static void sendOkForSpringBootService(String columnId) {
+        WebSocketClient.sendMsg(columnId);
+    }
 
-
+    /**
+     *
+     * @param list
+     */
     public static void ToTbCurrentCompanytypeJobnum(List<CompanyTypeJobNumSalaryAveEntity> list) {
 
         Integer id = CompanyTypeJobNumSalaryAveSevenDao.getInstance().searchId(jobtypeTwoId,time);
@@ -51,6 +62,7 @@ public class Update {
                     insert(new CompanyTypeJobNumSalaryAveSeven(jobtypeTwoId,0,gsonStr,time));
         }
 
+        sendOkForSpringBootService("5");
 
     }
 
@@ -69,6 +81,8 @@ public class Update {
                     insert(new EducationJobNumThree(jobtypeTwoId,gsonStr,0,time));
         }
 
+        sendOkForSpringBootService("3");
+
     }
 
     public static void ToTbCurrentJobnameRank(List<JobNameRankEntity> list) {
@@ -86,6 +100,7 @@ public class Update {
                     insert(new JobNameRankFour(0,jobtypeTwoId,0,gsonStr,time));
         }
 
+        sendOkForSpringBootService("4");
     }
 
     public static void ToTbCurrentProvinceJobnum(List<ProvinceJobNumEntity> list, long dayNum, long weekNum) {
@@ -103,6 +118,7 @@ public class Update {
                     insert(new ProvinceJobNumFive(0,jobtypeTwoId,0,gsonStr,time,dayNum,weekNum));
         }
 
+        sendOkForSpringBootService("8");
     }
 
     public static void ToTbCurrentSalarySite(List<SalarySiteEntity> list,
@@ -119,6 +135,7 @@ public class Update {
             SalarySiteTwoDao.getInstance().
                     insert(new SalarySiteTwo(0,jobtypeTwoId,0,gsonStr,requireMax,salaryMax,time));
         }
+        sendOkForSpringBootService("2");
 
     }
 
@@ -138,9 +155,9 @@ public class Update {
                     insert(new TimeSalaryOne(0,jobtypeTwoId,0,time,gsonStr,forecast));
         }
 
+        sendOkForSpringBootService("1");
+
     }
-
-
 
 
 

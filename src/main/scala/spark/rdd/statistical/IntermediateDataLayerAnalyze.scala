@@ -153,7 +153,7 @@ object IntermediateDataLayerAnalyze {
     list.add(IntermediateDataLayerEntity1(list1, list2, list3, list4, list5, list6, list7, list8, list9))
     list0.add(IntermediateDataLayerEntity(list))
     val str = ConvertToJson.ToJson9(list0)
-    //println(str.substring(1, str.length() - 1))
+    println(str.substring(1, str.length() - 1))
     //dbutils.update_statistical("tb_statistical_mediatedatalayer",str.substring(1, str.length() - 1))
   }
 }

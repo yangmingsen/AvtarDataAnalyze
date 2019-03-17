@@ -42,12 +42,13 @@ public class SalarySiteTwoDao {
 
     public boolean insert(SalarySiteTwo sst) {
         PreparedStatement pstmt = null;
-        String sql = "INSERT INTO `job_data`.`tb_current_salary_site`(`jobtype_two_id`, `result`) VALUES (?,?)";
+        String sql = "INSERT INTO `job_data`.`tb_current_salary_site`(`jobtype_two_id`, `result`,`time`) VALUES (?,?,?)";
 
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,sst.getJobtypeTwoId());
             pstmt.setString(2,sst.getResult());
+            pstmt.setString(3,sst.getDate());
 
             pstmt.executeUpdate();
 
@@ -56,6 +57,8 @@ public class SalarySiteTwoDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
 
     }
@@ -81,6 +84,8 @@ public class SalarySiteTwoDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
     }
 
@@ -104,6 +109,8 @@ public class SalarySiteTwoDao {
 
         }catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            JdbcUtil.release(null,pstmt,rs);
         }
 
         return 0;

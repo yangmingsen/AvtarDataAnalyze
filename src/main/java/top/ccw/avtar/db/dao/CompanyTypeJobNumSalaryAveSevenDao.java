@@ -64,15 +64,14 @@ public class CompanyTypeJobNumSalaryAveSevenDao {
         PreparedStatement pstmt = null;
 
         String sql = "INSERT INTO `job_data`.`tb_current_companytype_jobnum`" +
-                "(`jobtype_two_id`,`column_id`,`result`,`time`) VALUES (?,?,?,?)";
+                "(`jobtype_two_id`,`result`,`time`) VALUES (?,?,?)";
 
         try {
             pstmt = conn.prepareStatement(sql);
 
             pstmt.setInt(1,ctjnsa.getJobtypeTwoId());
-            pstmt.setInt(2,ctjnsa.getColumn());
-            pstmt.setString(3,ctjnsa.getResult());
-            pstmt.setString(4,ctjnsa.getDate());
+            pstmt.setString(2,ctjnsa.getResult());
+            pstmt.setString(3,ctjnsa.getDate());
 
             pstmt.executeUpdate();
 
@@ -80,6 +79,8 @@ public class CompanyTypeJobNumSalaryAveSevenDao {
 
         }catch (Exception e ) {
             e.printStackTrace();
+        } finally {
+            JdbcUtil.release(null,pstmt,null);
         }
 
         return false;
@@ -107,6 +108,8 @@ public class CompanyTypeJobNumSalaryAveSevenDao {
 
         }catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            JdbcUtil.release(null,pstmt,rs);
         }
 
         return 0;

@@ -43,7 +43,7 @@ object CompanyTypeNumAveAnalyze {
     //write to database
     val str = ConvertToJson.ToJson3(list)
 
-    //println(str)
+    println(str)
     //dbutils.update_statistical("tb_statistical_companytype_num", str)
   }
 

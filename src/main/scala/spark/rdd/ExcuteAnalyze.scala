@@ -5,9 +5,11 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
+import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
 import top.ccw.avtar.utils.DateHelper
+import top.ccw.avtar.websocket.WebSocketClient
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -21,16 +23,14 @@ import top.ccw.avtar.utils.DateHelper
 object ExcuteAnalyze {
 
   //初始化环境
-  val conf = new SparkConf().setAppName("ExcuteAnalyze").set("spark.driver.host", "localhost").setMaster("local[4]")
+  val conf = new SparkConf().setAppName("ExcuteAnalyze").set("spark.driver.host", "localhost").setMaster("local[*]")
   val sc = new SparkContext(conf)
 
 
   def test(): Unit = {
 
-    Update.setUpdateInfo(9, DateHelper.getYYYY_MM_DD)
-    startAnalyze("9") //test 目前方向是 软件工程
-
-
+    startAnalyze("7") //test
+    stopAnalyze()
   }
 
   /** *
@@ -40,7 +40,8 @@ object ExcuteAnalyze {
   def startAnalyze(): Unit = {
 
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
-    val direction = "9" //RedisClient.getValue("msgCmd", "direction")
+    val direction = RedisClient.getNowAnalyzeValue
+
     println("direction in Redis : "+direction)
 
     if(direction!=null && direction!="") {
@@ -68,16 +69,18 @@ object ExcuteAnalyze {
   private def excuteAnalyze(direcion: String): Unit = {
 
     //更新当前数据插入 方向
-    Update.setUpdateInfo(Integer.parseInt(direcion), DateHelper.getYYYY_MM_DD)
+    Update.setUpdateInfo(Integer.parseInt(direcion))
 
     //读取数据
-    val jobsData = dataIn()
+    val jobsData = dataIn(direcion)
 
     //进入时状态分析
-    //currentStatus(jobsData, direcion)
+    currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData, direcion)
+    //statisticalGraph(jobsData, direcion)
+
+    WebSocketClient.sendMsg(direcion)
 
   }
 
@@ -85,30 +88,102 @@ object ExcuteAnalyze {
   /** *
     * 读取数据
     */
-  private def dataIn(): RDD[JobDataEntity] = {
+  private def dataIn(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
+
+    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE direction="+jobtypeTwoId
     //测试读取MySQL数据
-    dataInFromMySQL()
+    dataInFromMySQL(sql)
 
     //读取HBase数据
 
   }
 
-  private def dataInFromMySQL(): RDD[JobDataEntity] = {
+
+  /** *
+    * 实时状态分析
+    *
+    * @return
+    */
+  private def currentStatus(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
+
+    //分析TimeSalary
+    //TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析SalarySite
+    SalarySiteAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析ProvinceJobNum
+    ProvinceJobNumAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 JobNameRank
+    //JobNameRankAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 EducationJobNum
+    //EducationJobNumAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 CompanyTypeJobNumSalaryAve
+    //CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+
+  }
+
+
+  /** *
+    * 统计图表
+    *
+    * @return
+    */
+  private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
+
+    //分析 Company_businessNum
+    CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 SalaryWorkExperJobNumAve
+    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 EducationCompanyTypeJobNum
+    EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 EducationJobNumSalaryAve
+    EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 CompanyTypeNumAve
+    CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 JobNameNum
+    JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 EducationSalaryAve
+    EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析 CompanyTypeSalaryAve
+    CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+
+    //中间数据层 IntermediateDataLayer
+    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+  }
+
+  private def dataInFromMySQL(sql: String): RDD[JobDataEntity] = {
 
     val sqlContext = new SQLContext(sc)
 
+    //    val jdbcDF = sqlContext.read.format("jdbc").
+    //      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
+    //        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
+    //    jdbcDF.registerTempTable("tb_job_info_new")
+
 //    val jdbcDF = sqlContext.read.format("jdbc").
-//      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
-//    jdbcDF.registerTempTable("tb_job_info_new")
+//      options(Map("url" -> "jdbc:mysql://10.0.0.28:3306/job_data?characterEncoding=utf8&useSSL=false",
+//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
+//    jdbcDF.registerTempTable("tb_jobinfo_data")
 
     val jdbcDF = sqlContext.read.format("jdbc").
-      options(Map("url" -> "jdbc:mysql://10.0.0.28:3306/job_data?characterEncoding=utf8&useSSL=false",
+      options(Map("url" -> "jdbc:mysql://localhost:3306/job_data?characterEncoding=utf8&useSSL=false",
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
     jdbcDF.registerTempTable("tb_jobinfo_data")
 
-    val jobDF = sqlContext.sql("SELECT * FROM `tb_jobinfo_data` WHERE direction=9")
+    val jobDF = sqlContext.sql(sql)
 
     val rdd1 = jobDF.map(x => {
       val direction = x.getInt(1).toString
@@ -131,73 +206,9 @@ object ExcuteAnalyze {
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
-    println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
+    //println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
 
     rdd1
-  }
-
-  /** *
-    * 实时状态分析
-    *
-    * @return
-    */
-  private def currentStatus(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-
-    //分析TimeSalary
-    TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析SalarySite
-    SalarySiteAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析ProvinceJobNum
-    ProvinceJobNumAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 JobNameRank
-    JobNameRankAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 EducationJobNum
-    EducationJobNumAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 CompanyTypeJobNumSalaryAve
-    CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
-
-
-  }
-
-
-  /** *
-    * 统计图表
-    *
-    * @return
-    */
-  private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-
-    //分析 Company_businessNum
-    //CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 SalaryWorkExperJobNumAve
-    //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 EducationCompanyTypeJobNum
-    //EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 EducationJobNumSalaryAve
-    //EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 CompanyTypeNumAve
-    //CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 JobNameNum
-    //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 EducationSalaryAve
-    //EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
-
-    //分析 CompanyTypeSalaryAve
-    //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
-
-    //中间数据层 IntermediateDataLayer
-    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

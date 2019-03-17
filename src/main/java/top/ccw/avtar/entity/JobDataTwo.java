@@ -5,6 +5,7 @@ public class JobDataTwo {
     private int direction;
     private String jobName;
     private String companyName;
+    private String jobSiteProvinces;
     private String jobSite;
     private String jobSalaryMin;
     private String jobSalaryMax;
@@ -20,15 +21,16 @@ public class JobDataTwo {
     public JobDataTwo() {
         super();
     }
-    public JobDataTwo( int direction, String jobName, String companyName, String jobSite,
-                          String jobSalaryMin, String jobSalaryMax, String relaseDate,
-                          String educationLevel, String workExper,
-                          String companyWelfare, String jobRequire,
-                          String companyType,String companyPeopleNum,String companyBusiness) {
+    public JobDataTwo( int direction, String jobName, String companyName,String jobSiteProvinces, String jobSite,
+                       String jobSalaryMin, String jobSalaryMax, String relaseDate,
+                       String educationLevel, String workExper,
+                       String companyWelfare, String jobRequire,
+                       String companyType,String companyPeopleNum,String companyBusiness) {
         super();
         this.direction = direction;
         this.jobName = jobName;
         this.companyName = companyName;
+        this.jobSiteProvinces = jobSiteProvinces;
         this.jobSite = jobSite;
         this.jobSalaryMin = jobSalaryMin;
         this.jobSalaryMax = jobSalaryMax;
@@ -64,6 +66,13 @@ public class JobDataTwo {
     }
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public String getJobSiteProvinces() {
+        return jobSiteProvinces;
+    }
+    public void setJobSiteProvinces(String jobSiteProvinces) {
+        this.jobSiteProvinces = jobSiteProvinces;
     }
     public String getJobSite() {
         return jobSite;
@@ -139,6 +148,7 @@ public class JobDataTwo {
                 ", direction=" + direction +
                 ", jobName='" + jobName + '\'' +
                 ", companyName='" + companyName + '\'' +
+                ", jobSiteProvinces='" + jobSiteProvinces + '\'' +
                 ", jobSite='" + jobSite + '\'' +
                 ", jobSalaryMin='" + jobSalaryMin + '\'' +
                 ", jobSalaryMax='" + jobSalaryMax + '\'' +

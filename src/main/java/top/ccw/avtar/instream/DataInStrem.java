@@ -15,6 +15,10 @@ public class DataInStrem implements Runnable {
      */
     @Override
     public void run() {
+
+        //do Kafka data inputStream...
+        KafkaConsumer.inStream();
+
         while (true) {
             System.out.println("DataInStrem ..... "+Thread.currentThread().getName()+"---------\n");
             try {
@@ -23,9 +27,6 @@ public class DataInStrem implements Runnable {
                 e.printStackTrace();
             }
         }
-
-        //do Kafka data inputStream...
-
     }
 
 

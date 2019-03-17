@@ -50,7 +50,7 @@ object EducationJobNumSalaryAveAnalyze {
 
     //write to database
     val gsonStr = ConvertToJson.ToJson5(list3)
-    //println(gsonStr.substring(1,gsonStr.length()-1))
+    println(gsonStr.substring(1,gsonStr.length()-1))
 
     //dbutils.update_statistical("tb_statistical_education_salaryave",gsonStr.substring(1,gsonStr.length()-1))
   }

@@ -52,7 +52,7 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
 
     //write to database
     val gsonStr = ConvertToJson.ToJson4(list3)
-    //println(gsonStr.substring(1,gsonStr.length()-1))
+    println(gsonStr.substring(1,gsonStr.length()-1))
     //dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", gsonStr.substring(1, gsonStr.length() - 1))
 
   }

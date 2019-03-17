@@ -27,7 +27,7 @@ object JobNameNumAnalyze {
 
     //do write to Databse
     val str = ConvertToJson.ToJson2(list)
-    //println(str)
+    println(str)
     //dbutils.update_statistical("tb_statistical_jobname_num",str)
 
   }

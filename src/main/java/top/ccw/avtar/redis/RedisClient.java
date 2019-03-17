@@ -19,14 +19,10 @@ public class RedisClient {
         Jedis jedis = new Jedis("39.108.73.162");
         jedis.auth("123");
 
-        String aDirecion = jedis.get("ADirecion");
+        String aDirecion = jedis.get("ADirection");
 
         return aDirecion;
 
-    }
-
-    public static void main(String[] args) {
-        System.out.println("dir = "+getNowAnalyzeValue());
     }
 
 
