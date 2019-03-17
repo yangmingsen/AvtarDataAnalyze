@@ -62,4 +62,14 @@ public class ConvertToJson {
         String gsonStr = gson.toJson(list);
         return gsonStr;
     }
+    public static String ToJson10(ArrayList<tb_analyze_professional_skill> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
+    public static String ToJson11(ArrayList<tb_analyze_job_requirements> list) {
+        Gson gson = new Gson();
+        String gsonStr = gson.toJson(list);
+        return gsonStr;
+    }
 }
