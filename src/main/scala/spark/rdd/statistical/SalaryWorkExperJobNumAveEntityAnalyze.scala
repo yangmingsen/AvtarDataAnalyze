@@ -4,7 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, SalaryWorkExperJobNumAve}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 /** *
   * 描述： 职位当前方向工作经验与薪资（平均薪资，职位数）的关系分析
@@ -52,9 +52,13 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
 
     //write to database
     val gsonStr = ConvertToJson.ToJson4(list3)
-    //println(gsonStr.substring(1,gsonStr.length()-1))
-    //dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", gsonStr.substring(1, gsonStr.length() - 1))
-
+    val str = gsonStr.substring(1, gsonStr.length() - 1)
+    //println(str)
+    if (dbutils.judge_statistical("tb_statistical_salary_workexper_jobnumave", TimeUtils.getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_salary_workexper_jobnumave", str, jobtypeTwoId)
+    }
+    else
+      dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", str,TimeUtils.getNowDate())
   }
 
 }

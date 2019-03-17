@@ -7,13 +7,13 @@ import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
 import org.ansj.splitWord.analysis.DicAnalysis
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 import scala.io.Source
 
 /**
   * @author ljq
-  * Created on 2019-03-13 19:10
+  *         Created on 2019-03-13 19:10
   **/
 object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
@@ -137,7 +137,7 @@ object IntermediateDataLayerAnalyze {
       filter.insertStopWords(word)
     }
 
-    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*","")).recognition(filter).toStringWithOutNature(" "))
+    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" "))
 
     val wordcloud = splited.cache().flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _, 1).sortBy(_._2, false).take(1000)
 
@@ -151,8 +151,14 @@ object IntermediateDataLayerAnalyze {
     //do write to Databse
     list.add(IntermediateDataLayerEntity1(list1, list2, list3, list4, list5, list6, list7, list8, list9))
     list0.add(IntermediateDataLayerEntity(list))
-    val str = ConvertToJson.ToJson9(list0)
-    println(str.substring(1, str.length() - 1))
-    //dbutils.update_statistical("tb_statistical_mediatedatalayer",str.substring(1, str.length() - 1))
+    val gsonstr = ConvertToJson.ToJson9(list0)
+    val str = gsonstr.substring(1, gsonstr.length() - 1)
+    //println(str)
+    if (dbutils.judge_statistical("tb_statistical_mediatedatalayer", TimeUtils.getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_mediatedatalayer", str, jobtypeTwoId)
+    }
+    else
+      dbutils.update_statistical("tb_statistical_mediatedatalayer", str,TimeUtils.getNowDate())
   }
+
 }

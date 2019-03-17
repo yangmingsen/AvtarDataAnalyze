@@ -4,7 +4,7 @@ import java.util
 
 import entity.{EducationCompanyTypeJobNum, EducationCompanyTypeJobNumEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 /** *
   * 描述： 按公司类型分类，统计出每种公司类型的学历数的关系分析
@@ -71,8 +71,13 @@ object EducationCompanyTypeJobNumAnalyze {
 
     //do write database
     val gsonStr = ConvertToJson.ToJson6(list9)
-    //println(gsonStr.substring(1, gsonStr.length() - 1))
+    val str = gsonStr.substring(1, gsonStr.length() - 1)
+    //println(str)
 
-    //dbutils.update_statistical("tb_statistical_education_companytype_jobnum",gsonStr.substring(1, gsonStr.length() - 1))
+    if (dbutils.judge_statistical("tb_statistical_education_companytype_jobnum", TimeUtils.getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_education_companytype_jobnum", str, jobtypeTwoId)
+    }
+    else
+      dbutils.update_statistical("tb_statistical_education_companytype_jobnum", str, TimeUtils.getNowDate())
   }
 }
