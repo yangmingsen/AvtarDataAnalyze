@@ -1,7 +1,6 @@
 package utils
 
 import java.sql.{Connection, DriverManager, ResultSet}
-import java.util.Date
 
 /**
   * created by ljq on 19-3-5.
@@ -30,14 +29,15 @@ object dbutils {
   }
 
 
-  def insert_statistical(dbname: String, result: String): Unit = {
+  def insert_statistical(dbname: String, result: String, jobtype_two_id: String): Unit = {
     var conn: Connection = null
     var ps: java.sql.PreparedStatement = null
     try {
       Class.forName(Driver)
       conn = DriverManager.getConnection(url, "user", "Group1234")
-      ps = conn.prepareStatement("insert into " + dbname + "(jobtype_two_id,column_id,result,time) VALUES(?,?,?,CURDATE())")
-      ps.setString(3, result)
+      ps = conn.prepareStatement("insert into " + dbname + "(jobtype_two_id,result,time) VALUES(?,?,CURDATE())")
+      ps.setString(1, jobtype_two_id)
+      ps.setString(2, result)
       ps.executeUpdate()
     }
     catch {
@@ -47,7 +47,7 @@ object dbutils {
     ps.close()
   }
 
-  def judge_statistical(dbname: String, time: Date): Boolean = {
+  def judge_statistical(dbname: String, time: String): Boolean = {
     var conn: Connection = null
     var ps: java.sql.PreparedStatement = null
     var rs: ResultSet = null
@@ -55,13 +55,13 @@ object dbutils {
     try {
       Class.forName(Driver)
       conn = DriverManager.getConnection(url, "user", "Group1234")
-      ps = conn.prepareStatement("SELECT time FROM " + dbname + "where time=" + time)
+      ps = conn.prepareStatement("SELECT time from " + dbname + " where time = '" + time + "'")
       rs = ps.executeQuery()
       if (rs.next()) {
-        result = true
+        result = false
       }
       else
-        result = false
+        result = true
     }
     catch {
       case e: Exception => e.printStackTrace

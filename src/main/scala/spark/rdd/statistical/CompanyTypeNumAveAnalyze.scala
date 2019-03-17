@@ -1,10 +1,12 @@
 package spark.rdd.statistical
 
+import java.text.SimpleDateFormat
 import java.util
+import java.util.Date
 
 import entity.{JobDataEntity, tb_statistical_companytype_num}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, dbutils}
 
 /** *
   * 描述： 按公司类型统计，得到各个公司类型的平均人数
@@ -44,7 +46,17 @@ object CompanyTypeNumAveAnalyze {
     val str = ConvertToJson.ToJson3(list)
 
     //println(str)
-    //dbutils.update_statistical("tb_statistical_companytype_num", str)
+    if (dbutils.judge_statistical("tb_statistical_companytype_num", getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_companytype_num", str, jobtypeTwoId)
+    }
+    else
+      dbutils.update_statistical("tb_statistical_companytype_num", str)
   }
 
+  def getNowDate(): String = {
+    val now: Date = new Date()
+    val dateFormat: SimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd")
+    val nowdate = dateFormat.format(now)
+    nowdate
+  }
 }
