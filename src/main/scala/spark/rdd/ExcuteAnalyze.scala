@@ -198,7 +198,7 @@ object ExcuteAnalyze {
     //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析词云
-    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
+    //WordCloudAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

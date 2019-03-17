@@ -56,7 +56,7 @@ object WordCloudAnalyze {
 
     val str1 = ConvertToJson.ToJson10(list1)
     val str2 = ConvertToJson.ToJson11(list2)
-    println(str1 + "\n" + str2)
+    //println(str1 + "\n" + str2)
 
     //dbutils.update_statistical("tb_current_professional_skill",str1)
     //dbutils.update_statistical("tb_current_job_requirements",str2)
