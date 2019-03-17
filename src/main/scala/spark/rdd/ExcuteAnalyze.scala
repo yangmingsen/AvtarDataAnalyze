@@ -41,9 +41,9 @@ object ExcuteAnalyze {
 
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
     val direction = "9" //RedisClient.getValue("msgCmd", "direction")
-    println("direction in Redis : "+direction)
+    println("direction in Redis : " + direction)
 
-    if(direction!=null && direction!="") {
+    if (direction != null && direction != "") {
       //执行分析程序
       excuteAnalyze(direction)
     }
@@ -98,10 +98,10 @@ object ExcuteAnalyze {
 
     val sqlContext = new SQLContext(sc)
 
-//    val jdbcDF = sqlContext.read.format("jdbc").
-//      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
-//    jdbcDF.registerTempTable("tb_job_info_new")
+    //    val jdbcDF = sqlContext.read.format("jdbc").
+    //      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
+    //        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
+    //    jdbcDF.registerTempTable("tb_job_info_new")
 
     val jdbcDF = sqlContext.read.format("jdbc").
       options(Map("url" -> "jdbc:mysql://192.168.0.101:3306/job_data?characterEncoding=utf8&useSSL=false",
@@ -162,7 +162,7 @@ object ExcuteAnalyze {
     CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析词云
-    WordCloudAnalyze.start(jobsData,jobtypeTwoId)
+    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
 
   }
 

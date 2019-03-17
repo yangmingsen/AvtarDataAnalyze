@@ -114,12 +114,12 @@ object IntermediateDataLayerAnalyze {
     val data = jobsRDD.map(x => x.jobRequire)
 
     val data1 = new util.ArrayList[String]()
-    for (word <- Source.fromFile(raw"../ParticipleText/ability", "GBK").getLines()) {
+    for (word <- Source.fromFile(raw"src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
       word.split(",").foreach(x => data1.add(x))
     }
 
     val data2 = new util.ArrayList[String]()
-    for (word <- Source.fromFile(raw"../ParticipleText/technology", "GBK").getLines()) {
+    for (word <- Source.fromFile(raw"src/main/scala/spark/rdd/ParticipleText/technology").getLines()) {
       word.split(",").foreach(x => data2.add(x.toLowerCase()))
     }
     //添加自定义词典
@@ -130,7 +130,7 @@ object IntermediateDataLayerAnalyze {
     }
 
     //添加停用词词典
-    val stopworddicfile = raw"../ParticipleText/StopWordDic" //stopworddicfile为一个文本文件的名字，里面每一行存放一个词
+    val stopworddicfile = raw"src/main/scala/spark/rdd/ParticipleText/StopWordDic" //stopworddicfile为一个文本文件的名字，里面每一行存放一个词
     val filter = new StopRecognition()
     filter.insertStopNatures("w", null) //过滤掉标点
     filter.insertStopRegexes("^[0-9]*$", "\\s*", " ") //过滤掉数字和空字符
