@@ -5,7 +5,6 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
-import spark.rdd.statistical.IntermediateDataLayerAnalyze
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.utils.DateHelper
 
@@ -104,7 +103,7 @@ object ExcuteAnalyze {
     //    jdbcDF.registerTempTable("tb_job_info_new")
 
     val jdbcDF = sqlContext.read.format("jdbc").
-      options(Map("url" -> "jdbc:mysql://192.168.0.101:3306/job_data?characterEncoding=utf8&useSSL=false",
+      options(Map("url" -> "jdbc:mysql://10.0.0.28:3306/job_data?characterEncoding=utf8&useSSL=false",
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
     jdbcDF.registerTempTable("tb_jobinfo_data")
 
@@ -161,9 +160,6 @@ object ExcuteAnalyze {
     //分析 CompanyTypeJobNumSalaryAve
     CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
-    //分析词云
-    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
-
   }
 
 
@@ -199,7 +195,10 @@ object ExcuteAnalyze {
     //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //中间数据层 IntermediateDataLayer
-    IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析词云
+    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }

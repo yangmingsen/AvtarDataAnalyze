@@ -2,7 +2,6 @@ package spark.rdd.current
 
 import java.util
 
-import com.google.common.base.CharMatcher
 import entity.{JobDataEntity, tb_analyze_job_requirements, tb_analyze_professional_skill}
 import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
@@ -40,12 +39,12 @@ object WordCloudAnalyze {
     val stopworddicfile = raw"src/main/scala/spark/rdd/ParticipleText/StopWordDic" //stopworddicfile为一个文本文件的名字，里面每一行存放一个词
     val filter = new StopRecognition()
     filter.insertStopNatures("w", null) //过滤掉标点
-    filter.insertStopRegexes("^[0-9]*$", "\\s*", " ") //过滤掉数字和空字符
+    filter.insertStopRegexes("^[0-9]*$", "\\s*") //过滤掉数字
     for (word <- Source.fromFile(stopworddicfile).getLines) {
       filter.insertStopWords(word)
     }
 
-    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(CharMatcher.WHITESPACE.trimFrom(x.toString)).recognition(filter).toStringWithOutNature(" "))
+    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*","")).recognition(filter).toStringWithOutNature(" "))
 
     val wordcloud = splited.cache().flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _, 1).sortBy(_._2, false).take(1000)
 

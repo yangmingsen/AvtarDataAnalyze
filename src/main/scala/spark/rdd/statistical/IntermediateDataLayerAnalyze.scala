@@ -2,7 +2,6 @@ package spark.rdd.statistical
 
 import java.util
 
-import com.google.common.base.CharMatcher
 import entity.{IntermediateDataLayerEntity, IntermediateDataLayerEntity1, JobDataEntity}
 import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
@@ -114,16 +113,16 @@ object IntermediateDataLayerAnalyze {
     val data = jobsRDD.map(x => x.jobRequire)
 
     val data1 = new util.ArrayList[String]()
-    for (word <- Source.fromFile(raw"src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
+    for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
       word.split(",").foreach(x => data1.add(x))
     }
 
     val data2 = new util.ArrayList[String]()
-    for (word <- Source.fromFile(raw"src/main/scala/spark/rdd/ParticipleText/technology").getLines()) {
+    for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/technology").getLines()) {
       word.split(",").foreach(x => data2.add(x.toLowerCase()))
     }
     //添加自定义词典
-    val dicfile = raw"../ParticipleText/ExtendDic" //ExtendDic为一个文本文件的名字，里面每一行存放一个词
+    val dicfile = raw"src/main/scala/spark/rdd/ParticipleText/ExtendDic" //ExtendDic为一个文本文件的名字，里面每一行存放一个词
     //逐行读入文本文件，将其添加到自定义词典中
     for (word <- Source.fromFile(dicfile).getLines) {
       DicLibrary.insert(DicLibrary.DEFAULT, word)
@@ -133,12 +132,12 @@ object IntermediateDataLayerAnalyze {
     val stopworddicfile = raw"src/main/scala/spark/rdd/ParticipleText/StopWordDic" //stopworddicfile为一个文本文件的名字，里面每一行存放一个词
     val filter = new StopRecognition()
     filter.insertStopNatures("w", null) //过滤掉标点
-    filter.insertStopRegexes("^[0-9]*$", "\\s*", " ") //过滤掉数字和空字符
+    filter.insertStopRegexes("^[0-9]*$", "\\s*") //过滤掉数字
     for (word <- Source.fromFile(stopworddicfile).getLines) {
       filter.insertStopWords(word)
     }
 
-    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(CharMatcher.WHITESPACE.trimFrom(x.toString)).recognition(filter).toStringWithOutNature(" "))
+    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*","")).recognition(filter).toStringWithOutNature(" "))
 
     val wordcloud = splited.cache().flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _, 1).sortBy(_._2, false).take(1000)
 
