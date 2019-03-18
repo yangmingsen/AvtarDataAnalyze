@@ -1,6 +1,7 @@
 package spark.rdd
 
 import entity.JobDataEntity
+import hbase.DataTransmission.HbaseBatch
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -72,11 +73,14 @@ object ExcuteAnalyze {
     //读取数据
     val jobsData = dataIn()
 
+    //将mysql里的数据BulkLoad(全量导入)到hbase中
+    HbaseBatch.MysqlToHBaseStart(jobsData)
+
     //进入时状态分析
     //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData, direcion)
+    //statisticalGraph(jobsData, direcion)
 
   }
 
@@ -127,7 +131,7 @@ object ExcuteAnalyze {
       val companyPeopleNum = x.getString(15)
       val companyBusiness = x.getString(16)
 
-      JobDataEntity(id,direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+      JobDataEntity(id, direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
