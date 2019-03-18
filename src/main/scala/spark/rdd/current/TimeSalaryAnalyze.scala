@@ -4,7 +4,6 @@ import java.util
 
 import entity.{JobDataEntity, TimeSalaryEntity}
 import org.apache.spark.rdd.RDD
-import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析薪资与时间的关系
@@ -18,7 +17,7 @@ object TimeSalaryAnalyze {
     /** *
       * 获取每个时间对应的平均薪资
       */
-    val rdd1 = jobsRDD.filter(x => (x.jobSalaryMin!="")).map(x => {
+    val rdd1 = jobsRDD.filter(x => x.jobSalaryMin!="").map(x => {
       val date = x.relaseDate.substring(5, x.relaseDate.length)
       val salary_min = x.jobSalaryMin.toDouble
       val salary_max = x.jobSalaryMax.toDouble

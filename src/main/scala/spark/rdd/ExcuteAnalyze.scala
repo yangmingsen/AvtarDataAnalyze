@@ -107,26 +107,27 @@ object ExcuteAnalyze {
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
     jdbcDF.registerTempTable("tb_jobinfo_data")
 
-    val jobDF = sqlContext.sql("SELECT * FROM `tb_jobinfo_data` WHERE direction=9")
+    val jobDF = sqlContext.sql("SELECT * FROM `tb_jobinfo_data`")
 
     val rdd1 = jobDF.map(x => {
-      val direction = x.getInt(1).toString
-      val jobName = x.getString(2)
-      val companyName = x.getString(3)
-      val jobSiteProvinces = x.getString(4)
-      val jobSite = x.getString(5)
-      val jobSalaryMin = x.getString(6)
-      val jobSalaryMax = x.getString(7)
-      val relaseDate = x.getString(8)
-      val educationLevel = x.getString(9)
-      val workExper = x.getString(10)
-      val companyWelfare = x.getString(11)
-      val jobRequire = x.getString(12)
-      val companyType = x.getString(13)
-      val companyPeopleNum = x.getString(14)
-      val companyBusiness = x.getString(15)
+      val id = x.getLong(1).toString
+      val direction = x.getInt(2).toString
+      val jobName = x.getString(3)
+      val companyName = x.getString(4)
+      val jobSiteProvinces = x.getString(5)
+      val jobSite = x.getString(6)
+      val jobSalaryMin = x.getString(7)
+      val jobSalaryMax = x.getString(8)
+      val relaseDate = x.getString(9)
+      val educationLevel = x.getString(10)
+      val workExper = x.getString(11)
+      val companyWelfare = x.getString(12)
+      val jobRequire = x.getString(13)
+      val companyType = x.getString(14)
+      val companyPeopleNum = x.getString(15)
+      val companyBusiness = x.getString(16)
 
-      JobDataEntity(direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+      JobDataEntity(id,direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 

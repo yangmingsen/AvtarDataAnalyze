@@ -55,7 +55,7 @@ object HbaseUtils {
     val scan = new Scan()
     val table = connection.getTable(TableName.valueOf(tableName))
     table.getScanner(scan)
-    //    val scanner: CellScanner = rs.next().cellScanner()
+    //val scanner: CellScanner = rs.next().cellScanner()
   }
 
   /**

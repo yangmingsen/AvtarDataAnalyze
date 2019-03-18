@@ -4,7 +4,6 @@ import java.util
 
 import entity.{JobDataEntity, ProvinceJobNumEntity}
 import org.apache.spark.rdd.RDD
-import top.ccw.avtar.db.Update
 
 
 /** *
@@ -33,7 +32,7 @@ object ProvinceJobNumAnalyze {
 
     val day = "2019-02-10"
     //统计当前职位数据 该天职位数
-    val jobDayNum = rdd1.filter(x => (x._2 == day)).count()
+    val jobDayNum = rdd1.filter(x => x._2 == day).count()
     //统计当前职位数据 日期范围职位数
     val jobWeekNum = rdd1.filter(x => {
       isWeekRange(x._2)
