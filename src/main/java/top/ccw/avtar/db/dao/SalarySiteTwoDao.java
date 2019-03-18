@@ -42,13 +42,16 @@ public class SalarySiteTwoDao {
 
     public boolean insert(SalarySiteTwo sst) {
         PreparedStatement pstmt = null;
-        String sql = "INSERT INTO `job_data`.`tb_current_salary_site`(`jobtype_two_id`, `result`,`time`) VALUES (?,?,?)";
+        String sql = "INSERT INTO `job_data`.`tb_current_salary_site`(`jobtype_two_id`, `result`,`time`," +
+                "`require_max`, `salary_max`) VALUES (?,?,?,?,?)";
 
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,sst.getJobtypeTwoId());
             pstmt.setString(2,sst.getResult());
             pstmt.setString(3,sst.getDate());
+            pstmt.setString(4,sst.getRequireMax());
+            pstmt.setString(5,sst.getSalaryMax());
 
             pstmt.executeUpdate();
 

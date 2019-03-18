@@ -1,8 +1,10 @@
 package spark.rdd
 
+import com.alibaba.fastjson.JSON
 import entity.JobDataEntity
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
+import org.elasticsearch.spark._
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
 import spark.rdd.statistical._
@@ -24,13 +26,19 @@ object ExcuteAnalyze {
 
   //初始化环境
   val conf = new SparkConf().setAppName("ExcuteAnalyze").set("spark.driver.host", "localhost").setMaster("local[*]")
+  //在spark中自动创建es中的索引
+  conf.set("es.index.auto.create","true")
+  //设置在Spark 中连接 es的url和端口
+  conf.set("es.nodes","127.0.0.1")
+  conf.set("es.port","9200")
+
   val sc = new SparkContext(conf)
 
 
-  def test(): Unit = {
+  def test(direction: String): Unit = {
 
-    startAnalyze("7") //test
-    stopAnalyze()
+    startAnalyze(direction) //test
+    //stopAnalyze()
   }
 
   /** *
@@ -86,16 +94,24 @@ object ExcuteAnalyze {
 
 
   /** *
-    * 读取数据
+    * 描述：分析读取数据
+    *
+    * 1、从mysql
+    * 2、从hbase
+    * 3、从elasticsearch
+    *
     */
   private def dataIn(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
 
-    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE direction="+jobtypeTwoId
-    //测试读取MySQL数据
-    dataInFromMySQL(sql)
+
+    //从MySQL读取数据
+    //dataInFromMySQL(jobtypeTwoId)
 
     //读取HBase数据
+
+    //从ES中读取数据
+    dataInFromElasticsearch(jobtypeTwoId)
 
   }
 
@@ -108,7 +124,7 @@ object ExcuteAnalyze {
   private def currentStatus(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析TimeSalary
-    //TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
+    TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析SalarySite
     SalarySiteAnalyze.start(jobsData, jobtypeTwoId)
@@ -117,13 +133,13 @@ object ExcuteAnalyze {
     ProvinceJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 JobNameRank
-    //JobNameRankAnalyze.start(jobsData, jobtypeTwoId)
+    JobNameRankAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationJobNum
-    //EducationJobNumAnalyze.start(jobsData, jobtypeTwoId)
+    EducationJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeJobNumSalaryAve
-    //CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
 
   }
@@ -164,8 +180,9 @@ object ExcuteAnalyze {
     //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
   }
 
-  private def dataInFromMySQL(sql: String): RDD[JobDataEntity] = {
+  private def dataInFromMySQL(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
+    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE  direction="+jobtypeTwoId
     val sqlContext = new SQLContext(sc)
 
     //    val jdbcDF = sqlContext.read.format("jdbc").
@@ -206,9 +223,45 @@ object ExcuteAnalyze {
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
+
+
     //println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
 
     rdd1
+  }
+
+  private def dataInFromElasticsearch(jobtypeTwoId: String): RDD[JobDataEntity] = {
+
+    val query = "?q=direction:"+jobtypeTwoId
+
+    val esRDD = sc.esJsonRDD("job_data/jdbc",query)
+
+    val jobs= esRDD.map( x => {
+      val json = JSON.parseObject(x._2)
+
+      val direction = json.getString("direction")
+      val jobName = json.getString("job_name")
+      val companyName = json.getString("company_name")
+      val jobSiteProvinces = json.getString("job_site_provinces")
+      val jobSite = json.getString("job_site")
+      val jobSalaryMin = json.getString("job_salary_min")
+      val jobSalaryMax = json.getString("job_salary_max")
+      val relaseDate = json.getString("relase_date")
+      val educationLevel = json.getString("education_level")
+      val workExper = json.getString("work_exper")
+      val companyWelfare = json.getString("company_welfare")
+      val jobRequire = json.getString("job_require")
+      val companyType = json.getString("company_type")
+      val companyPeopleNum = json.getString("company_people_num")
+      val companyBusiness = json.getString("company_business")
+
+      JobDataEntity(direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+        workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
+    })
+
+    println("从es读取完毕")
+
+    jobs
   }
 
 }
