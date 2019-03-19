@@ -4,6 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, JobNameRankEntity}
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.db.Update
 
 /** *
   * 描述： 分析全国当前方向的职位排名(按薪资)

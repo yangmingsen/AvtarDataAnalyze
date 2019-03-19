@@ -54,7 +54,7 @@ object SalarySiteAnalyze {
 
 
     val list = new util.ArrayList[SalarySiteEntity]()
-    rdd5.collect().toList.map(x => list.add(SalarySiteEntity(x._1, x._2, x._3)))
+    rdd5.collect().toList.take(8).map(x => list.add(SalarySiteEntity(x._1, x._2, x._3)))
 
     //print to Test
     println("SalarySiteAnalyze = " + rdd5.collect().toBuffer)
