@@ -74,10 +74,10 @@ object EducationCompanyTypeJobNumAnalyze {
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
 
-    if (dbutils.judge_statistical("tb_statistical_education_companytype_jobnum", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_education_companytype_jobnum", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_education_companytype_jobnum", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_education_companytype_jobnum", str, TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_education_companytype_jobnum", str, TimeUtils.getNowDate(),jobtypeTwoId)
   }
 }

@@ -11,13 +11,13 @@ object dbutils {
   val url = "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com:3306/job_data?useUnicode=true&characterEncoding=utf8" +
     "&useSSL=false"
 
-  def update_statistical(dbname: String, result: String, time: String): Unit = {
+  def update_statistical(dbname: String, result: String, time: String, jobtype_two_id: String): Unit = {
     var conn: Connection = null
     var ps: java.sql.PreparedStatement = null
     try {
       Class.forName(Driver)
       conn = DriverManager.getConnection(url, "user", "Group1234")
-      ps = conn.prepareStatement("update " + dbname + " set result=? where time='" + time + "'")
+      ps = conn.prepareStatement("update " + dbname + " set result=? where time='" + time + "' AND jobtype_two_id='" + jobtype_two_id + "'")
       ps.setString(1, result)
       ps.executeUpdate()
     }
@@ -47,7 +47,7 @@ object dbutils {
     ps.close()
   }
 
-  def judge_statistical(dbname: String, time: String): Boolean = {
+  def judge_statistical(dbname: String, time: String, jobtype_two_id: String): Boolean = {
     var conn: Connection = null
     var ps: java.sql.PreparedStatement = null
     var rs: ResultSet = null
@@ -55,7 +55,7 @@ object dbutils {
     try {
       Class.forName(Driver)
       conn = DriverManager.getConnection(url, "user", "Group1234")
-      ps = conn.prepareStatement("SELECT time from " + dbname + " where time = '" + time + "'")
+      ps = conn.prepareStatement("SELECT time from " + dbname + " where time = '" + time + "' AND jobtype_two_id='" + jobtype_two_id + "'")
       rs = ps.executeQuery()
       if (rs.next()) {
         result = false

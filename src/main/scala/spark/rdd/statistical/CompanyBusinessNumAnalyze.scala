@@ -14,7 +14,7 @@ import utils.{ConvertToJson, TimeUtils, dbutils}
 object CompanyBusinessNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
     val rdd1 = jobsRDD.filter(x => {
-      x.companyBusiness != ""
+      x.companyBusiness != "" && x.companyBusiness.length<=5
     }).map(x => {
       val business = x.companyBusiness
       (business, 1)
@@ -28,11 +28,11 @@ object CompanyBusinessNumAnalyze {
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_companybusiness_num", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_companybusiness_num", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_companybusiness_num", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_companybusiness_num", str,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_companybusiness_num", str,TimeUtils.getNowDate(),jobtypeTwoId)
   }
 
 }

@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSON
 import entity.JobDataEntity
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
-import org.elasticsearch.spark._
 import org.apache.spark.{SparkConf, SparkContext}
+import org.elasticsearch.spark._
 import spark.rdd.current._
 import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
-import top.ccw.avtar.utils.DateHelper
 import top.ccw.avtar.websocket.WebSocketClient
 
 /** *
@@ -29,7 +28,7 @@ object ExcuteAnalyze {
   //在spark中自动创建es中的索引
   conf.set("es.index.auto.create","true")
   //设置在Spark 中连接 es的url和端口
-  conf.set("es.nodes","127.0.0.1")
+  conf.set("es.nodes","10.0.0.28")
   conf.set("es.port","9200")
 
   val sc = new SparkContext(conf)
@@ -83,10 +82,10 @@ object ExcuteAnalyze {
     val jobsData = dataIn(direcion)
 
     //进入时状态分析
-    currentStatus(jobsData, direcion)
+    //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    //statisticalGraph(jobsData, direcion)
+    statisticalGraph(jobsData, direcion)
 
     WebSocketClient.sendMsg(direcion)
 
@@ -177,7 +176,7 @@ object ExcuteAnalyze {
     CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //中间数据层 IntermediateDataLayer
-    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
   }
 
   private def dataInFromMySQL(jobtypeTwoId: String): RDD[JobDataEntity] = {

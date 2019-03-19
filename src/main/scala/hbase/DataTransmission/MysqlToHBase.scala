@@ -14,7 +14,7 @@ object MysqlToHBase {
   def getHbaseDomain(jobsRDD: RDD[JobDataEntity]): ListBuffer[HbaseDomain] = {
     val hbaseDomainList = new ListBuffer[HbaseDomain]
     val rdd = jobsRDD.map(x => {
-      val hbaseDomain = new HbaseDomain(x.id,x.direction,x.jobName,x.companyName,x.jobSiteProvinces,x.jobSite,x.jobSalaryMin,x.jobSalaryMax,x.relaseDate,x.educationLevel,x.workExper,x.companyWelfare,x.jobRequire,x.companyType,x.companyPeopleNum,x.companyBusiness)
+      val hbaseDomain = new HbaseDomain(x.id, x.direction, x.jobName, x.companyName, x.jobSiteProvinces, x.jobSite, x.jobSalaryMin, x.jobSalaryMax, x.relaseDate, x.educationLevel, x.workExper, x.companyWelfare, x.jobRequire, x.companyType, x.companyPeopleNum, x.companyBusiness)
       hbaseDomainList.append(hbaseDomain)
     })
     hbaseDomainList

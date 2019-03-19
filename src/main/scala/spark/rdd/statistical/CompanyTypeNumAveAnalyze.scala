@@ -44,11 +44,11 @@ object CompanyTypeNumAveAnalyze {
     val str = ConvertToJson.ToJson3(list)
 
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_companytype_num", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_companytype_num", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_companytype_num", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_companytype_num", str,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_companytype_num", str,TimeUtils.getNowDate(),jobtypeTwoId)
   }
 
 }

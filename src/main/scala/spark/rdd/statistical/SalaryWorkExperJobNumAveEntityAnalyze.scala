@@ -54,11 +54,11 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
     val gsonStr = ConvertToJson.ToJson4(list3)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_salary_workexper_jobnumave", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_salary_workexper_jobnumave", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_salary_workexper_jobnumave", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", str,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_salary_workexper_jobnumave", str,TimeUtils.getNowDate(),jobtypeTwoId)
   }
 
 }

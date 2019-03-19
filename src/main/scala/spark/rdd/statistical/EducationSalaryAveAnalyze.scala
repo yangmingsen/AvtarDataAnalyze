@@ -79,10 +79,10 @@ object EducationSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson7(list)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_education_jobnum_salaryave", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_education_jobnum_salaryave", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_education_jobnum_salaryave", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_education_jobnum_salaryave", str,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_education_jobnum_salaryave", str,TimeUtils.getNowDate(),jobtypeTwoId)
   }
 }

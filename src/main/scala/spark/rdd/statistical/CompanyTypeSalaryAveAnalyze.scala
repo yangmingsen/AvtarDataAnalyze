@@ -110,11 +110,11 @@ object CompanyTypeSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson8(list)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_companytype_salary", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate(),jobtypeTwoId)
   }
 
 }

@@ -154,11 +154,11 @@ object IntermediateDataLayerAnalyze {
     val gsonstr = ConvertToJson.ToJson9(list0)
     val str = gsonstr.substring(1, gsonstr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_mediatedatalayer", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_mediatedatalayer", TimeUtils.getNowDate(),jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_mediatedatalayer", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_mediatedatalayer", str,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_mediatedatalayer", str,TimeUtils.getNowDate(),jobtypeTwoId)
   }
 
 }
