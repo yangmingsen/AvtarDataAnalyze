@@ -5,6 +5,7 @@ import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import spark.rdd.current._
+import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.utils.DateHelper
 
@@ -110,7 +111,7 @@ object ExcuteAnalyze {
         "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
     jdbcDF.registerTempTable("tb_jobinfo_data")
 
-    val jobDF = sqlContext.sql("SELECT * FROM `tb_jobinfo_data`")
+    val jobDF = sqlContext.sql("SELECT * FROM `t  b_jobinfo_data` where direction = 9")
 
     val rdd1 = jobDF.map(x => {
       val id = x.getInt(1).toString
@@ -134,7 +135,7 @@ object ExcuteAnalyze {
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
-    println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
+    //println("get Data from MySQL" + "AND data size = " + rdd1.collect().toList.size)
 
     rdd1
   }
@@ -175,31 +176,31 @@ object ExcuteAnalyze {
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析 Company_businessNum
-    //CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 SalaryWorkExperJobNumAve
-    //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationCompanyTypeJobNum
-    //EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
+    EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationJobNumSalaryAve
-    //EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeNumAve
-    //CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 JobNameNum
-    //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
+    JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationSalaryAve
-    //EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeSalaryAve
-    //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //中间数据层 IntermediateDataLayer
-    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析技能和能力词云
     WordCloudAnalyze.start(jobsData, jobtypeTwoId)

@@ -7,13 +7,13 @@ import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
 import org.ansj.splitWord.analysis.DicAnalysis
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 import scala.io.Source
 
 /**
   * @author ljq
-  * Created on 2019-03-17 14:23
+  *         Created on 2019-03-17 14:23
   **/
 object WordCloudAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
@@ -44,7 +44,7 @@ object WordCloudAnalyze {
       filter.insertStopWords(word)
     }
 
-    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*","")).recognition(filter).toStringWithOutNature(" "))
+    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" "))
 
     val wordcloud = splited.cache().flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _, 1).sortBy(_._2, false).take(1000)
 
@@ -56,18 +56,18 @@ object WordCloudAnalyze {
 
     val str1 = ConvertToJson.ToJson10(list1)
     val str2 = ConvertToJson.ToJson11(list2)
-    println(str1 + "\n" + str2)
-   /* if (dbutils.judge_statistical("tb_current_professional_skill", TimeUtils.getNowDate())) {
+    //println(str1 + "\n" + str2)
+    if (dbutils.judge_statistical("tb_current_professional_skill", TimeUtils.getNowDate())) {
       dbutils.insert_statistical("tb_current_professional_skill", str1, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_current_professional_skill", str1,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_current_professional_skill", str1, TimeUtils.getNowDate())
 
 
     if (dbutils.judge_statistical("tb_current_job_requirements", TimeUtils.getNowDate())) {
       dbutils.insert_statistical("tb_current_job_requirements", str2, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_current_job_requirements", str2,TimeUtils.getNowDate())*/
+      dbutils.update_statistical("tb_current_job_requirements", str2, TimeUtils.getNowDate())
   }
 }
