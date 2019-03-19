@@ -57,6 +57,8 @@ public class JobNameRankFourDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
 
     }
@@ -79,6 +81,8 @@ public class JobNameRankFourDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
     }
 
@@ -102,6 +106,8 @@ public class JobNameRankFourDao {
 
         }catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            JdbcUtil.release(null,pstmt,rs);
         }
 
         return 0;

@@ -40,13 +40,16 @@ public class ProvinceJobNumFiveDao {
 
     public boolean insert(ProvinceJobNumFive pjnf) {
         PreparedStatement pstmt = null;
-        String sql = "INSERT INTO `job_data`.`tb_current_province_jobnum`(`jobtype_two_id`, `result`,`time`) VALUES (?,?,?)";
+        String sql = "INSERT INTO `job_data`." +
+                "`tb_current_province_jobnum`(`jobtype_two_id`, `result`,`time`,`day_num`,`week_num`) VALUES (?,?,?,?,?)";
 
         try {
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,pjnf.getJobtypeTwoId());
             pstmt.setString(2,pjnf.getResult());
             pstmt.setString(3,pjnf.getDate());
+            pstmt.setLong(4,pjnf.getDayNum());
+            pstmt.setLong(5,pjnf.getWeekNum());
 
             pstmt.executeUpdate();
 
@@ -55,6 +58,8 @@ public class ProvinceJobNumFiveDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
 
     }
@@ -80,6 +85,8 @@ public class ProvinceJobNumFiveDao {
         }catch(Exception e) {
             e.printStackTrace();
             return false;
+        }finally {
+            JdbcUtil.release(null,pstmt,null);
         }
     }
 
@@ -103,6 +110,8 @@ public class ProvinceJobNumFiveDao {
 
         }catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            JdbcUtil.release(null,pstmt,rs);
         }
 
         return 0;

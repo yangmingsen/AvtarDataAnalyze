@@ -13,7 +13,7 @@ public class TestWebSocket  {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            WebSocketClient.sendMsg();
+            WebSocketClient.sendMsg("9");
 
 
         }

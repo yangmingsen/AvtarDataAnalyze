@@ -10,8 +10,8 @@ public class WebSocketClient {
 
     }
 
-    public static void sendMsg() {
-        socketClient.send("ok");
+    public static void sendMsg(String column_id) {
+        //socketClient.send(column_id);
     }
 
 }

@@ -24,9 +24,15 @@ import top.ccw.avtar.task.AnalyzeTask;
  * @author yangmingsen
  */
 public class ConsumerTool implements MessageListener,ExceptionListener {
-    private String user = ActiveMQConnection.DEFAULT_USER;
-    private String password = ActiveMQConnection.DEFAULT_PASSWORD;
-    private String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+//    private String user = ActiveMQConnection.DEFAULT_USER;
+//    private String password = ActiveMQConnection.DEFAULT_PASSWORD;
+//    private String url = ActiveMQConnection.DEFAULT_BROKER_URL;
+
+    private String url = "failover://tcp://192.168.0.101:61616";
+    private String user = "user";
+    private String password = "user";
+
+
     private String subject = "AnalyzeCmd";
     private Destination destination = null;
     private Connection connection = null;
@@ -85,8 +91,9 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
 
                 MapMessage mm = (MapMessage) message;
 
-                //获取主题信息
-                String listenCmdStr = mm.getString("QueueCmd");
+                //获取主题信息  注意这里的 mm.getString(arg) 的arg参数必须与生产者的一致，不然拿不到数据
+                String listenCmdStr = mm.getString("msgCmd");
+                System.out.println("listenCmdStr = "+listenCmdStr);
                 Gson gson = new Gson();
 
                 //获取命令对象 通过gson
@@ -99,16 +106,18 @@ public class ConsumerTool implements MessageListener,ExceptionListener {
                  */
                 QueueCmd listenCmd = gson.fromJson(listenCmdStr, QueueCmd.class);
 
-                //1.如果是 name = A
-                if(listenCmd.getName().equals("A")) {
-                    //do execute things....
+                if(listenCmd!= null) {
+                    //1.如果是 name = A
+                    if(listenCmd.getName().equals("A")) {
+                        //do execute things....
 
-                    //Thread analyzeTask = new Thread(new AnalyzeTask(listenCmd),"analyzeTask");
-                    //analyzeTask.start();
+                        //Thread analyzeTask = new Thread(new AnalyzeTask(listenCmd),"analyzeTask");
+                        //analyzeTask.start();
 
-                } else if (listenCmd.getName().equals("B")) {//2.如果 name = B
-                    //do execute things....
-                    System.out.println("mobile change direction = "+listenCmd.getContent().toString());
+                    } else if (listenCmd.getName().equals("B")) {//2.如果 name = B
+                        //do execute things....
+                        System.out.println("mobile change direction = "+listenCmd.getContent().toString());
+                    }
                 }
 
 

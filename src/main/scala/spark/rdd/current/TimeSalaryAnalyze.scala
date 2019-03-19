@@ -54,6 +54,6 @@ object TimeSalaryAnalyze {
 
     //do write database
 
-    //Update.ToTbCurrentTimeSalary(list)
+    Update.ToTbCurrentTimeSalary(list)
   }
 }

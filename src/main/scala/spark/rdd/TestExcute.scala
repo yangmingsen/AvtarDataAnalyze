@@ -9,6 +9,9 @@ import utils.LoggerLevels
 object TestExcute {
   def main(args: Array[String]): Unit = {
     LoggerLevels.setStreamingLogLevels()
-    ExcuteAnalyze.test()
+
+    for(i <- 1 to 9) {
+      ExcuteAnalyze.test(i.toString)
+    }
   }
 }
