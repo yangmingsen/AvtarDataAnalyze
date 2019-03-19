@@ -7,7 +7,7 @@ import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
 import org.ansj.splitWord.analysis.DicAnalysis
 import org.apache.spark.rdd.RDD
-import utils.{ConvertToJson, TimeUtils, dbutils}
+import utils.ConvertToJson
 
 import scala.io.Source
 
@@ -56,8 +56,8 @@ object WordCloudAnalyze {
 
     val str1 = ConvertToJson.ToJson10(list1)
     val str2 = ConvertToJson.ToJson11(list2)
-    //println(str1 + "\n" + str2)
-    if (dbutils.judge_statistical("tb_current_professional_skill", TimeUtils.getNowDate())) {
+    println(str1 + "\n" + str2)
+   /* if (dbutils.judge_statistical("tb_current_professional_skill", TimeUtils.getNowDate())) {
       dbutils.insert_statistical("tb_current_professional_skill", str1, jobtypeTwoId)
     }
     else
@@ -68,6 +68,6 @@ object WordCloudAnalyze {
       dbutils.insert_statistical("tb_current_job_requirements", str2, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_current_job_requirements", str2,TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_current_job_requirements", str2,TimeUtils.getNowDate())*/
   }
 }

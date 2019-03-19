@@ -1,7 +1,6 @@
 package spark.rdd
 
 import entity.JobDataEntity
-import hbase.DataTransmission.HbaseBatch
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -68,19 +67,19 @@ object ExcuteAnalyze {
   private def excuteAnalyze(direcion: String): Unit = {
 
     //更新当前数据插入 方向
-    Update.setUpdateInfo(Integer.parseInt(direcion), DateHelper.getYYYY_MM_DD)
+    //Update.setUpdateInfo(Integer.parseInt(direcion), DateHelper.getYYYY_MM_DD)
 
     //读取数据
     val jobsData = dataIn()
 
     //将mysql里的数据BulkLoad(全量导入)到hbase中
-    HbaseBatch.MysqlToHBaseStart(jobsData)
+    //HbaseBatch.MysqlToHBaseStart(jobsData)
 
     //进入时状态分析
     //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    //statisticalGraph(jobsData, direcion)
+    statisticalGraph(jobsData, direcion)
 
   }
 
@@ -114,7 +113,7 @@ object ExcuteAnalyze {
     val jobDF = sqlContext.sql("SELECT * FROM `tb_jobinfo_data`")
 
     val rdd1 = jobDF.map(x => {
-      val id = x.getLong(1).toString
+      val id = x.getInt(1).toString
       val direction = x.getInt(2).toString
       val jobName = x.getString(3)
       val companyName = x.getString(4)
@@ -203,7 +202,7 @@ object ExcuteAnalyze {
     //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析技能和能力词云
-    //WordCloudAnalyze.start(jobsData, jobtypeTwoId)
+    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
   }
 
 }
