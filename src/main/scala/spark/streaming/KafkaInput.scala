@@ -9,7 +9,7 @@ import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import utils.LoggerLevels
 
-/***
+/** *
   * 监听
   */
 object KafkaInput {
@@ -33,7 +33,7 @@ object KafkaInput {
     ssc.checkpoint("c://ck2")
 
     val topicMap = topics.split(",").map((_, numThreads.toInt)).toMap
-    println("topicMap = "+topicMap)
+    println("topicMap = " + topicMap)
 
     //与kafka 建立连接
     val data = KafkaUtils.createStream(ssc, zkQuorum, group, topicMap, StorageLevel.MEMORY_AND_DISK_SER)
@@ -41,7 +41,7 @@ object KafkaInput {
     val jobs = data.map(x => x._2).map(x => parseJobDataEntity(x))
 
 
-    /***
+    /** *
       * 在使用Streaming和kafka结合 的时候需要触发如下方法 print否则出现如下的错误
       * <p>
       *   java.lang.IllegalArgumentException: requirement failed: No output operations registered, so nothing to execute
@@ -63,8 +63,9 @@ object KafkaInput {
   }
 
 
-  /***
+  /** *
     * 该方法为解析 objStr 为 JobDataEntity对象，采用com.alibaba.fastjson.JSON 工具
+    *
     * @author yangmingsen
     * @param objStr
     * @return
@@ -73,6 +74,7 @@ object KafkaInput {
 
     val jsonObj = JSON.parseObject(objStr)
 
+    val id = jsonObj.get("id").toString
     val direction = jsonObj.get("direction").toString
     val jobName = jsonObj.get("jobName").toString
     val companyName = jsonObj.get("companyName").toString
@@ -97,14 +99,15 @@ object KafkaInput {
     val companyBusiness = jsonObj.get("companyBusiness").toString
 
 
-    JobDataEntity(direction,jobName,companyName,jobSiteProvinces,jobSite,jobSalaryMin,jobSalaryMax,
-      relaseDate,educationLevel,workExper,companyWelfare,jobRequire,
-      companyType,companyPeopleNum,companyBusiness)
+    JobDataEntity(id, direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax,
+      relaseDate, educationLevel, workExper, companyWelfare, jobRequire,
+      companyType, companyPeopleNum, companyBusiness)
   }
 
 
-  /***
+  /** *
     * 输出数据到HBase
+    *
     * @param jobs 数据流
     */
   def outStreamToHBase(jobs: DStream[JobDataEntity]): Unit = {
@@ -112,8 +115,9 @@ object KafkaInput {
   }
 
 
-  /***
+  /** *
     * 输出数据到MySQL
+    *
     * @param jobs 数据流
     */
   def outStreamToMySQL(jobs: DStream[JobDataEntity]): Unit = {

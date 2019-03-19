@@ -14,6 +14,7 @@
         <scala.compat.version>2.10</scala.compat.version>
         <spark.version>1.6.1</spark.version>
         <hadoop.version>2.6.4</hadoop.version>
+        <hbase.version>2.1.2</hbase.version>
     </properties>
 
     <dependencies>
@@ -119,12 +120,30 @@
             <version>2.8</version>
         </dependency>
 
+       <!--hbase-->
         <dependency>
-            <groupId>org.elasticsearch</groupId>
-            <artifactId>elasticsearch-spark_2.10</artifactId>
-            <version>2.3.1</version>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-client</artifactId>
+            <version>${hbase.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-server</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-common</artifactId>
+            <version>${hbase.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.hbase</groupId>
+            <artifactId>hbase-spark</artifactId>
+            <version>2.0.0-alpha4</version>
+        </dependency>
 
     </dependencies>
 

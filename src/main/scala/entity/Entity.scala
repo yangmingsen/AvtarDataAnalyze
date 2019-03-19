@@ -124,9 +124,17 @@ case class IntermediateDataLayerEntity1(val current_total_positions: util.ArrayL
 
 case class IntermediateDataLayerEntity(val data: util.ArrayList[IntermediateDataLayerEntity1])
 
-case class JobDataEntity(direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
+case class tb_analyze_professional_skill(name:String,value:Long)
+
+case class tb_analyze_job_requirements(name:String,value:Long)
+
+case class JobDataEntity(id: String,direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
                          jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
                          jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
+
+case class HbaseDomain(id: String,direction: String, jobName: String, companyName: String, jobSiteProvinces: String, jobSite: String, jobSalaryMin: String,
+                       jobSalaryMax: String, relaseDate: String, educationLevel: String, workExper: String, companyWelfare: String,
+                       jobRequire: String, companyType: String, companyPeopleNum: String, companyBusiness: String)
 
 class Entity {
 

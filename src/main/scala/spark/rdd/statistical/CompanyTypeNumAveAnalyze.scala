@@ -4,7 +4,7 @@ import java.util
 
 import entity.{JobDataEntity, tb_statistical_companytype_num}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 /** *
   * 描述： 按公司类型统计，得到各个公司类型的平均人数
@@ -43,8 +43,12 @@ object CompanyTypeNumAveAnalyze {
     //write to database
     val str = ConvertToJson.ToJson3(list)
 
-    println(str)
-    //dbutils.update_statistical("tb_statistical_companytype_num", str)
+    //println(str)
+    if (dbutils.judge_statistical("tb_statistical_companytype_num", TimeUtils.getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_companytype_num", str, jobtypeTwoId)
+    }
+    else
+      dbutils.update_statistical("tb_statistical_companytype_num", str,TimeUtils.getNowDate())
   }
 
 }

@@ -4,7 +4,7 @@ import java.util
 
 import entity.{CompanyTypeSalaryAveEntity, JobDataEntity}
 import org.apache.spark.rdd.RDD
-import utils.ConvertToJson
+import utils.{ConvertToJson, TimeUtils, dbutils}
 
 /** *
   * 描述： 以时间为轴、分析公司类型薪资历史走向
@@ -37,7 +37,7 @@ object CompanyTypeSalaryAveAnalyze {
       list1.add(y)
       for (z <- data3) {
         val rdd2 = rdd1.filter(x => {
-          isWeekRange(x._1._2) == z && x._1._1.equals(y)
+          TimeUtils.isWeekRange(x._1._2) == z && x._1._1.equals(y)
         }).map(x => {
           ((x._1._1, "2019-" + data1(z)), x._2)
         }).cache()
@@ -108,22 +108,13 @@ object CompanyTypeSalaryAveAnalyze {
 
     //write to database
     val gsonStr = ConvertToJson.ToJson8(list)
-    println(gsonStr.substring(1, gsonStr.length() - 1))
-    //dbutils.update_statistical("tb_statistical_companytype_salary", gsonStr.substring(1, gsonStr.length() - 1))
-
-  }
-
-  def isWeekRange(date: String): Int = {
-    val day = date.substring(5, date.length)
-    if (day <= "02-18")
-      0
-    else if (day > "02-18" & day <= "02-25")
-      1
-    else if (day > "02-25" && day <= "03-02")
-      2
-    else if (day > "03-02" && day <= "03-09")
-      3
+    val str = gsonStr.substring(1, gsonStr.length() - 1)
+    //println(str)
+    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate())) {
+      dbutils.insert_statistical("tb_statistical_companytype_salary", str, jobtypeTwoId)
+    }
     else
-      4
+      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate())
   }
+
 }
