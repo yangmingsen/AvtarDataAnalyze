@@ -203,6 +203,7 @@ object ExcuteAnalyze {
     val jobDF = sqlContext.sql(sql)
 
     val rdd1 = jobDF.map(x => {
+      val id = x.getInt(0).toString
       val direction = x.getInt(1).toString
       val jobName = x.getString(2)
       val companyName = x.getString(3)
@@ -219,7 +220,7 @@ object ExcuteAnalyze {
       val companyPeopleNum = x.getString(14)
       val companyBusiness = x.getString(15)
 
-      JobDataEntity(direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+      JobDataEntity(id,direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
