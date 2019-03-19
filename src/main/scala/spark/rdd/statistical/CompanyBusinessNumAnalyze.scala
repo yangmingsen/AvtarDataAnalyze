@@ -13,14 +13,14 @@ import utils.{ConvertToJson, TimeUtils, dbutils}
   */
 object CompanyBusinessNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-    val rdd1 = jobsRDD.filter(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
       x.companyBusiness != "" && x.companyBusiness.length<=5
-    }).map(x => {
+    }).mapPartitions(it=>it.map(x => {
       val business = x.companyBusiness
       (business, 1)
-    }).cache()
+    })).cache()
 
-    val rdd2 = rdd1.reduceByKey(_ + _).sortBy(_._2, false).cache()
+    val rdd2 = rdd1.reduceByKey(_ + _,10).sortBy(_._2, false).cache()
     val list = new util.ArrayList[tb_statistical_companybusiness_num]()
 
     rdd2.collect().take(50).map(x => list.add(tb_statistical_companybusiness_num(x._1, x._2)))

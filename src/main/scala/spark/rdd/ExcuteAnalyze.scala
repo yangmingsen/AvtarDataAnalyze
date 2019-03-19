@@ -7,7 +7,6 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark._
 import spark.rdd.current._
-import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
 import top.ccw.avtar.websocket.WebSocketClient
@@ -152,31 +151,34 @@ object ExcuteAnalyze {
   private def statisticalGraph(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析 Company_businessNum
-    CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
+    //CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 SalaryWorkExperJobNumAve
-    SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+    //SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationCompanyTypeJobNum
-    EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
+    //EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationJobNumSalaryAve
-    EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    //EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeNumAve
-    CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
+    //CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 JobNameNum
-    JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
+    //JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 EducationSalaryAve
-    EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    //EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析 CompanyTypeSalaryAve
-    CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    //CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
     //中间数据层 IntermediateDataLayer
-    IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    //IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+
+    //分析词云
+    //WordCloudAnalyze.start(jobsData, jobtypeTwoId)
   }
 
   private def dataInFromMySQL(jobtypeTwoId: String): RDD[JobDataEntity] = {
