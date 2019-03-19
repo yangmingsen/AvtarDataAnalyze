@@ -19,30 +19,30 @@ object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     val rdd1 = jobsRDD.filter(x => {
-      x.jobName.length != 0
+      x.jobName != ""
     }).map(x => {
       val direction = x.direction
       (direction, 1)
-    })
+    }).cache()
     val rdd2 = rdd1.reduceByKey(_ + _)
 
     val rdd3 = jobsRDD.filter(x => {
-      x.jobName.length != 0
+      x.jobName != ""
     }).map(x => {
       val jobName = x.jobName
       (jobName, 1)
-    })
+    }).cache()
     val rdd4 = rdd3.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd5 = jobsRDD.filter(x => {
-      x.jobSalaryMin.length != 0 && x.jobName != ""
+      x.jobSalaryMin != "" && x.jobName != ""
     }).map(x => {
       val direction = x.direction
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
       (direction, ave)
-    })
+    }).cache()
     val rdd7 = rdd5.countByKey()
     val rdd6 = rdd5.reduceByKey(_ + _).map(x => {
       val jobNum = rdd7.get(x._1) match {
@@ -51,38 +51,38 @@ object IntermediateDataLayerAnalyze {
       }
       val ave = (x._2 / jobNum).formatted("%.2f").toDouble
       (x._1, jobNum, ave)
-    })
+    }).cache()
 
     val rdd8 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && x.jobSite.length != 0
+      x.jobName != "" && x.jobSite != ""
     }).map(x => {
       val jobSite = x.jobSite
       (jobSite, 1)
-    })
+    }).cache()
     val rdd9 = rdd8.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd10 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && x.educationLevel != ""
+      x.jobName != "" && x.educationLevel != ""
     }).map(x => {
       val educationLevel = x.educationLevel
       (educationLevel, 1)
-    })
+    }).cache()
     val rdd11 = rdd10.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd12 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && x.companyType.length != 0
+      x.jobName != "" && x.companyType != ""
     }).map(x => {
       val companyType = x.companyType
       (companyType, 1)
-    })
+    }).cache()
     val rdd13 = rdd12.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val rdd14 = jobsRDD.filter(x => {
-      x.jobName.length != 0 && x.workExper != ""
+      x.jobName != "" && x.workExper != ""
     }).map(x => {
       val workExper = x.workExper
       (workExper, 1)
-    })
+    }).cache()
     val rdd15 = rdd14.reduceByKey(_ + _).sortBy(_._2, false).take(1)
 
     val list0 = new util.ArrayList[IntermediateDataLayerEntity]()
@@ -90,13 +90,13 @@ object IntermediateDataLayerAnalyze {
 
     val list1 = new util.ArrayList[String]()
     list1.add("当前职位总数")
-    rdd2.collect().toList.map(x => list1.add(x._2.toString))
+    rdd2.collect().map(x => list1.add(x._2.toString))
     val list2 = new util.ArrayList[String]()
     list2.add("最热门职位")
     rdd4.foreach(x => list2.add(x._1))
     val list3 = new util.ArrayList[String]()
     list3.add("平均薪资")
-    rdd6.collect().toList.map(x => list3.add(x._3.toString))
+    rdd6.collect().map(x => list3.add(x._3.toString))
     val list4 = new util.ArrayList[String]()
     list4.add("需求最大城市")
     rdd9.foreach(x => list4.add(x._1))
@@ -154,11 +154,11 @@ object IntermediateDataLayerAnalyze {
     val gsonstr = ConvertToJson.ToJson9(list0)
     val str = gsonstr.substring(1, gsonstr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_mediatedatalayer", TimeUtils.getNowDate(),jobtypeTwoId)) {
+    if (dbutils.judge_statistical("tb_statistical_mediatedatalayer", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_mediatedatalayer", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_mediatedatalayer", str,TimeUtils.getNowDate(),jobtypeTwoId)
+      dbutils.update_statistical("tb_statistical_mediatedatalayer", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 
 }

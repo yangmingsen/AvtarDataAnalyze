@@ -23,7 +23,7 @@ object EducationCompanyTypeJobNumAnalyze {
       val level = x.educationLevel
       val companyType = x.companyType
       ((companyType, level), 1)
-    })
+    }).cache()
     val rdd2 = rdd1.countByKey()
 
     val rdd3 = rdd1.reduceByKey(_ + _).sortBy(_._1, false).map(x => {
@@ -32,10 +32,10 @@ object EducationCompanyTypeJobNumAnalyze {
         case None => 1
       }
       (x._1._1, jobNum, x._1._2)
-    })
+    }).cache()
 
     val list = new util.ArrayList[EducationCompanyTypeJobNumEntity]()
-    rdd3.collect().toList.map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
+    rdd3.collect().map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
 
     val data1 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data2 = List("国企", "上市公司", "创业公司", "外资（非欧美）", "外资（欧美）", "民营公司", "合资", "事业单位")
@@ -47,7 +47,7 @@ object EducationCompanyTypeJobNumAnalyze {
           x._3.equals(y) && x._1.equals(z)
         }).cache()
         if (rdd.count() > 0) {
-          rdd.collect().toList.map(x => list1.add(x._2))
+          rdd.collect().map(x => list1.add(x._2))
         }
         else {
           list1.add(0)

@@ -18,12 +18,12 @@ object CompanyBusinessNumAnalyze {
     }).map(x => {
       val business = x.companyBusiness
       (business, 1)
-    })
+    }).cache()
 
-    val rdd2 = rdd1.reduceByKey(_ + _).sortBy(_._2, false)
+    val rdd2 = rdd1.reduceByKey(_ + _).sortBy(_._2, false).cache()
     val list = new util.ArrayList[tb_statistical_companybusiness_num]()
 
-    rdd2.collect().toList.map(x => list.add(tb_statistical_companybusiness_num(x._1, x._2)))
+    rdd2.collect().take(50).map(x => list.add(tb_statistical_companybusiness_num(x._1, x._2)))
 
     //do write to Databse
     val str = ConvertToJson.ToJson1(list)

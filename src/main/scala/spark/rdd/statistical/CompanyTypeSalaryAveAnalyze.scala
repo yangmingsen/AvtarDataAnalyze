@@ -21,7 +21,7 @@ object CompanyTypeSalaryAveAnalyze {
     val data3 = List(0, 1, 2, 3, 4)
 
     val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin.length != 0 && x.companyType != ""
+      x.jobSalaryMin != "" && x.companyType != ""
     }).map(x => {
       val companyType = x.companyType
       val min = x.jobSalaryMin.toDouble
@@ -30,7 +30,7 @@ object CompanyTypeSalaryAveAnalyze {
       val relaseDate = x.relaseDate
 
       ((companyType, relaseDate), ave)
-    })
+    }).cache()
 
     val list1 = new util.ArrayList[Object]()
     for (y <- data2) {
@@ -51,7 +51,7 @@ object CompanyTypeSalaryAveAnalyze {
           (x._1._1, ave_salary, "2019-" + data1(z))
         }).cache()
         if (rdd4.count() > 0) {
-          rdd4.collect().toList.map(x => list1.add(x._2.toString))
+          rdd4.collect().map(x => list1.add(x._2.toString))
         }
         else {
           list1.add("0")
@@ -110,11 +110,11 @@ object CompanyTypeSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson8(list)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate(),jobtypeTwoId)) {
+    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_companytype_salary", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate(),jobtypeTwoId)
+      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 
 }

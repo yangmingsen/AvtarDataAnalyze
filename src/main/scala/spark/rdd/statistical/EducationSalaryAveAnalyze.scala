@@ -21,7 +21,7 @@ object EducationSalaryAveAnalyze {
     val data3 = List(0, 1, 2, 3, 4)
 
     val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin.length != 0 && x.educationLevel != ""
+      x.jobSalaryMin!="" && x.educationLevel != ""
     }).map(x => {
       val level = x.educationLevel
       val min = x.jobSalaryMin.toDouble
@@ -29,7 +29,7 @@ object EducationSalaryAveAnalyze {
       val ave = (min.toDouble + max.toDouble) / 2.0
       val relaseDate = x.relaseDate
       ((level, relaseDate), ave)
-    })
+    }).cache()
 
     val list1 = new util.ArrayList[Double]()
     for (y <- data2) {
@@ -49,7 +49,7 @@ object EducationSalaryAveAnalyze {
           (x._1._1, ave_salary, "2019-" + data1(z))
         }).cache()
         if (rdd4.count() > 0) {
-          rdd4.collect().toList.map(x => list1.add(x._2))
+          rdd4.collect().map(x => list1.add(x._2))
         }
         else {
           list1.add(0)

@@ -18,7 +18,7 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
       * 获取 （工作经验--按最小值来,最小薪资,最大薪资）
       */
     val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin.length != 0 && x.workExper != ""
+      x.jobSalaryMin!= "" && x.workExper != ""
     }).map(x => {
       val workExper = x.workExper
       val min = x.jobSalaryMin.toDouble
@@ -26,7 +26,7 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
       val ave = (min.toDouble + max.toDouble) / 2.0
 
       (workExper, ave)
-    })
+    }).cache()
 
     val list1 = new util.ArrayList[String]()
     val list2 = new util.ArrayList[Double]()
@@ -42,12 +42,12 @@ object SalaryWorkExperJobNumAveEntityAnalyze {
       val ave = (x._2 / jobNum).formatted("%.2f").toDouble
 
       (x._1, jobNum, ave)
-    })
+    }).cache()
 
     //val list = new util.ArrayList[SalaryWorkExperJobNumAveEntity]()
     val list3 = new util.ArrayList[SalaryWorkExperJobNumAve]()
     //rdd3.collect().toList.map(x => list.add(entity.SalaryWorkExperJobNumAveEntity(x._1, x._2, x._3)))
-    rdd3.collect().toList.map(x => list1.add(x._1) && list2.add(x._3))
+    rdd3.collect().map(x => list1.add(x._1) && list2.add(x._3))
     list3.add(SalaryWorkExperJobNumAve(list1, list2))
 
     //write to database

@@ -23,7 +23,7 @@ object CompanyTypeNumAveAnalyze {
       val companyType = x.companyType
       val num = x.companyPeopleNum.toLong
       (companyType, num)
-    })
+    }).cache()
 
     val rdd2 = rdd1.countByKey()
 
@@ -35,10 +35,10 @@ object CompanyTypeNumAveAnalyze {
       val ave = x._2 / jobNum
 
       (ave, x._1)
-    })
+    }).cache()
 
     val list = new util.ArrayList[tb_statistical_companytype_num]()
-    rdd3.collect().toList.map(x => list.add(entity.tb_statistical_companytype_num(x._1, x._2)))
+    rdd3.collect().map(x => list.add(entity.tb_statistical_companytype_num(x._1, x._2)))
 
     //write to database
     val str = ConvertToJson.ToJson3(list)

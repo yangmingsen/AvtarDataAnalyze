@@ -17,7 +17,7 @@ import scala.io.Source
   **/
 object WordCloudAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-    val data = jobsRDD.map(x => x.jobRequire)
+    val data = jobsRDD.map(x => x.jobRequire).cache()
 
     val data1 = new util.ArrayList[String]()
     for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
