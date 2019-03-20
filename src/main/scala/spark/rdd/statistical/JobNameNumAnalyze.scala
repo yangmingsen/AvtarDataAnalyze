@@ -13,14 +13,14 @@ import utils.{ConvertToJson, TimeUtils, dbutils}
   */
 object JobNameNumAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
-    val rdd1 = jobsRDD.filter(x => {
-      x.jobName != ""&&x.jobName.length<=5
-    }).map(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
+      x.jobName != "" && x.jobName.length <= 5
+    }).mapPartitions(it => it.map(x => {
       val jobName = x.jobName
       (jobName, 1)
-    }).cache()
+    })).cache()
 
-    val rdd2 = rdd1.reduceByKey(_ + _).sortBy(_._2, false)
+    val rdd2 = rdd1.reduceByKey(_ + _, 10).sortBy(_._2, false).cache()
     val list = new util.ArrayList[tb_statistical_jobname_num]()
 
     rdd2.collect().take(50).map(x => list.add(tb_statistical_jobname_num(x._1, x._2)))
@@ -28,10 +28,10 @@ object JobNameNumAnalyze {
     //do write to Databse
     val str = ConvertToJson.ToJson2(list)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_jobname_num", TimeUtils.getNowDate(),jobtypeTwoId)) {
+    if (dbutils.judge_statistical("tb_statistical_jobname_num", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_jobname_num", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_jobname_num", str,TimeUtils.getNowDate(),jobtypeTwoId)
+      dbutils.update_statistical("tb_statistical_jobname_num", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 }

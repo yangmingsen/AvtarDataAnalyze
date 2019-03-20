@@ -20,34 +20,34 @@ object EducationSalaryAveAnalyze {
     val data2 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data3 = List(0, 1, 2, 3, 4)
 
-    val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin!="" && x.educationLevel != ""
-    }).map(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
+      x.jobSalaryMin != "" && x.educationLevel != ""
+    }).mapPartitions(it => it.map(x => {
       val level = x.educationLevel
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
       val relaseDate = x.relaseDate
       ((level, relaseDate), ave)
-    }).cache()
+    })).cache()
 
     val list1 = new util.ArrayList[Double]()
     for (y <- data2) {
       for (z <- data3) {
         val rdd2 = rdd1.filter(x => {
           TimeUtils.isWeekRange(x._1._2) == z && x._1._1.equals(y)
-        }).map(x => {
+        }).mapPartitions(it => it.map(x => {
           ((x._1._1, "2019-" + data1(z)), x._2)
-        }).cache()
+        })).cache()
         val rdd3 = rdd2.countByKey()
-        val rdd4 = rdd2.reduceByKey(_ + _).map(x => {
+        val rdd4 = rdd2.reduceByKey(_ + _, 10).mapPartitions(it => it.map(x => {
           val num = rdd3.get(x._1) match {
             case Some(v) => v.toLong
             case None => 1
           }
           val ave_salary = (x._2 / num).formatted("%.2f").toDouble
           (x._1._1, ave_salary, "2019-" + data1(z))
-        }).cache()
+        })).cache()
         if (rdd4.count() > 0) {
           rdd4.collect().map(x => list1.add(x._2))
         }
@@ -79,10 +79,10 @@ object EducationSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson7(list)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_education_jobnum_salaryave", TimeUtils.getNowDate(),jobtypeTwoId)) {
+    if (dbutils.judge_statistical("tb_statistical_education_jobnum_salaryave", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_education_jobnum_salaryave", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_education_jobnum_salaryave", str,TimeUtils.getNowDate(),jobtypeTwoId)
+      dbutils.update_statistical("tb_statistical_education_jobnum_salaryave", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 }

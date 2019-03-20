@@ -18,72 +18,73 @@ import scala.io.Source
 object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
-    val rdd1 = jobsRDD.filter(x => {
+    val rdd0 = jobsRDD.repartition(10)
+    val rdd = jobsRDD.repartition(10).filter(x => {
       x.jobName != ""
-    }).map(x => {
+    }).cache()
+
+    val rdd1 = rdd.mapPartitions(it => it.map(x => {
       val direction = x.direction
       (direction, 1)
-    }).cache()
-    val rdd2 = rdd1.reduceByKey(_ + _)
+    })).cache()
+    val rdd2 = rdd1.reduceByKey(_ + _, 10).cache()
 
-    val rdd3 = jobsRDD.filter(x => {
-      x.jobName != ""
-    }).map(x => {
+    val rdd3 = rdd.mapPartitions(it => it.map(x => {
       val jobName = x.jobName
       (jobName, 1)
-    }).cache()
-    val rdd4 = rdd3.reduceByKey(_ + _).sortBy(_._2, false).take(1)
+    })).cache()
+    val rdd4 = rdd3.reduceByKey(_ + _, 10).sortBy(_._2, false).take(1)
 
-    val rdd5 = jobsRDD.filter(x => {
+    val rdd5 = rdd0.filter(x => {
       x.jobSalaryMin != "" && x.jobName != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val direction = x.direction
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
       (direction, ave)
-    }).cache()
+    })).cache()
     val rdd7 = rdd5.countByKey()
-    val rdd6 = rdd5.reduceByKey(_ + _).map(x => {
+    val rdd6 = rdd5.reduceByKey(_ + _, 10).mapPartitions(it => it.map(x => {
       val jobNum = rdd7.get(x._1) match {
         case Some(v) => v.toLong
         case None => 1
       }
       val ave = (x._2 / jobNum).formatted("%.2f").toDouble
-      (x._1, jobNum, ave)
-    }).cache()
+      (x._1, ave)
+    })).cache()
 
-    val rdd8 = jobsRDD.filter(x => {
+    val rdd8 = rdd0.filter(x => {
       x.jobName != "" && x.jobSite != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val jobSite = x.jobSite
       (jobSite, 1)
-    }).cache()
-    val rdd9 = rdd8.reduceByKey(_ + _).sortBy(_._2, false).take(1)
+    })).cache()
+    val rdd9 = rdd8.reduceByKey(_ + _, 10).sortBy(_._2, false).take(1)
 
-    val rdd10 = jobsRDD.filter(x => {
+    val rdd10 = rdd0.filter(x => {
       x.jobName != "" && x.educationLevel != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val educationLevel = x.educationLevel
       (educationLevel, 1)
-    }).cache()
-    val rdd11 = rdd10.reduceByKey(_ + _).sortBy(_._2, false).take(1)
+    })).cache()
+    val rdd11 = rdd10.reduceByKey(_ + _, 10).sortBy(_._2, false).take(1)
 
-    val rdd12 = jobsRDD.filter(x => {
+    val rdd12 = rdd0.filter(x => {
       x.jobName != "" && x.companyType != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val companyType = x.companyType
       (companyType, 1)
-    }).cache()
-    val rdd13 = rdd12.reduceByKey(_ + _).sortBy(_._2, false).take(1)
+    })).cache()
+    val rdd13 = rdd12.reduceByKey(_ + _, 10).sortBy(_._2, false).take(1)
 
-    val rdd14 = jobsRDD.filter(x => {
+    val rdd14 = rdd0.filter(x => {
       x.jobName != "" && x.workExper != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val workExper = x.workExper
       (workExper, 1)
-    }).cache()
-    val rdd15 = rdd14.reduceByKey(_ + _).sortBy(_._2, false).take(1)
+    })).cache()
+    val rdd15 = rdd14.reduceByKey(_ + _, 10).sortBy(_._2, false).take(1)
 
     val list0 = new util.ArrayList[IntermediateDataLayerEntity]()
     val list = new util.ArrayList[IntermediateDataLayerEntity1]()
@@ -96,7 +97,7 @@ object IntermediateDataLayerAnalyze {
     rdd4.foreach(x => list2.add(x._1))
     val list3 = new util.ArrayList[String]()
     list3.add("平均薪资")
-    rdd6.collect().map(x => list3.add(x._3.toString))
+    rdd6.collect().map(x => list3.add(x._2.toString))
     val list4 = new util.ArrayList[String]()
     list4.add("需求最大城市")
     rdd9.foreach(x => list4.add(x._1))
@@ -110,7 +111,9 @@ object IntermediateDataLayerAnalyze {
     list7.add("需求最大的工作经验要求")
     rdd15.foreach(x => list7.add(x._1))
 
-    val data = jobsRDD.map(x => x.jobRequire)
+    val data = rdd0.filter(x => {
+      x.jobRequire != ""
+    }).mapPartitions(it => it.map(x => x.jobRequire))
 
     val data1 = new util.ArrayList[String]()
     for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
@@ -137,16 +140,16 @@ object IntermediateDataLayerAnalyze {
       filter.insertStopWords(word)
     }
 
-    val splited = data.filter(_ != null).map(x => DicAnalysis.parse(x.toString.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" "))
+    val splited = data.map(x => DicAnalysis.parse(x.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" ")).cache()
 
-    val wordcloud = splited.cache().flatMap(_.split(" ")).map((_, 1)).reduceByKey(_ + _, 1).sortBy(_._2, false).take(1000)
+    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache()
 
     val list8 = new util.ArrayList[String]()
     list8.add("需求最大的能力要求")
-    wordcloud.filter(x => x._1 != " " && data1.contains(x._1)).take(1).foreach(x => list8.add(x._1))
+    wordcloud.take(100).filter(x => x._1 != "" && data1.contains(x._1)).take(1).foreach(x => list8.add(x._1))
     val list9 = new util.ArrayList[String]()
     list9.add("最热门技术")
-    wordcloud.filter(x => x._1 != " " && data2.contains(x._1.toLowerCase())).take(1).foreach(x => list9.add(x._1))
+    wordcloud.take(100).filter(x => x._1 != "" && data2.contains(x._1.toLowerCase())).take(1).foreach(x => list9.add(x._1))
 
     //do write to Databse
     list.add(IntermediateDataLayerEntity1(list1, list2, list3, list4, list5, list6, list7, list8, list9))

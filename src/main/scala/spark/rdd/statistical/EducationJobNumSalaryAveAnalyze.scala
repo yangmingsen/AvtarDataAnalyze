@@ -17,29 +17,29 @@ object EducationJobNumSalaryAveAnalyze {
     /** *
       * 获取 （学历,最小薪资,最大薪资）
       */
-    val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin!= "" && x.educationLevel!=""
-    }).map(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
+      x.jobSalaryMin != "" && x.educationLevel != ""
+    }).mapPartitions(it => it.map(x => {
       val level = x.educationLevel
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
       val ave = (min.toDouble + max.toDouble) / 2.0
 
       (level, ave)
-    }).cache()
+    })).cache()
 
     val list1 = new util.ArrayList[String]()
     val list2 = new util.ArrayList[Double]()
     val rdd2 = rdd1.countByKey()
 
-    val rdd3 = rdd1.reduceByKey(_ + _).sortBy(_._1, true).map(x => {
+    val rdd3 = rdd1.reduceByKey(_ + _, 10).sortBy(_._1, true).mapPartitions(it => it.map(x => {
       val jobNum = rdd2.get(x._1) match {
         case Some(v) => v.toLong
         case None => 1
       }
       val ave = (x._2 / jobNum).formatted("%.2f").toDouble
       (x._1, jobNum, ave)
-    }).cache()
+    })).cache()
 
     //val list = new util.ArrayList[EducationJobNumSalaryAveEntity]()
     val list3 = new util.ArrayList[EducationJobNumSalaryAve]()
@@ -49,12 +49,12 @@ object EducationJobNumSalaryAveAnalyze {
 
     //write to database
     val gsonStr = ConvertToJson.ToJson5(list3)
-    val str = gsonStr.substring(1,gsonStr.length()-1)
+    val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_education_salaryave", TimeUtils.getNowDate(),jobtypeTwoId)) {
+    if (dbutils.judge_statistical("tb_statistical_education_salaryave", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_education_salaryave", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_education_salaryave", str,TimeUtils.getNowDate(),jobtypeTwoId)
+      dbutils.update_statistical("tb_statistical_education_salaryave", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 }
