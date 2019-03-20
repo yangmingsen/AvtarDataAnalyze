@@ -11,7 +11,7 @@ object dbutils {
   val url = "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com:3306/job_data?useUnicode=true&characterEncoding=utf8" +
     "&useSSL=false"
   val user = "user"
-  val pwd = "Group1234"
+  val pwd = "AvtarGroup1234"
 
   def getconn(): Connection = {
     var conn: Connection = null
@@ -86,7 +86,7 @@ object dbutils {
     var result: Boolean = false
     try {
       conn = getconn()
-      ps = conn.prepareStatement("SELECT time from " + dbname + " where time = '" + time + "' AND jobtype_two_id='" + jobtype_two_id + "'")
+      ps = conn.prepareStatement("SELECT time,jobtype_two_id from " + dbname + " where time = '" + time + "' AND jobtype_two_id='" + jobtype_two_id + "'")
       rs = ps.executeQuery()
       if (rs.next()) {
         result = false

@@ -1,5 +1,7 @@
 package spark.rdd
 
+import java.util.concurrent.{ExecutorService, Executors}
+
 import com.alibaba.fastjson.JSON
 import entity.JobDataEntity
 import org.apache.spark.rdd.RDD
@@ -7,6 +9,7 @@ import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
 import org.elasticsearch.spark._
 import spark.rdd.current._
+import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
 import top.ccw.avtar.websocket.WebSocketClient
@@ -25,13 +28,12 @@ object ExcuteAnalyze {
   //初始化环境
   val conf = new SparkConf().setAppName("ExcuteAnalyze").set("spark.driver.host", "localhost").setMaster("local[*]")
   //在spark中自动创建es中的索引
-  conf.set("es.index.auto.create","true")
+  conf.set("es.index.auto.create", "true")
   //设置在Spark 中连接 es的url和端口
-  conf.set("es.nodes","10.0.0.28")
-  conf.set("es.port","9200")
+  conf.set("es.nodes", "10.0.0.28")
+  conf.set("es.port", "9200")
 
   val sc = new SparkContext(conf)
-
 
   def test(direction: String): Unit = {
 
@@ -48,9 +50,9 @@ object ExcuteAnalyze {
     //获取存储在Redis的方向命令（这个方向命令是springboot后台存放的）
     val direction = RedisClient.getNowAnalyzeValue
 
-    println("direction in Redis : "+direction)
+    println("direction in Redis : " + direction)
 
-    if(direction!=null && direction!="") {
+    if (direction != null && direction != "") {
       //执行分析程序
       excuteAnalyze(direction)
     }
@@ -100,7 +102,6 @@ object ExcuteAnalyze {
     *
     */
   private def dataIn(jobtypeTwoId: String): RDD[JobDataEntity] = {
-
 
 
     //从MySQL读取数据
@@ -179,22 +180,70 @@ object ExcuteAnalyze {
 
     //分析词云
     //WordCloudAnalyze.start(jobsData, jobtypeTwoId)
+    val threadPool: ExecutorService = Executors.newFixedThreadPool(4)
+    try {
+      for (i <- 1 to 10) {
+        //threadPool.submit(new ThreadDemo("thread"+i))
+        threadPool.execute(new ThreadDemo(i, jobsData, jobtypeTwoId))
+      }
+    } finally {
+      threadPool.shutdown()
+    }
+  }
+
+  private def Scheduling(i: Int, jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
+    if (i == 1) {
+      CompanyBusinessNumAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 2) {
+      SalaryWorkExperJobNumAveEntityAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 3) {
+      EducationCompanyTypeJobNumAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 4) {
+      EducationJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 5) {
+      CompanyTypeNumAveAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 6) {
+      JobNameNumAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 7) {
+      EducationSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 8) {
+      CompanyTypeSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else if (i == 9) {
+      IntermediateDataLayerAnalyze.start(jobsData, jobtypeTwoId)
+    }
+    else {
+      WordCloudAnalyze.start(jobsData, jobtypeTwoId)
+    }
+  }
+
+  class ThreadDemo(i: Int, jobsData: RDD[JobDataEntity], jobtypeTwoId: String) extends Runnable {
+    override def run() {
+      Scheduling(i, jobsData, jobtypeTwoId)
+    }
   }
 
   private def dataInFromMySQL(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
-    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE  direction="+jobtypeTwoId
+    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE  direction=" + jobtypeTwoId
     val sqlContext = new SQLContext(sc)
 
     //    val jdbcDF = sqlContext.read.format("jdbc").
     //      options(Map("url" -> "jdbc:mysql://rm-uf6871zn4f8aq9vpvro.mysql.rds.aliyuncs.com/job_data?characterEncoding=utf8&useSSL=false",
-    //        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "Group1234")).load()
+    //        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_job_info_new", "user" -> "user", "password" -> "AvtarGroup1234")).load()
     //    jdbcDF.registerTempTable("tb_job_info_new")
 
-//    val jdbcDF = sqlContext.read.format("jdbc").
-//      options(Map("url" -> "jdbc:mysql://10.0.0.28:3306/job_data?characterEncoding=utf8&useSSL=false",
-//        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
-//    jdbcDF.registerTempTable("tb_jobinfo_data")
+    //    val jdbcDF = sqlContext.read.format("jdbc").
+    //      options(Map("url" -> "jdbc:mysql://10.0.0.28:3306/job_data?characterEncoding=utf8&useSSL=false",
+    //        "driver" -> "com.mysql.jdbc.Driver", "dbtable" -> "tb_jobinfo_data", "user" -> "yms", "password" -> "yms")).load()
+    //    jdbcDF.registerTempTable("tb_jobinfo_data")
 
     val jdbcDF = sqlContext.read.format("jdbc").
       options(Map("url" -> "jdbc:mysql://localhost:3306/job_data?characterEncoding=utf8&useSSL=false",
@@ -222,7 +271,7 @@ object ExcuteAnalyze {
       val companyPeopleNum = x.getString(14)
       val companyBusiness = x.getString(15)
 
-      JobDataEntity(id,direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+      JobDataEntity(id, direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
@@ -235,11 +284,11 @@ object ExcuteAnalyze {
 
   private def dataInFromElasticsearch(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
-    val query = "?q=direction:"+jobtypeTwoId
+    val query = "?q=direction:" + jobtypeTwoId
 
-    val esRDD = sc.esJsonRDD("job_data/jdbc",query)
+    val esRDD = sc.esJsonRDD("job_data/jdbc", query)
 
-    val jobs= esRDD.map( x => {
+    val jobs = esRDD.map(x => {
       val json = JSON.parseObject(x._2)
 
       val id = json.getString("id")
@@ -259,7 +308,7 @@ object ExcuteAnalyze {
       val companyPeopleNum = json.getString("company_people_num")
       val companyBusiness = json.getString("company_business")
 
-      JobDataEntity(id,direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+      JobDataEntity(id, direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
         workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
     })
 
@@ -267,5 +316,4 @@ object ExcuteAnalyze {
 
     jobs
   }
-
 }
