@@ -4,6 +4,7 @@ import com.google.common.base.CharMatcher;
 import top.ccw.avtar.db.dao.stream.JobDataTwoDao;
 import top.ccw.avtar.entity.JobDataOne;
 import top.ccw.avtar.entity.JobDataTwo;
+import top.ccw.avtar.instream.ElasticsearchUtils;
 import top.ccw.avtar.utils.DateHelper;
 
 import java.util.regex.Matcher;
@@ -18,9 +19,12 @@ public class ClearnProcess {
         //add j2 to database
         JobDataTwoDao.getInstance().insert(j2);
 
+        //add j2 to elasticsearch
+        ElasticsearchUtils.saveTo(j2);
+
     }
 
-    public static void process(JobDataOne j1, JobDataTwo j2) {
+    private static void process(JobDataOne j1, JobDataTwo j2) {
         init(j1, j2);
 
         firstModifyJobSite(j1, j2);
@@ -33,7 +37,7 @@ public class ClearnProcess {
         eightModifyJobRequire(j1, j2);
     }
 
-    public static void init(JobDataOne j1, JobDataTwo j2) {
+    private static void init(JobDataOne j1, JobDataTwo j2) {
         j2.setDirection(j1.getDirection());//设置方向
         j2.setJobName(j1.getJobName());//职位名
         j2.setCompanyName(j1.getCompanyName());//公司名
@@ -41,7 +45,7 @@ public class ClearnProcess {
     }
 
     //清洗程序1
-    public static void firstModifyJobSite(JobDataOne j1, JobDataTwo j2) {
+    private static void firstModifyJobSite(JobDataOne j1, JobDataTwo j2) {
 
         if(j1.getJobSite() == null || j1.getJobSite().equals("") || j1.getJobSite().equals("None")) {
             j2.setJobSite("");
@@ -137,7 +141,7 @@ public class ClearnProcess {
     }
 
     //清洗程序2
-    public static void secondModifySalary(JobDataOne j1, JobDataTwo j2) {
+    private static void secondModifySalary(JobDataOne j1, JobDataTwo j2) {
 
         /**
          * 考虑3中情况:
@@ -225,7 +229,7 @@ public class ClearnProcess {
     }
 
     //清洗程序3
-    public static void thirdModifyRelaseDate(JobDataOne j1,JobDataTwo j2) {
+    private static void thirdModifyRelaseDate(JobDataOne j1,JobDataTwo j2) {
 
         if(j1.getRelaseDate()!=null && !j1.getRelaseDate().equals("") || !j1.getJobSite().equals("None")) {
             String relaseDate = DateHelper.getYear() + "-" +j1.getRelaseDate();
@@ -260,7 +264,7 @@ public class ClearnProcess {
     }
 
     //清洗程序4
-    public static void fourthModifyJobInfo(JobDataOne j1, JobDataTwo j2) {
+    private static void fourthModifyJobInfo(JobDataOne j1, JobDataTwo j2) {
         String jobInfo = j1.getJobInfo1();// 需要提取学历、工作经验的数据
 
         if (jobInfo!=null && !jobInfo.equals("") && !jobInfo.equals("None")) {
@@ -289,7 +293,7 @@ public class ClearnProcess {
     }
 
     //清洗程序5
-    public static void fiveModifyCompanyPeopleNum(JobDataOne j1, JobDataTwo j2) {
+    private static void fiveModifyCompanyPeopleNum(JobDataOne j1, JobDataTwo j2) {
         String str = j1.getCompanyPeopleNum();
 
         String personAve = "";
@@ -332,7 +336,7 @@ public class ClearnProcess {
     }
 
     //清洗程序6
-    public static void sixModifyCompanyTypeFormat(JobDataOne j1, JobDataTwo j2) {
+    private static void sixModifyCompanyTypeFormat(JobDataOne j1, JobDataTwo j2) {
         if(j1.getCompanyType() == null || j1.getCompanyType().equals("")
                 || j1.getCompanyType().equals("None")) {
             j2.setCompanyType("");
@@ -342,7 +346,7 @@ public class ClearnProcess {
     }
 
     //清洗程序7
-    public static void sevenModifyCompanyBusiness(JobDataOne j1, JobDataTwo j2) {
+    private static void sevenModifyCompanyBusiness(JobDataOne j1, JobDataTwo j2) {
         if(j1.getCompanyBusiness()==null || j1.getCompanyBusiness().equals("")
                 || j1.getCompanyBusiness().equals("None")) {
             j2.setCompanyBusiness("");
@@ -352,7 +356,7 @@ public class ClearnProcess {
     }
 
     //清洗程序8
-    public static void eightModifyJobRequire(JobDataOne j1, JobDataTwo j2) {
+    private static void eightModifyJobRequire(JobDataOne j1, JobDataTwo j2) {
         if(j1.getJobInfo2() == null || j1.getJobInfo2().equals("")
                 || j1.getJobInfo2().equals("None")) {
             j2.setJobRequire("");

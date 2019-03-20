@@ -43,6 +43,30 @@ public class JobDataTwo {
         this.companyPeopleNum = companyPeopleNum;
         this.companyBusiness = companyBusiness;
     }
+
+    public JobDataTwo(long id, int direction, String jobName, String companyName, String jobSiteProvinces,
+                      String jobSite, String jobSalaryMin, String jobSalaryMax, String relaseDate, String educationLevel,
+                      String workExper, String companyWelfare, String jobRequire, String companyType, String companyPeopleNum,
+                      String companyBusiness) {
+        super();
+        this.id = id;
+        this.direction = direction;
+        this.jobName = jobName;
+        this.companyName = companyName;
+        this.jobSiteProvinces = jobSiteProvinces;
+        this.jobSite = jobSite;
+        this.jobSalaryMin = jobSalaryMin;
+        this.jobSalaryMax = jobSalaryMax;
+        this.relaseDate = relaseDate;
+        this.educationLevel = educationLevel;
+        this.workExper = workExper;
+        this.companyWelfare = companyWelfare;
+        this.jobRequire = jobRequire;
+        this.companyType = companyType;
+        this.companyPeopleNum = companyPeopleNum;
+        this.companyBusiness = companyBusiness;
+    }
+
     public long getId() {
         return id;
     }

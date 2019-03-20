@@ -5,7 +5,9 @@ import top.ccw.avtar.utils.JdbcUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JobDataTwoDao {
@@ -125,5 +127,58 @@ public class JobDataTwoDao {
 
 
     }
+
+    /***
+     * this is for test suggestion
+     * @return
+     */
+    public List<JobDataTwo> selects() {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        List<JobDataTwo> list = new ArrayList<JobDataTwo>();
+
+        String sql = "SELECT * FROM tb_job_info_new WHERE relase_date='2019-01-21'";
+
+        try {
+            pstmt = conn.prepareStatement(sql);
+
+            rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+
+                list.add(new JobDataTwo(
+                        rs.getLong("id"),
+                        rs.getInt("direction"),
+                        rs.getString("job_name"),
+                        rs.getString("company_name"),
+                        rs.getString("job_site_provinces"),
+                        rs.getString("job_site"),
+                        rs.getString("job_salary_min"),
+                        rs.getString("job_salary_max"),
+                        rs.getString("relase_date"),
+                        rs.getString("education_level"),
+                        rs.getString("work_exper"),
+                        rs.getString("company_welfare"),
+                        rs.getString("job_require"),
+                        rs.getString("company_type"),
+                        rs.getString("company_people_num"),
+                        rs.getString("company_business")
+                ));
+
+            }
+
+            return list;
+        }catch (Exception e) {
+
+            e.printStackTrace();
+
+            // TODO: handle exception
+        }
+
+        return null;
+
+    }
+
 
 }

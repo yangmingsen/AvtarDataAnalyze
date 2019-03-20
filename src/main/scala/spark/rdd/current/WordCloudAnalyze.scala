@@ -56,6 +56,7 @@ object WordCloudAnalyze {
 
     val str1 = ConvertToJson.ToJson10(list1)
     val str2 = ConvertToJson.ToJson11(list2)
+
     println(str1 + "\n" + str2)
    /* if (dbutils.judge_statistical("tb_current_professional_skill", TimeUtils.getNowDate())) {
       dbutils.insert_statistical("tb_current_professional_skill", str1, jobtypeTwoId)
