@@ -17,25 +17,25 @@ object EducationCompanyTypeJobNumAnalyze {
     /** *
       * 获取 （公司类型,学历)
       */
-    val rdd1 = jobsRDD.filter(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
       x.educationLevel != "" && x.companyType != ""
-    }).map(x => {
+    }).mapPartitions(it => it.map(x => {
       val level = x.educationLevel
       val companyType = x.companyType
       ((companyType, level), 1)
-    })
+    })).cache()
     val rdd2 = rdd1.countByKey()
 
-    val rdd3 = rdd1.reduceByKey(_ + _).sortBy(_._1, false).map(x => {
+    val rdd3 = rdd1.reduceByKey(_ + _, 10).sortBy(_._1, false).mapPartitions(it => it.map(x => {
       val jobNum = rdd2.get(x._1) match {
         case Some(v) => v.toLong
         case None => 1
       }
       (x._1._1, jobNum, x._1._2)
-    })
+    })).cache()
 
     val list = new util.ArrayList[EducationCompanyTypeJobNumEntity]()
-    rdd3.collect().toList.map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
+    rdd3.collect().map(x => list.add(entity.EducationCompanyTypeJobNumEntity(x._1, x._2, x._3)))
 
     val data1 = List("高中", "中专", "大专", "本科", "硕士", "博士")
     val data2 = List("国企", "上市公司", "创业公司", "外资（非欧美）", "外资（欧美）", "民营公司", "合资", "事业单位")
@@ -47,7 +47,7 @@ object EducationCompanyTypeJobNumAnalyze {
           x._3.equals(y) && x._1.equals(z)
         }).cache()
         if (rdd.count() > 0) {
-          rdd.collect().toList.map(x => list1.add(x._2))
+          rdd.collect().map(x => list1.add(x._2))
         }
         else {
           list1.add(0)
@@ -74,10 +74,10 @@ object EducationCompanyTypeJobNumAnalyze {
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
 
-    if (dbutils.judge_statistical("tb_statistical_education_companytype_jobnum", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_education_companytype_jobnum", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_education_companytype_jobnum", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_education_companytype_jobnum", str, TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_education_companytype_jobnum", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 }

@@ -20,9 +20,9 @@ object CompanyTypeSalaryAveAnalyze {
     val data2 = List("国企", "上市公司", "创业公司", "外资（非欧美）", "外资（欧美）", "民营公司", "合资", "事业单位")
     val data3 = List(0, 1, 2, 3, 4)
 
-    val rdd1 = jobsRDD.filter(x => {
-      x.jobSalaryMin.length != 0 && x.companyType != ""
-    }).map(x => {
+    val rdd1 = jobsRDD.repartition(10).filter(x => {
+      x.jobSalaryMin != "" && x.companyType != ""
+    }).mapPartitions(it => it.map(x => {
       val companyType = x.companyType
       val min = x.jobSalaryMin.toDouble
       val max = x.jobSalaryMax.toDouble
@@ -30,7 +30,7 @@ object CompanyTypeSalaryAveAnalyze {
       val relaseDate = x.relaseDate
 
       ((companyType, relaseDate), ave)
-    })
+    })).cache()
 
     val list1 = new util.ArrayList[Object]()
     for (y <- data2) {
@@ -38,20 +38,20 @@ object CompanyTypeSalaryAveAnalyze {
       for (z <- data3) {
         val rdd2 = rdd1.filter(x => {
           TimeUtils.isWeekRange(x._1._2) == z && x._1._1.equals(y)
-        }).map(x => {
+        }).mapPartitions(it => it.map(x => {
           ((x._1._1, "2019-" + data1(z)), x._2)
-        }).cache()
+        })).cache()
         val rdd3 = rdd2.countByKey()
-        val rdd4 = rdd2.reduceByKey(_ + _).map(x => {
+        val rdd4 = rdd2.reduceByKey(_ + _, 10).mapPartitions(it => it.map(x => {
           val num = rdd3.get(x._1) match {
             case Some(v) => v.toLong
             case None => 1
           }
           val ave_salary = (x._2 / num).formatted("%.2f").toDouble
           (x._1._1, ave_salary, "2019-" + data1(z))
-        }).cache()
+        })).cache()
         if (rdd4.count() > 0) {
-          rdd4.collect().toList.map(x => list1.add(x._2.toString))
+          rdd4.collect().map(x => list1.add(x._2.toString))
         }
         else {
           list1.add("0")
@@ -110,11 +110,11 @@ object CompanyTypeSalaryAveAnalyze {
     val gsonStr = ConvertToJson.ToJson8(list)
     val str = gsonStr.substring(1, gsonStr.length() - 1)
     //println(str)
-    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate())) {
+    if (dbutils.judge_statistical("tb_statistical_companytype_salary", TimeUtils.getNowDate(), jobtypeTwoId)) {
       dbutils.insert_statistical("tb_statistical_companytype_salary", str, jobtypeTwoId)
     }
     else
-      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate())
+      dbutils.update_statistical("tb_statistical_companytype_salary", str, TimeUtils.getNowDate(), jobtypeTwoId)
   }
 
 }
