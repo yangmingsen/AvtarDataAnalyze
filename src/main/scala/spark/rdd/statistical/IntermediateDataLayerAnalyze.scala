@@ -18,7 +18,7 @@ import scala.io.Source
 object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
-    val rdd0 = jobsRDD.repartition(10)
+    val rdd0 = jobsRDD.repartition(10).cache()
 
     val rdd = rdd0.filter(x => {
       x.jobName != ""
@@ -114,7 +114,7 @@ object IntermediateDataLayerAnalyze {
 
     val data = rdd0.filter(x => {
       x.jobRequire != ""
-    }).mapPartitions(it => it.map(x => x.jobRequire))
+    }).mapPartitions(it => it.map(x => x.jobRequire)).cache()
 
     val data1 = new util.ArrayList[String]()
     for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/ability").getLines()) {
@@ -143,7 +143,7 @@ object IntermediateDataLayerAnalyze {
 
     val splited = data.map(x => DicAnalysis.parse(x.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" ")).cache()
 
-    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache().take(250)
+    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache().take(200)
 
     val list8 = new util.ArrayList[String]()
     list8.add("需求最大的能力要求")
