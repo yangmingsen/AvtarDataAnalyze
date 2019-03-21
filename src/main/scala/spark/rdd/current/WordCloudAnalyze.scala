@@ -48,13 +48,13 @@ object WordCloudAnalyze {
 
     val splited = data.map(x => DicAnalysis.parse(x.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" ")).cache()
 
-    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache()
+    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache().take(500)
 
     val list1 = new util.ArrayList[tb_analyze_professional_skill]()
     val list2 = new util.ArrayList[tb_analyze_job_requirements]()
 
-    wordcloud.take(500).filter(x => x._1 != "" && data1.contains(x._1)).take(50).foreach(x => list2.add(tb_analyze_job_requirements(x._1, x._2)))
-    wordcloud.take(500).filter(x => x._1 != "" && data2.contains(x._1.toLowerCase())).take(50).foreach(x => list1.add(tb_analyze_professional_skill(x._1, x._2)))
+    wordcloud.filter(x => x._1 != "" && data1.contains(x._1)).take(50).foreach(x => list2.add(tb_analyze_job_requirements(x._1, x._2)))
+    wordcloud.filter(x => x._1 != "" && data2.contains(x._1.toLowerCase())).take(50).foreach(x => list1.add(tb_analyze_professional_skill(x._1, x._2)))
 
     val str1 = ConvertToJson.ToJson10(list1)
     val str2 = ConvertToJson.ToJson11(list2)
