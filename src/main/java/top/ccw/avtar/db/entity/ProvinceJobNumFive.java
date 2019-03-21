@@ -6,15 +6,17 @@ public class ProvinceJobNumFive {
     private int jobtypeTwoId;
     private int column;
     private String result;
+    private String result_two;
     private String date;
     private long dayNum;
     private long weekNum;
 
-    public ProvinceJobNumFive(int id, int jobtypeTwoId, int column,String result, String date, long dayNum, long weekNum) {
+    public ProvinceJobNumFive(int id, int jobtypeTwoId, int column,String result,String result_two, String date, long dayNum, long weekNum) {
         this.id = id;
         this.jobtypeTwoId = jobtypeTwoId;
         this.column = column;
         this.result = result;
+        this.result_two = result_two;
         this.date = date;
         this.dayNum = dayNum;
         this.weekNum = weekNum;
@@ -30,6 +32,14 @@ public class ProvinceJobNumFive {
                 ", dayNum=" + dayNum +
                 ", weekNum=" + weekNum +
                 '}';
+    }
+
+    public String getResult_two() {
+        return result_two;
+    }
+
+    public void setResult_two(String result_two) {
+        this.result_two = result_two;
     }
 
     public int getColumn() {
