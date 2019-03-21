@@ -19,7 +19,8 @@ object IntermediateDataLayerAnalyze {
   def start(jobsRDD: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     val rdd0 = jobsRDD.repartition(10)
-    val rdd = jobsRDD.repartition(10).filter(x => {
+
+    val rdd = rdd0.filter(x => {
       x.jobName != ""
     }).cache()
 
@@ -142,14 +143,14 @@ object IntermediateDataLayerAnalyze {
 
     val splited = data.map(x => DicAnalysis.parse(x.replaceAll("\\s*", "")).recognition(filter).toStringWithOutNature(" ")).cache()
 
-    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache()
+    val wordcloud = splited.flatMap(_.split(" ")).mapPartitions(it => it.map((_, 1))).reduceByKey(_ + _, 10).sortBy(_._2, false).cache().take(250)
 
     val list8 = new util.ArrayList[String]()
     list8.add("需求最大的能力要求")
-    wordcloud.take(100).filter(x => x._1 != "" && data1.contains(x._1)).take(1).foreach(x => list8.add(x._1))
+    wordcloud.filter(x => x._1 != "" && data1.contains(x._1)).take(1).foreach(x => list8.add(x._1))
     val list9 = new util.ArrayList[String]()
     list9.add("最热门技术")
-    wordcloud.take(100).filter(x => x._1 != "" && data2.contains(x._1.toLowerCase())).take(1).foreach(x => list9.add(x._1))
+    wordcloud.filter(x => x._1 != "" && data2.contains(x._1.toLowerCase())).take(1).foreach(x => list9.add(x._1))
 
     //do write to Databse
     list.add(IntermediateDataLayerEntity1(list1, list2, list3, list4, list5, list6, list7, list8, list9))
