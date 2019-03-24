@@ -54,7 +54,7 @@ object ProvinceJobNumAnalyze {
     RDD2.collect().toList.map(x => list2.add(x))
 
     //print to Test
-    println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
+    //println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
     Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum,list2)

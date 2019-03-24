@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public class ClearnProcess {
 
     public static void start(JobDataOne j1) {
+
         JobDataTwo j2 = new JobDataTwo();
         process(j1, j2);
 

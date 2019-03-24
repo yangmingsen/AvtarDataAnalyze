@@ -7,6 +7,7 @@ import org.ansj.library.DicLibrary
 import org.ansj.recognition.impl.StopRecognition
 import org.ansj.splitWord.analysis.DicAnalysis
 import org.apache.spark.rdd.RDD
+import top.ccw.avtar.websocket.WebSocketClient
 import utils.{ConvertToJson, TimeUtils, dbutils}
 
 import scala.io.Source
@@ -71,5 +72,9 @@ object WordCloudAnalyze {
     }
     else
       dbutils.update_statistical("tb_current_job_requirements", str2, TimeUtils.getNowDate(), jobtypeTwoId)
+
+    WebSocketClient.sendMsg("7")
+    WebSocketClient.sendMsg("6")
+
   }
 }
