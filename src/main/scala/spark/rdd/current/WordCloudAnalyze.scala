@@ -27,7 +27,7 @@ object WordCloudAnalyze {
     }
 
     val data2 = new util.ArrayList[String]()
-    for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/technology1").getLines()) {
+    for (word <- Source.fromFile("src/main/scala/spark/rdd/ParticipleText/technology").getLines()) {
       word.split(",").foreach(x => data2.add(x))
     }
     //添加自定义词典
