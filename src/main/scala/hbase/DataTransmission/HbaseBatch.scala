@@ -24,11 +24,11 @@ object HbaseBatch {
   lazy val connection: Connection = ConnectionFactory.createConnection(conf)
 
   def MysqlToHBaseStart(jobsRDD: RDD[JobDataEntity]): Unit = {
-    val conf1 = new SparkConf().setAppName("HbaseBatch").set("spark.driver.host", "localhost").setMaster("local[4]")
+    val conf1 = new SparkConf().setAppName("HbaseBatch").set("spark.driver.host", "localhost").setMaster("local[*]")
     val sc = new SparkContext(conf1)
     setConf("master,machine1,machine2", "2181", "master")
     val hbaseContext = new HBaseContext(sc, conf)
-    val tableNameStr = "tb_job_info"
+    val tableNameStr = "tb_job_data"
     val loadPathStr = "/hbase/data1"
     val table = connection.getTable(TableName.valueOf(tableNameStr))
     val rdd = sc.parallelize(MysqlToHBase.getHbaseDomainArray(jobsRDD))

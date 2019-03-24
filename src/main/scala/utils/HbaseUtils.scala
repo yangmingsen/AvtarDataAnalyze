@@ -127,7 +127,7 @@ object HbaseUtils {
     setConf("master,machine1,machine2", "2181","master")
 
     /* import scala.collection.JavaConverters._
-     val resultScanner: ResultScanner = hbaseScan("tb_job_info")
+     val resultScanner: ResultScanner = hbaseScan("tb_job_data")
      resultScanner.asScala.foreach(rs=>{
        val cells = rs.listCells()
        cells.asScala.foreach(cell => {
@@ -137,10 +137,10 @@ object HbaseUtils {
          println(rowKey,qualifier,value)
        })
      })*/
-    //createTable("tb_job_info", "info")
-    //singlePut("tb_job_info", "2","info","haha","6")
-    //deleteByRow("tb_job_info","1")
-    //getCell("tb_job_info", "1")
+    //createTable("tb_job_data", "info")
+    //singlePut("tb_job_data", "2","info","haha","6")
+    //deleteByRow("tb_job_data","1")
+    //getCell("tb_job_data", "1")
     this.close()
   }
 }

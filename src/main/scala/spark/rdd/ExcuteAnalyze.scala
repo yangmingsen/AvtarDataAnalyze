@@ -2,6 +2,7 @@ package spark.rdd
 
 import com.alibaba.fastjson.JSON
 import entity.JobDataEntity
+import hbase.DataTransmission.HbaseBatch
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -83,7 +84,10 @@ object ExcuteAnalyze {
     //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData, direcion)
+    //statisticalGraph(jobsData, direcion)
+
+    //BulkLoad全量导入mysql数据到Hbase
+    HbaseBatch.MysqlToHBaseStart(jobsData)
 
     //WebSocketClient.sendMsg(direcion)
 
@@ -142,7 +146,7 @@ object ExcuteAnalyze {
     //分析 CompanyTypeJobNumSalaryAve
     CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
-    WordCloudAnalyze.start(jobsData,jobtypeTwoId)
+    WordCloudAnalyze.start(jobsData, jobtypeTwoId)
 
   }
 
