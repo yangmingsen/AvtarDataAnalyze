@@ -2,7 +2,6 @@ package spark.rdd
 
 import com.alibaba.fastjson.JSON
 import entity.JobDataEntity
-import hbase.DataTransmission.HbaseBatch
 import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -11,6 +10,7 @@ import spark.rdd.current._
 import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
+import utils.HbaseUtils
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -87,7 +87,9 @@ object ExcuteAnalyze {
     //statisticalGraph(jobsData, direcion)
 
     //BulkLoad全量导入mysql数据到Hbase
-    HbaseBatch.MysqlToHBaseStart(jobsData)
+    //HbaseBatch.MysqlToHBaseStart(jobsData, sc)
+    //HbaseUtils.BatchPut("tb_job_data", jobsData)
+    HbaseUtils.getDomainList1(jobsData)
 
     //WebSocketClient.sendMsg(direcion)
 
@@ -104,7 +106,7 @@ object ExcuteAnalyze {
     * 3、从elasticsearch
     *
     */
-  private def dataIn(jobtypeTwoId: String): RDD[JobDataEntity] = {
+  def dataIn(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
 
     //从MySQL读取数据

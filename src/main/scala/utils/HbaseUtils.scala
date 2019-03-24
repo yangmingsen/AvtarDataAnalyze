@@ -1,9 +1,11 @@
 package utils
 
+import entity.JobDataEntity
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.hbase._
 import org.apache.hadoop.hbase.client._
 import org.apache.hadoop.hbase.util.Bytes
+import org.apache.spark.rdd.RDD
 
 import scala.collection.mutable
 
@@ -26,10 +28,10 @@ object HbaseUtils {
     * @param port   zk端口2181
     * @return
     */
-  def setConf(quorum: String, port: String,hbase_pos:String): Unit = {
+  def setConf(quorum: String, port: String, hbase_pos: String): Unit = {
     //System.setProperty("Hadoop_USER_NAME","root")
     val conf = HBaseConfiguration.create()
-    conf.set("hbase.rootdir", "hdfs://" + hbase_pos+ ":8020/hbase")
+    conf.set("hbase.rootdir", "hdfs://" + hbase_pos + ":8020/hbase")
     conf.set("hbase.zookeeper.quorum", quorum)
     conf.set("hbase.zookeeper.property.clientPort", port)
     this.conf = conf
@@ -88,21 +90,65 @@ object HbaseUtils {
 
   /**
     * 单条插入
+    *
     * @param tableName 命名空间：表名
     * @param rowKey    rowkey
     * @param family    列族
     * @param qualifier column列
     * @param value     列值
+    *                  List<Put>
     */
   def singlePut(tableName: String, rowKey: String, family: String, qualifier: String, value: String): Unit = {
     //向表中插入数据
     //单个插入
-    val put: Put = new Put(Bytes.toBytes(rowKey)) //参数是行键row01
+    val put: Put = new Put(Bytes.toBytes(rowKey))
     put.addColumn(Bytes.toBytes(family), Bytes.toBytes(qualifier), Bytes.toBytes(value))
     //获得表对象
     val table: Table = connection.getTable(TableName.valueOf(tableName))
     table.put(put)
     table.close()
+  }
+
+  def getDomainList(jobsRDD: RDD[JobDataEntity]): java.util.ArrayList[Put] = {
+    val list = new java.util.ArrayList[Put]()
+    val rdd = jobsRDD.repartition(10).mapPartitions(it => it.map(x => {
+      val put: Put = new Put(Bytes.toBytes(x.id))
+      put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("direction"), Bytes.toBytes(x.direction))
+      put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("jobName"), Bytes.toBytes(x.jobName))
+      put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("companyName"), Bytes.toBytes(x.companyName))
+      put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("jobSiteProvinces"), Bytes.toBytes(x.jobSiteProvinces))
+      put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("jobSite"), Bytes.toBytes(x.jobSite))
+      put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("jobSalaryMin"), Bytes.toBytes(x.jobSalaryMin))
+      put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("jobSalaryMax"), Bytes.toBytes(x.jobSalaryMax))
+      put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("relaseDate"), Bytes.toBytes(x.relaseDate))
+      put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("educationLevel"), Bytes.toBytes(x.educationLevel))
+      put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("workExper"), Bytes.toBytes(x.workExper))
+      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyWelfare"), Bytes.toBytes(x.companyWelfare))
+      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("jobRequire"), Bytes.toBytes(x.jobRequire))
+      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyType"), Bytes.toBytes(x.companyType))
+      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyPeopleNum"), Bytes.toBytes(x.companyPeopleNum))
+      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyBusiness"), Bytes.toBytes(x.companyBusiness))
+      list.add(put)
+    }))
+    list
+  }
+
+  def getDomainList1(jobsRDD: RDD[JobDataEntity]): Unit = {
+    val rdd = jobsRDD.filter(x=>{x.id=="50"}).repartition(10).mapPartitions(it => it.map(x => {
+      println(x.direction)
+    }))
+  }
+
+  /**
+    * 批量插入
+    */
+  def BatchPut(tableName: String, jobsRDD: RDD[JobDataEntity]): Unit = {
+    setConf("master,machine1,machine2", "2181", "master")
+    val list = getDomainList(jobsRDD)
+    val table: Table = connection.getTable(TableName.valueOf(tableName))
+    table.put(list)
+    table.close()
+    this.close()
   }
 
   /**
@@ -122,9 +168,9 @@ object HbaseUtils {
     admin.close()
     connection.close()
   }
-
+/*
   def main(args: Array[String]): Unit = {
-    setConf("master,machine1,machine2", "2181","master")
+    setConf("master,machine1,machine2", "2181", "master")
 
     /* import scala.collection.JavaConverters._
      val resultScanner: ResultScanner = hbaseScan("tb_job_data")
@@ -138,9 +184,10 @@ object HbaseUtils {
        })
      })*/
     //createTable("tb_job_data", "info")
-    //singlePut("tb_job_data", "2","info","haha","6")
-    //deleteByRow("tb_job_data","1")
+    //singlePut("tb_job_data", "2","info1","haha","6")
+    //deleteByRow("tb_job_data","2")
     //getCell("tb_job_data", "1")
     this.close()
   }
+  */
 }
