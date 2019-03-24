@@ -37,12 +37,19 @@ case class EducationJobNumEntity(val level: String, val num: Long)
 case class JobNameRankEntity(val jobName: String, val salary: Double, val site: String, val companyName: String)
 
 /** *
-  * 这里的地区为 市
+  * 这里的地区为 省
   *
-  * @param province 地区名字 (本来是省，后面改为地区-市。然后这个字段就没有更改)
+  * @param province
   * @param num      地区职位数
   */
 case class ProvinceJobNumEntity(val province: String, val num: Long)
+
+/***
+  * 这里的地区为 市
+  * @param city
+  * @param num
+  */
+case class CityJobNumEntity(val city: String, val num: Long)
 
 
 /** *

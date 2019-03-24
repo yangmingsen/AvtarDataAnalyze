@@ -2,7 +2,7 @@ package spark.rdd.current
 
 import java.util
 
-import entity.{JobDataEntity, ProvinceJobNumEntity}
+import entity.{CityJobNumEntity, JobDataEntity, ProvinceJobNumEntity}
 import org.apache.spark.rdd.RDD
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.utils.DateHelper
@@ -22,15 +22,20 @@ object ProvinceJobNumAnalyze {
       * 获取 （职位地点,发布时间)
       */
     val rdd1 = jobsRDD.map(x => {
-      val jobSite = x.jobSiteProvinces
+      val jobSite = x.jobSiteProvinces//省
       val relaseDate = x.relaseDate
-      (jobSite, relaseDate)
+      val jobCity = x.jobSite //市
+      (jobSite, relaseDate,jobCity)
     })
 
-    //按地区统计职位数，并封装为RDD[ProvinceJobNumEntity()]
+    //按省地区统计职位数，并封装为RDD[ProvinceJobNumEntity()]
     val rdd2 = rdd1.filter(x => {
-      !x._1.equals("异地招聘")
+      !x._1.equals("异地")
     }).map(x => (x._1, 1)).reduceByKey(_ + _).map(x => ProvinceJobNumEntity(x._1, x._2.toLong))
+
+    //这里按市
+    val RDD2 = rdd1.filter(x => {x._3 != "异地招聘"}).map(x => (x._3,1))
+      .reduceByKey(_ + _).map(x =>CityJobNumEntity(x._1,x._2))
 
     //获取当天日期
     val day = DateHelper.getYYYY_MM_DD
@@ -45,11 +50,15 @@ object ProvinceJobNumAnalyze {
     val list = new util.ArrayList[ProvinceJobNumEntity]()
     rdd2.collect().toList.map(x => list.add(x))
 
+    val list2 = new util.ArrayList[CityJobNumEntity]()
+    RDD2.collect().toList.map(x => list2.add(x))
+
     //print to Test
     println("ProvinceJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write database
-    Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum)
+    Update.ToTbCurrentProvinceJobnum(list, jobDayNum, jobWeekNum,list2)
+
 
   }
 

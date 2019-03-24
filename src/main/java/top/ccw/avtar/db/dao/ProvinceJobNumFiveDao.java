@@ -41,7 +41,7 @@ public class ProvinceJobNumFiveDao {
     public boolean insert(ProvinceJobNumFive pjnf) {
         PreparedStatement pstmt = null;
         String sql = "INSERT INTO `job_data`." +
-                "`tb_current_province_jobnum`(`jobtype_two_id`, `result`,`time`,`day_num`,`week_num`) VALUES (?,?,?,?,?)";
+                "`tb_current_province_jobnum`(`jobtype_two_id`, `result`,`time`,`day_num`,`week_num`,`result_two`) VALUES (?,?,?,?,?,?)";
 
         try {
             pstmt = conn.prepareStatement(sql);
@@ -50,6 +50,7 @@ public class ProvinceJobNumFiveDao {
             pstmt.setString(3,pjnf.getDate());
             pstmt.setLong(4,pjnf.getDayNum());
             pstmt.setLong(5,pjnf.getWeekNum());
+            pstmt.setString(6,pjnf.getResult_two());
 
             pstmt.executeUpdate();
 
@@ -67,7 +68,7 @@ public class ProvinceJobNumFiveDao {
     public boolean update(ProvinceJobNumFive pjnf) {
         PreparedStatement pstmt = null;
         String sql = "UPDATE `job_data`.`tb_current_province_jobnum` SET " +
-                "`jobtype_two_id` = ?, `result` = ?,`time` = ?,`day_num` = ?,`week_num` = ? WHERE `id` = ?";
+                "`jobtype_two_id` = ?, `result` = ?,`time` = ?,`day_num` = ?,`week_num` = ?,`result_two` = ? WHERE `id` = ?";
 
         try {
             pstmt = conn.prepareStatement(sql);
@@ -76,7 +77,8 @@ public class ProvinceJobNumFiveDao {
             pstmt.setString(3,pjnf.getDate());
             pstmt.setLong(4,pjnf.getDayNum());
             pstmt.setLong(5,pjnf.getWeekNum());
-            pstmt.setInt(6,pjnf.getId());
+            pstmt.setString(6,pjnf.getResult_two());
+            pstmt.setInt(7,pjnf.getId());
 
             pstmt.executeUpdate();
 

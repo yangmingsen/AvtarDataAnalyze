@@ -103,19 +103,21 @@ public class Update {
         sendOkForSpringBootService("4");
     }
 
-    public static void ToTbCurrentProvinceJobnum(List<ProvinceJobNumEntity> list, long dayNum, long weekNum) {
+    public static void ToTbCurrentProvinceJobnum(List<ProvinceJobNumEntity> list, long dayNum, long weekNum,
+                                                 List<CityJobNumEntity> list2) {
 
         Integer id = ProvinceJobNumFiveDao.getInstance().searchId(jobtypeTwoId,time);
 
         Gson gson = new Gson();
         String gsonStr = gson.toJson(list);
+        String gsonStr2 = gson.toJson(list2);
 
         if(id != 0) {
             ProvinceJobNumFiveDao.getInstance().
-                    update(new ProvinceJobNumFive(id,jobtypeTwoId,0,gsonStr,time,dayNum,weekNum));
+                    update(new ProvinceJobNumFive(id,jobtypeTwoId,0,gsonStr,gsonStr2,time,dayNum,weekNum));
         } else  {
             ProvinceJobNumFiveDao.getInstance().
-                    insert(new ProvinceJobNumFive(0,jobtypeTwoId,0,gsonStr,time,dayNum,weekNum));
+                    insert(new ProvinceJobNumFive(0,jobtypeTwoId,0,gsonStr,gsonStr2,time,dayNum,weekNum));
         }
 
         sendOkForSpringBootService("8");

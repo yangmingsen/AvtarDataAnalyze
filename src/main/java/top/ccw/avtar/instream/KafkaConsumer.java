@@ -7,6 +7,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.MessageAndMetadata;
 import top.ccw.avtar.entity.JobDataOne;
+import top.ccw.avtar.instream.clearn.ClearnProcess;
 
 
 import java.util.HashMap;
@@ -50,11 +51,8 @@ public class KafkaConsumer {
                 //得到一个数据对象
                 JobDataOne jobDataOne = gson.fromJson(msg,JobDataOne.class);
 
-                System.out.println("jobinfo = "+jobDataOne.toString());
-
-
-
                 //go data clear program
+                ClearnProcess.start(jobDataOne);
 
             }
         }

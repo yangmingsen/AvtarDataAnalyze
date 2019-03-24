@@ -81,10 +81,10 @@ object ExcuteAnalyze {
     val jobsData = dataIn(direcion)
 
     //进入时状态分析
-    //currentStatus(jobsData, direcion)
+    currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    statisticalGraph(jobsData, direcion)
+    //statisticalGraph(jobsData, direcion)
 
     WebSocketClient.sendMsg(direcion)
 
