@@ -11,7 +11,7 @@ public class TimeWorkTask implements Runnable {
             ExcuteAnalyze.startAnalyze();
 
             try {
-                Thread.sleep(3*1000);
+                Thread.sleep(4*1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

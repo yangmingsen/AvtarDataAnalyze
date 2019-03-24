@@ -27,7 +27,7 @@ object EducationJobNumAnalyze {
     rdd2.collect().toList.map(x => list.add(EducationJobNumEntity(x._1, x._2)))
 
     //print to Test
-    println("EducationJobNumAnalyze = " + rdd2.collect().toBuffer)
+    //println("EducationJobNumAnalyze = " + rdd2.collect().toBuffer)
 
     //do write to Databse
     Update.ToTbCurrentEducationJobnum(list)
