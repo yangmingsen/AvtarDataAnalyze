@@ -10,7 +10,6 @@ import spark.rdd.current._
 import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
-import top.ccw.avtar.websocket.WebSocketClient
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -81,12 +80,12 @@ object ExcuteAnalyze {
     val jobsData = dataIn(direcion)
 
     //进入时状态分析
-    currentStatus(jobsData, direcion)
+    //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    //statisticalGraph(jobsData, direcion)
+    statisticalGraph(jobsData, direcion)
 
-    WebSocketClient.sendMsg(direcion)
+    //WebSocketClient.sendMsg(direcion)
 
   }
 
