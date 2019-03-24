@@ -38,7 +38,7 @@ object JobNameRankAnalyze {
 
 
     //print to Test
-    //println("JobNameRankAnalyze = " + rdd2.collect().toBuffer.take(10))
+    println("JobNameRankAnalyze = " + rdd2.collect().toBuffer.take(10))
 
     //do write database
     Update.ToTbCurrentJobnameRank(list)

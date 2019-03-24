@@ -24,7 +24,7 @@ import java.util.Properties;
 public class KafkaConsumer {
 
     //主题
-    private static final String topic = "test1";
+    private static final String topic = "sortware";
     private static final Integer threads = 2;
 
     public static void inStream() {
@@ -46,11 +46,10 @@ public class KafkaConsumer {
 
                 //获取kafka中数据
                 String msg = new String(mm.message());
+
                 Gson gson = new Gson();
                 //得到一个数据对象
                 JobDataOne jobDataOne = gson.fromJson(msg,JobDataOne.class);
-
-                System.out.println("jobdata = "+jobDataOne.toString());
 
                 //go data clear program
                 ClearnProcess.start(jobDataOne);

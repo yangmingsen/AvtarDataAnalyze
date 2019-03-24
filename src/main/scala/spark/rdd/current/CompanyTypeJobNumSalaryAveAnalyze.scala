@@ -46,7 +46,7 @@ object CompanyTypeJobNumSalaryAveAnalyze {
 
 
     //print to Test
-    //println("CompanyTypeJobNumSalaryAveAnalyze = "+rdd3.collect().toBuffer)
+    println("CompanyTypeJobNumSalaryAveAnalyze = "+rdd3.collect().toBuffer)
 
     //write to database
     Update.ToTbCurrentCompanytypeJobnum(list)

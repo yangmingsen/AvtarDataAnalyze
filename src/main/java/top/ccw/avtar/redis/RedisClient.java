@@ -17,7 +17,7 @@ public class RedisClient {
 
     public static String getNowAnalyzeValue() {
         Jedis jedis = new Jedis("39.108.73.162");
-        jedis.auth("avatar");
+        jedis.auth("123");
 
         String aDirecion = jedis.get("ADirection");
 

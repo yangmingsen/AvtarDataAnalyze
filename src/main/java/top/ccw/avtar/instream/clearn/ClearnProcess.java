@@ -1,6 +1,5 @@
 package top.ccw.avtar.instream.clearn;
 
-import com.google.common.base.CharMatcher;
 import top.ccw.avtar.db.dao.stream.JobDataTwoDao;
 import top.ccw.avtar.entity.JobDataOne;
 import top.ccw.avtar.entity.JobDataTwo;
@@ -13,7 +12,6 @@ import java.util.regex.Pattern;
 public class ClearnProcess {
 
     public static void start(JobDataOne j1) {
-
         JobDataTwo j2 = new JobDataTwo();
         process(j1, j2);
 

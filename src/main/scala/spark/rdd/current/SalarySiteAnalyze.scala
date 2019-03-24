@@ -57,7 +57,7 @@ object SalarySiteAnalyze {
     rdd5.collect().toList.take(8).map(x => list.add(SalarySiteEntity(x._1, x._2, x._3)))
 
     //print to Test
-    //println("SalarySiteAnalyze = " + rdd5.collect().toBuffer)
+    println("SalarySiteAnalyze = " + rdd5.collect().toBuffer)
 
     //do write dabase
     Update.ToTbCurrentSalarySite(list,requireMax,salaryMax)

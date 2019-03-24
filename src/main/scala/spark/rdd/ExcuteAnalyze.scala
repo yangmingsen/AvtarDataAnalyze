@@ -87,6 +87,8 @@ object ExcuteAnalyze {
 
     //WebSocketClient.sendMsg(direcion)
 
+    println("分析完毕...")
+
   }
 
 
@@ -109,6 +111,9 @@ object ExcuteAnalyze {
     //从ES中读取数据
     dataInFromElasticsearch(jobtypeTwoId)
 
+    //从ES中读取数据
+    //dataInFromElasticsearchToday(jobtypeTwoId)
+
   }
 
 
@@ -120,7 +125,7 @@ object ExcuteAnalyze {
   private def currentStatus(jobsData: RDD[JobDataEntity], jobtypeTwoId: String): Unit = {
 
     //分析TimeSalary
-    TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
+    //TimeSalaryAnalyze.start(jobsData, jobtypeTwoId)
 
     //分析SalarySite
     SalarySiteAnalyze.start(jobsData, jobtypeTwoId)
@@ -137,6 +142,7 @@ object ExcuteAnalyze {
     //分析 CompanyTypeJobNumSalaryAve
     CompanyTypeJobNumSalaryAveAnalyze.start(jobsData, jobtypeTwoId)
 
+    WordCloudAnalyze.start(jobsData,jobtypeTwoId)
 
   }
 
@@ -229,7 +235,7 @@ object ExcuteAnalyze {
 
   private def dataInFromMySQL(jobtypeTwoId: String): RDD[JobDataEntity] = {
 
-    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE  direction=" + jobtypeTwoId
+    val sql = "SELECT * FROM `tb_jobinfo_data` WHERE AND relase_date='2019-03-23' AND  direction=" + jobtypeTwoId
     val sqlContext = new SQLContext(sc)
 
     //    val jdbcDF = sqlContext.read.format("jdbc").
@@ -313,4 +319,41 @@ object ExcuteAnalyze {
 
     jobs
   }
+
+  private def dataInFromElasticsearchToday(jobtypeTwoId: String): RDD[JobDataEntity] = {
+
+    val query = "?q=direction:" + jobtypeTwoId
+
+    val esRDD = sc.esJsonRDD("job_data_current/jdbc", query)
+
+    val jobs = esRDD.map(x => {
+      val json = JSON.parseObject(x._2)
+
+      val id = json.getString("id")
+      val direction = json.getString("direction")
+      val jobName = json.getString("job_name")
+      val companyName = json.getString("company_name")
+      val jobSiteProvinces = json.getString("job_site_provinces")
+      val jobSite = json.getString("job_site")
+      val jobSalaryMin = json.getString("job_salary_min")
+      val jobSalaryMax = json.getString("job_salary_max")
+      val relaseDate = json.getString("relase_date")
+      val educationLevel = json.getString("education_level")
+      val workExper = json.getString("work_exper")
+      val companyWelfare = json.getString("company_welfare")
+      val jobRequire = json.getString("job_require")
+      val companyType = json.getString("company_type")
+      val companyPeopleNum = json.getString("company_people_num")
+      val companyBusiness = json.getString("company_business")
+
+      JobDataEntity(id, direction, jobName, companyName, jobSiteProvinces, jobSite, jobSalaryMin, jobSalaryMax, relaseDate, educationLevel,
+        workExper, companyWelfare, jobRequire, companyType, companyPeopleNum, companyBusiness)
+    })
+
+    println("从es读取today完毕")
+
+    jobs
+  }
+
+
 }

@@ -18,17 +18,17 @@ public class Start {
     public static void main(String[] args) throws Exception{
 
         //与springboot服务端建立连接
-        WebSocketClient.initClient(new MessageServiceWebSocket("ws://192.168.0.113:8081/bigscreendisplay/websocket/999"));
+        WebSocketClient.initClient(new MessageServiceWebSocket("ws://192.168.0.8:8081/bigscreendisplay/websocket/999"));
 
 
         //启动分析线程
         Thread analyzeDataThread = new Thread(new AnalyzeData(), "AnalyzeData");
 //
 //        //启动数据流入线程
-        Thread dataInStremThread = new Thread(new DataInStrem(), "DataInStrem");
+//        Thread dataInStremThread = new Thread(new DataInStrem(), "DataInStrem");
 //
         analyzeDataThread.start();
-        dataInStremThread.start();
+//        dataInStremThread.start();
 
 
         Thread timeWorkTaskThread = new Thread(new TimeWorkTask(),"TimeWorkTask");

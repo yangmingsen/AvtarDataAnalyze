@@ -14,7 +14,7 @@ public class ElasticsearchUtils {
     private final static String HOST = "localhost";
     private final static int PORT = 9300;
     private static Client client = null;
-    private final static String INDEX = "job_data_current";
+    private final static String INDEX = "metawiki";
     private final static String TYPE = "jdbc";
 
     static {
