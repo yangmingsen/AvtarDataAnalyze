@@ -16,7 +16,7 @@ object MysqlToHBase {
     val rdd = jobsRDD.filter(x=>{x.id.toInt<100}).repartition(10).mapPartitions(it=>it.map(x => {
       val hbaseDomain = new HbaseDomain(x.id, x.direction, x.jobName, x.companyName, x.jobSiteProvinces, x.jobSite, x.jobSalaryMin, x.jobSalaryMax, x.relaseDate, x.educationLevel, x.workExper, x.companyWelfare, x.jobRequire, x.companyType, x.companyPeopleNum, x.companyBusiness)
       hbaseDomainList.append(hbaseDomain)
-    }))
+    })).collect()
     hbaseDomainList
   }
 

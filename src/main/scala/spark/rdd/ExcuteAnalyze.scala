@@ -88,8 +88,8 @@ object ExcuteAnalyze {
 
     //BulkLoad全量导入mysql数据到Hbase
     //HbaseBatch.MysqlToHBaseStart(jobsData, sc)
-    //HbaseUtils.BatchPut("tb_job_data", jobsData)
-    HbaseUtils.getDomainList1(jobsData)
+    HbaseUtils.BatchPut(jobsData, "tb_job_data")
+
 
     //WebSocketClient.sendMsg(direcion)
 

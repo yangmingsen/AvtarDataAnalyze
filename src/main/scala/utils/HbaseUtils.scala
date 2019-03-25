@@ -109,9 +109,13 @@ object HbaseUtils {
     table.close()
   }
 
-  def getDomainList(jobsRDD: RDD[JobDataEntity]): java.util.ArrayList[Put] = {
+  def BatchPut(jobsRDD: RDD[JobDataEntity], tableName: String): Unit = {
+    setConf("master,machine1,machine2", "2181", "master")
+    val table: Table = connection.getTable(TableName.valueOf(tableName))
     val list = new java.util.ArrayList[Put]()
-    val rdd = jobsRDD.repartition(10).mapPartitions(it => it.map(x => {
+    val rdd = jobsRDD.repartition(10).filter(x => {
+      x.jobSalaryMin != "" && x.educationLevel != "" && x.jobRequire != "" && x.companyWelfare != "" && x.companyPeopleNum != "" && x.companyBusiness != ""
+    }).collect().foreach(x => {
       val put: Put = new Put(Bytes.toBytes(x.id))
       put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("direction"), Bytes.toBytes(x.direction))
       put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("jobName"), Bytes.toBytes(x.jobName))
@@ -129,27 +133,26 @@ object HbaseUtils {
       put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyPeopleNum"), Bytes.toBytes(x.companyPeopleNum))
       put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyBusiness"), Bytes.toBytes(x.companyBusiness))
       list.add(put)
-    }))
-    list
-  }
-
-  def getDomainList1(jobsRDD: RDD[JobDataEntity]): Unit = {
-    val rdd = jobsRDD.filter(x=>{x.id=="50"}).repartition(10).mapPartitions(it => it.map(x => {
-      println(x.direction)
-    }))
+      if (list.size() == 100000) {
+        table.put(list)
+        list.clear()
+        table.close()
+        this.close()
+      }
+    })
   }
 
   /**
     * 批量插入
     */
-  def BatchPut(tableName: String, jobsRDD: RDD[JobDataEntity]): Unit = {
-    setConf("master,machine1,machine2", "2181", "master")
-    val list = getDomainList(jobsRDD)
-    val table: Table = connection.getTable(TableName.valueOf(tableName))
-    table.put(list)
-    table.close()
-    this.close()
-  }
+  /* def BatchPut(tableName: String, jobsRDD: RDD[JobDataEntity]): Unit = {
+     setConf("master,machine1,machine2", "2181", "master")
+     val list = getDomainList(jobsRDD)
+     val table: Table = connection.getTable(TableName.valueOf(tableName))
+     table.put(list)
+     table.close()
+     this.close()
+   }*/
 
   /**
     * 删除数据
@@ -168,26 +171,27 @@ object HbaseUtils {
     admin.close()
     connection.close()
   }
-/*
-  def main(args: Array[String]): Unit = {
-    setConf("master,machine1,machine2", "2181", "master")
 
-    /* import scala.collection.JavaConverters._
-     val resultScanner: ResultScanner = hbaseScan("tb_job_data")
-     resultScanner.asScala.foreach(rs=>{
-       val cells = rs.listCells()
-       cells.asScala.foreach(cell => {
-         val rowKey = Bytes.toString(CellUtil.cloneRow(cell))
-         val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell)) //取到修饰名
-         val value = Bytes.toString(CellUtil.cloneValue(cell))
-         println(rowKey,qualifier,value)
-       })
-     })*/
-    //createTable("tb_job_data", "info")
-    //singlePut("tb_job_data", "2","info1","haha","6")
-    //deleteByRow("tb_job_data","2")
-    //getCell("tb_job_data", "1")
-    this.close()
-  }
-  */
+  /*
+    def main(args: Array[String]): Unit = {
+      setConf("master,machine1,machine2", "2181", "master")
+
+      /* import scala.collection.JavaConverters._
+       val resultScanner: ResultScanner = hbaseScan("tb_job_data")
+       resultScanner.asScala.foreach(rs=>{
+         val cells = rs.listCells()
+         cells.asScala.foreach(cell => {
+           val rowKey = Bytes.toString(CellUtil.cloneRow(cell))
+           val qualifier = Bytes.toString(CellUtil.cloneQualifier(cell)) //取到修饰名
+           val value = Bytes.toString(CellUtil.cloneValue(cell))
+           println(rowKey,qualifier,value)
+         })
+       })*/
+      //createTable("tb_job_data", "info")
+      //singlePut("tb_job_data", "2","info1","haha","6")
+      //deleteByRow("tb_job_data","2")
+      //getCell("tb_job_data", "1")
+      this.close()
+    }
+    */
 }
