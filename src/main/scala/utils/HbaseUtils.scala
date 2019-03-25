@@ -114,7 +114,7 @@ object HbaseUtils {
     val table: Table = connection.getTable(TableName.valueOf(tableName))
     val list = new java.util.ArrayList[Put]()
     val rdd = jobsRDD.repartition(10).filter(x => {
-      x.jobSalaryMin != "" && x.educationLevel != "" && x.jobRequire != "" && x.companyWelfare != "" && x.companyPeopleNum != "" && x.companyBusiness != ""
+      x.jobSalaryMin != "" && x.jobSalaryMax != "" && x.educationLevel != "" && x.jobRequire != "" && x.companyWelfare != "" && x.companyPeopleNum != "" && x.companyBusiness != ""
     }).collect().foreach(x => {
       val put: Put = new Put(Bytes.toBytes(x.id))
       put.addColumn(Bytes.toBytes("info1"), Bytes.toBytes("direction"), Bytes.toBytes(x.direction))
@@ -127,7 +127,7 @@ object HbaseUtils {
       put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("relaseDate"), Bytes.toBytes(x.relaseDate))
       put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("educationLevel"), Bytes.toBytes(x.educationLevel))
       put.addColumn(Bytes.toBytes("info2"), Bytes.toBytes("workExper"), Bytes.toBytes(x.workExper))
-      put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyWelfare"), Bytes.toBytes(x.companyWelfare))
+     // put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyWelfare"), Bytes.toBytes(x.companyWelfare))
       put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("jobRequire"), Bytes.toBytes(x.jobRequire))
       put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyType"), Bytes.toBytes(x.companyType))
       put.addColumn(Bytes.toBytes("info3"), Bytes.toBytes("companyPeopleNum"), Bytes.toBytes(x.companyPeopleNum))
