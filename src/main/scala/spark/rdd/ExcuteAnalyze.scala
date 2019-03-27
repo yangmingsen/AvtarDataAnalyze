@@ -10,7 +10,6 @@ import spark.rdd.current._
 import spark.rdd.statistical._
 import top.ccw.avtar.db.Update
 import top.ccw.avtar.redis.RedisClient
-import utils.HbaseUtils
 
 /** *
   * <p>共分析2个主题：实时状态、统计图表</p>
@@ -84,11 +83,11 @@ object ExcuteAnalyze {
     //currentStatus(jobsData, direcion)
 
     //进入统计图表分析
-    //statisticalGraph(jobsData, direcion)
+    statisticalGraph(jobsData, direcion)
 
     //BulkLoad全量导入mysql数据到Hbase
     //HbaseBatch.MysqlToHBaseStart(jobsData, sc)
-    HbaseUtils.BatchPut(jobsData, "tb_job_data")
+    //HbaseUtils.BatchPut(jobsData, "tb_job_data")
 
 
     //WebSocketClient.sendMsg(direcion)
